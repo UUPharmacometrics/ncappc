@@ -1,0 +1,36 @@
+-
+Description of the tabular output
+------------------------------
+
+**Table 1 (ncaOutput.tsv).** Estimated PK measures using the observed and simulated concentration-time profile. Brief description of the column names: **ID** = individual ID, **AUClast** = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data. Similar annotation was used for the other PK measures.
+
+# Table 1. ncaOutput.tsv (selected columns of top 100 rows)
+
+```{r Final table, echo=FALSE, results='asis'}
+require(xtable)
+print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html')
+```
+
+**Table 2 (Obs_Stat.tsv).** A set of statistical parameters calculated for the population groups for Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
+
+
+-
+---------------------------------
+Description of the graphical output
+------------------------------
+
+```{r plot, echo=FALSE, fig.align='center', dpi=80}
+for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
+```
+
+**Figure 1.** [Individual level] Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
+
+-
+
+```{r histobsplot, echo=FALSE, fig.align='center',fig.height=7, fig.width=6, dpi=100}
+for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+```
+
+**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval of the PK measures obtained from the study population.
+
+

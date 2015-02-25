@@ -1,0 +1,22 @@
+citHeader("To cite ncappc in publications use:")
+
+citEntry(entry = "Article",
+  title        = "A diagnostic tool for population models using non-compartmental analysis: The ncappc functionality for R",
+  author       = personList(as.person("Chayan Acharya"),
+                            as.person("Andrew C. Hooker"),
+                            as.person("Siv Jonsson"),
+                            as.person("Mats O. Karlsson")),
+  journal      = "Computer Methods and Programs in Biomedicine",
+  year         = "2015",
+  volume       = "XX",
+  number       = "X",
+  pages        = "XX--XX",
+  url          = "XXXXXXXXXXXXXXXXXXX",
+
+  textVersion  =
+  paste("Chayan Acharya, Andrew C. Hooker, Siv Jonsson and Mats O. Karlsson (2015).",
+        "A diagnostic tool for population models using non-compartmental analysis: The ncappc functionality for R",
+        "Computer Methods and Programs in Biomedicine, Vol(Issue), Pi-Pl.",
+        "URL xxxx")
+)
+

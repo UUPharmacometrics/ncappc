@@ -1,0 +1,51 @@
+-
+# Report of *nca_ppc* package
+-
+### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
+### *Department of Pharmaceutical Biosciences*
+### *Uppsala University, Sweden*
+------------------------------------------------------------------
+
+==============================================================
+
+```{r main, echo=FALSE}
+spread   <- fnOut$spread
+nsim     <- fnOut$NSIM
+txt      <- fnOut$TXT
+prnTab   <- fnOut$prnTab
+pddf     <- fnOut$pddf
+conc     <- fnOut$conc
+histobs  <- fnOut$histobs
+pop      <- fnOut$pop
+dev      <- fnOut$dev
+outlier  <- fnOut$outlier
+forest   <- fnOut$forest
+npde     <- fnOut$npde
+histnpde <- fnOut$histnpde
+sprtxt   <- ifelse(spread=="sd", "standard deviation", "95\% nonparametric prediction interval of the PK measures obtained from the simulated data")
+```
+
+-
+
+Summary of the data set and the results
+-------------------------------
+
+
+```{r txt, echo=FALSE}
+cat(txt)
+```
+
+-
+
+```{r table, echo=FALSE, results='asis'}
+kable(pddf, align='c')
+```
+
+-------------------------------
+
+```{r test, child = if (nsim == 0) 'figTabNoSim.Rmd', echo=FALSE}
+```
+
+```{r test, child = if (nsim != 0) 'figTab.Rmd', echo=FALSE}
+```
+

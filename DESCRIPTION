@@ -1,0 +1,32 @@
+Package: ncappc
+Title: The ncappc package performs NCA calculations and population PK model
+    diagnosis.
+Version: 0.0.0.9000
+Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email =
+    "chayan.acharya@farmbio.uu.se"), person("Andrew C.", "Hooker", role =
+    "aut"), person("Siv", "Jonsson", role = "aut"), person("Mats O.",
+    "Karlsson", role = "aut"))
+Author: Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
+Maintainer: Chayan Acharya <chayan.acharya@farmbio.uu.se>
+Description: ncappc is a flexible tool, to (i) perform a traditional NCA and
+    (ii) perform simulation-based posterior predictive checks for a population
+    PK model using NCA metrics.
+Depends:
+    R (>= 3.0.2)
+Imports:
+    ggplot2,
+    grid,
+    gridExtra,
+    scales,
+    gtable,
+    PerformanceAnalytics,
+    lattice,
+    knitr,
+    xtable,
+    reshape2
+Suggests:
+    knitr,
+    testthat
+License: GPL-3
+LazyData: true
+VignetteBuilder: knitr
