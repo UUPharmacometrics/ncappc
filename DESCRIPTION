@@ -25,7 +25,6 @@ Imports:
     xtable,
     reshape2
 Suggests:
-    knitr,
     testthat
 License: GPL-3
 LazyData: true

@@ -28,25 +28,23 @@
 #'
 #' @return An array of calculated statistics of a given set of numbers
 #' @export
-#' @examples
-#'  calc.stat(arr=seq(1:5))
 #'
 
-calc.stat <- function(arr){
-  arr     <- as.numeric(arr)
-  Ntot    <- length(arr)
-  Nunique <- length(unique(arr))
-  Min     <- min(arr)
-  Max     <- max(arr)
-  Mean    <- mean(arr)
-  Median  <- median(arr)
-  SD      <- sd(arr)
+calc.stat <- function(x){
+  x       <- as.numeric(x)
+  Ntot    <- length(x)
+  Nunique <- length(unique(x))
+  Min     <- min(x)
+  Max     <- max(x)
+  Mean    <- mean(x)
+  Median  <- median(x)
+  SD      <- sd(x)
   SE      <- SD/sqrt(Ntot)
   CVp     <- 100*SD/Mean
   CI95l   <- Mean-abs(qt(0.025,Ntot-1)*SE)  # two-tailed
   CI95u   <- Mean+abs(qt(0.975,Ntot-1)*SE)  # two-tailed
-  gMean   <- exp(mean(log(arr)))
-  gCVp    <- sqrt(exp(sd(log(arr))^2)-1)*100
+  gMean   <- exp(mean(log(x)))
+  gCVp    <- sqrt(exp(sd(log(x))^2)-1)*100
   stPrm   <- c(Ntot,Nunique,Min,Max,Mean,Median,SD,SE,CVp,CI95l,CI95u,gMean,gCVp)
   names(stPrm) <- c("Ntot","Nunique","Min","Max","Mean","Median","SD","SE","CVp","CI95l","CI95u","gMean","gCVp")
   return(stPrm)

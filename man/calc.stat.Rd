@@ -4,7 +4,7 @@
 \alias{calc.stat}
 \title{Calculates a set of statistics for a given array of numbers.}
 \usage{
-calc.stat(arr)
+calc.stat(x)
 }
 \arguments{
 \item{x}{a numeric array}
@@ -33,8 +33,5 @@ The calculated statistics are
  \item gMean = Geometric mean value of the array
  \item gCVp = Geometric percent coefficient of variation of the array
 }
-}
-\examples{
-calc.stat(arr=seq(1:5))
 }
 

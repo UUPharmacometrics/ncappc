@@ -154,7 +154,4 @@ below.
  \item \strong{Clss} is an estimate of the total body clearance for steady-state data.
 }
 }
-\examples{
-est.nca(time=c(1,2,6,12,24),conc=c(12,7,4,2,1))
-}
 

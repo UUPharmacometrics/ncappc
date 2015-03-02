@@ -1,1 +1,0 @@
-expect_equal(exists("ncappc"), TRUE)
