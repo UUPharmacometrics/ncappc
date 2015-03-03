@@ -6,10 +6,10 @@
 data.}
 \usage{
 est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
-  doseType = "ns", adminType = "extravascular", doseAmt = NULL,
-  method = "linear", AUCTimeRange = NULL, LambdaTimeRange = NULL,
-  LambdaExclude = NULL, Tau = NULL, TI = NULL, simFile = NULL,
-  dset = "obs")
+  doseType = "ns", adminType = "extravascular", doseNm = NULL,
+  dose = NULL, doseNumber = NULL, doseAmt = NULL, method = "linear",
+  AUCTimeRange = NULL, LambdaTimeRange = NULL, LambdaExclude = NULL,
+  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs")
 }
 \arguments{
 \item{time}{Numeric array for time}
@@ -26,6 +26,12 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 
 \item{adminType}{Route of administration
 (iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})}
+
+\item{doseNm}{Column name to specify dose identifiers (\strong{"NULL"})}
+
+\item{dose}{Dose identifiers used in the entire data (c(1,2)) (\strong{"NULL"})}
+
+\item{doseNumber}{Dose identifier used in this estimation (1) (\strong{"NULL"})}
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
@@ -63,7 +69,7 @@ metrics estimated in this package are assigned mainly following the names
 used in WinNonlin. This package accepts any of the three different types of
 drug administration, (i) iv-bolus, (ii) iv-infusion and (iii) extravascular;
 \pkg{ncappc} also can accept both non-steady state and steady-state data.
-The NCa metric that are estimated and reported by \pkg{ncappc} are listed
+The NCA metrics that are estimated and reported by \pkg{ncappc} are listed
 below.
 \itemize{
  \item \strong{C0} is the initial concentration at the dosing time. It is

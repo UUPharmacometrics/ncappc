@@ -6,8 +6,6 @@ Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email =
     "chayan.acharya@farmbio.uu.se"), person("Andrew C.", "Hooker", role =
     "aut"), person("Siv", "Jonsson", role = "aut"), person("Mats O.",
     "Karlsson", role = "aut"))
-Author: Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
-Maintainer: Chayan Acharya <chayan.acharya@farmbio.uu.se>
 Description: ncappc is a flexible tool, to (i) perform a traditional NCA and
     (ii) perform simulation-based posterior predictive checks for a population
     PK model using NCA metrics.
