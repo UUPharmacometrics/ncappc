@@ -31,8 +31,8 @@ dv.plot <- function(pdata,cunit="[M].[L]^-3",tunit="[T]"){
                            axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
                            legend.position = "none",
                            strip.text.x = element_text(size=9, face="bold")),
-                     xlab(""),ylab(""),geom_line(aes(colour=ID), size=0.5),geom_point(aes(colour=ID), size=1))
-  p01 <- ggplot(pdata, aes(x=as.numeric(as.character(Time)), y=as.numeric(as.character(Conc)), color=ID)) +
+                     xlab(""),ylab(""),geom_line(aes(colour=factor(ID)), size=0.5),geom_point(aes(colour=factor(ID)), size=1))
+  p01 <- ggplot(pdata, aes(x=as.numeric(as.character(Time)), y=as.numeric(as.character(Conc)), color=factor(ID))) +
     ggOpt_conc + #geom_smooth(method="loess",size=1,color=rgb(139, 0, 0, maxColorValue=255),se=F) +
     facet_wrap(~FCT, scales="free", ncol=1)
   p02 <- p01 + scale_y_log10()
