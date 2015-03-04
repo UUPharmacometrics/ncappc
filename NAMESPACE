@@ -9,6 +9,7 @@ import(lattice)
 import(knitr)
 import(xtable)
 import(reshape2)
+
 export(calc.stat)
 export(dv.plot)
 export(est.nca)

@@ -50,6 +50,7 @@ dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
 dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combination of D, M and Y)
 spread | String | "pi" | measure of the spread of simulated data ("sd" or "pi" (95% nonparametric prediction interval))
 tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
+figFormat | String | "tiff" | format of the produced figures (bmp, jpeg, tiff, png)
 
 
 **path**  
@@ -169,4 +170,10 @@ The data format for the date column. The accepted formats are "D-M-Y", "D/M/Y" o
 
 **spread**  
 This argument determines the metric that will be used to measure the spread of the simulated distribution of the NCA metrics. The spread argument accepts either "sd" or "pi" as input. The "sd" uses the standard deviation of the distribution, while "pi" uses the 95% nonparametric prediction interval. The default value for this argument is ***"pi"***.
+
+**tabCol**
+This argument selects the table columns, in addition to ID, dose and population strata, to print in the produced report. This argument accepts a list of NCA metrics in a string array. The default value of this argument is ***c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")***
+
+**figFormat**
+This argument selects the format of the produced figures. Acceptable value for this argument is either bmp, jpeg, tiff or png. The default value is ***"tiff"***
 

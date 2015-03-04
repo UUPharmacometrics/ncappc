@@ -1,7 +1,7 @@
 ---
 title: "ncappc"
 author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
-date: "2014-12-10"
+date: "2015-03-03"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ncappc}
@@ -78,6 +78,7 @@ dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
 dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combination of D, M and Y)
 spread | String | "pi" | measure of the spread of simulated data ("sd" or "pi" (95% nonparametric prediction interval))
 tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
+figFormat | String | "tiff" | format of the produced figures (bmp, jpeg, tiff, png)
 
 
 **path**  
@@ -197,6 +198,12 @@ The data format for the date column. The accepted formats are "D-M-Y", "D/M/Y" o
 
 **spread**  
 This argument determines the metric that will be used to measure the spread of the simulated distribution of the NCA metrics. The spread argument accepts either "sd" or "pi" as input. The "sd" uses the standard deviation of the distribution, while "pi" uses the 95% nonparametric prediction interval. The default value for this argument is ***"pi"***.
+
+**tabCol**
+This argument selects the table columns, in addition to ID, dose and population strata, to print in the produced report. This argument accepts a list of NCA metrics in a string array. The default value of this argument is ***c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")***
+
+**figFormat**
+This argument selects the format of the produced figures. Acceptable value for this argument is either bmp, jpeg, tiff or png. The default value is ***"tiff"***
 
 
 
@@ -437,7 +444,7 @@ This table reports the estimated NCA metrics values for each individual obtained
 ### [Individual level] Concentration *vs.* time profile  
 <img src="conc.png" height="350px" width="500px" align="middle" />  
 
-The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every two strata. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth. The above figure shows a typical example of the concentration-time profile.
+The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. Each of the lines represents individual data. The above figure shows a typical example of the concentration-time profile.
 
 
 ### [Population level] Histogram of the selected NCA metrics estimated from the observed data  

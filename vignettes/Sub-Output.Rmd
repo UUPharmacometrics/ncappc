@@ -47,7 +47,7 @@ This table reports the estimated NCA metrics values for each individual obtained
 ### [Individual level] Concentration *vs.* time profile  
 <img src="conc.png" height="350px" width="500px" align="middle" />  
 
-The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every two strata. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth. The above figure shows a typical example of the concentration-time profile.
+The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. Each of the lines represents individual data. The above figure shows a typical example of the concentration-time profile.
 
 
 ### [Population level] Histogram of the selected NCA metrics estimated from the observed data  
