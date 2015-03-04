@@ -7,12 +7,13 @@
 dv.plot(pdata, cunit = "[M].[L]^-3", tunit = "[T]")
 }
 \arguments{
-\item{pdata}{A data frame with four mandatory columns:
+\item{pdata}{A data frame with three mandatory columns and one optional
+  column:
 \enumerate{
- \item Time: Time column
- \item Conc: DV column
- \item ID: Individual ID
- \item FCT: Dose identifier and/or population stratifier
+ \item Time: Time column (mandatory)
+ \item Conc: DV column (mandatory)
+ \item ID: Individual ID (mandatory)
+ \item FCT: Dose identifier and/or population stratifier (optional)
 }}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
