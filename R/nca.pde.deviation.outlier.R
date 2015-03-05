@@ -77,8 +77,8 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
     if (length(id)!=1 | (!is.element(id, obsdata[,idNm])) | (!is.element(id, simdata[,idNm]))){stop("Either more than one values are provided to id argument, or provided id value is not present in observed and/or simulated data.")}
   }
   
-  iobslst  <- apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf])))
-  isimlst  <- apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf])))
+  iobslst  <- as.list(apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
+  isimlst  <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
   
   npr    <- length(diagparam)
   metric <- ""                                                # NCA metric associated with the outlier
@@ -91,14 +91,14 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
     obsdata[,paste("sim",calcparam,sep="")] <- "NaN"
   }else{
     for (i in 1:length(iobslst)){
-      pnm <- names(isimlst)[i]
-      if (length(iobslst[[pnm]])==0 | length(isimlst[[pnm]])==0){
+      pnm <- colnames(isimlst)[i]
+      if (length(iobslst[[pnm]])==0 | length(isimlst[,pnm])==0){
         pde[,pnm]                         <- "NaN"
         obsdata[,paste("d",pnm,sep="")]   <- "NaN"
         obsdata[,paste("sim",pnm,sep="")] <- "NaN"
       }else{
         obsval    <- iobslst[[pnm]]
-        simval    <- isimlst[[pnm]]
+        simval    <- isimlst[,pnm]
         msimval   <- mean(simval)
         sdsimval  <- sd(simval)
         sdsimmean <- sdsimval*(simval-msimval)

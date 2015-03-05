@@ -55,7 +55,7 @@ outlier  <- fnOut$outlier
 forest   <- fnOut$forest
 npde     <- fnOut$npde
 histnpde <- fnOut$histnpde
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95\% nonparametric prediction interval of the PK measures obtained from the simulated data")
+sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the PK measures obtained from the simulated data")
 @
 
 <<txt, echo=FALSE>>=
