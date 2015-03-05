@@ -503,7 +503,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       lheight     <- histobsgrob$lheight
       if (printOut=="TRUE"){
         fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-        eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=600)",sep="")))
+        eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
         suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
         dev.off()
       }
@@ -537,7 +537,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=600)
+      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
     }
   }
   if (case == 2){
@@ -570,7 +570,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         lheight     <- histobsgrob$lheight
         if (printOut=="TRUE"){
           fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=600)",sep="")))
+          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
           dev.off()
         }
@@ -605,7 +605,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=600)
+      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
     }
   }
   if (case == 3){
@@ -638,7 +638,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         lheight     <- histobsgrob$lheight
         if (printOut=="TRUE"){
           fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=600)",sep="")))
+          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
           dev.off()
         }
@@ -673,7 +673,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=600)
+      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
     }
   }
   if (case == 4){
@@ -708,7 +708,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           lheight     <- histobsgrob$lheight
           if (printOut=="TRUE"){
             fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=600)",sep="")))
+            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
             dev.off()
           }
@@ -744,7 +744,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=600)
+      if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
     }
   }
   
@@ -1213,7 +1213,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         lheight     <- histpopgrob$lheight
         if (printOut=="TRUE"){
           fl <- paste(usrdir,"/popMean_",figlbl,sep="")
-          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
           suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
           dev.off()
         }
@@ -1242,7 +1242,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           lheight     <- histpopgrob$lheight
           if (printOut=="TRUE"){
             fl <- paste(usrdir,"/popMean_",figlbl,sep="")
-            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
             dev.off()
           }
@@ -1272,7 +1272,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           lheight     <- histpopgrob$lheight
           if (printOut=="TRUE"){
             fl <- paste(usrdir,"/popMean_",figlbl,sep="")
-            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
             dev.off()
           }
@@ -1303,7 +1303,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             lheight     <- histpopgrob$lheight
             if (printOut=="TRUE"){
               fl <- paste(usrdir,"/popMean_",figlbl,sep="")
-              eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+              eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
               dev.off()
             }
@@ -1359,7 +1359,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             lheight  <- pdeout$lheight
             if (printOut=="TRUE"){
               fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
-              eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+              eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
               dev.off()
             }
@@ -1395,7 +1395,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
         if (!is.null(ggdev)){
           suppressMessages(suppressWarnings(print(ggdev)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           devplot[[length(devplot)+1]] <- ggdev
         }
         # NPDE plot
@@ -1407,11 +1407,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         
         npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
         suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
         
         histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
         suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
       }
       
       # Forest plot for NPDE
@@ -1424,7 +1424,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
       suppressMessages(suppressWarnings(print(ggplt)))
       forestplot[[length(forestplot)+1]] <- ggplt
-      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
     }else if (case==2){
       for (g in 1:ngrp){
         for (d in 1:ndose){
@@ -1449,7 +1449,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               lheight  <- pdeout$lheight
               if (printOut=="TRUE"){
                 fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
-                eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+                eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
                 dev.off()
               }
@@ -1486,7 +1486,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             devplot[[length(devplot)+1]] <- ggdev
           }
           # NPDE plot
@@ -1498,11 +1498,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           
           histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
           suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
         }
       }
       # Forest plot for NPDE
@@ -1515,7 +1515,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
       suppressMessages(suppressWarnings(print(ggplt)))
       forestplot[[length(forestplot)+1]] <- ggplt
-      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
     }else if (case == 3){
       for (f in 1:nflag){
         for (d in 1:ndose){
@@ -1540,7 +1540,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               lheight  <- pdeout$lheight
               if (printOut=="TRUE"){
                 fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
-                eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+                eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
                 dev.off()
               }
@@ -1577,7 +1577,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             devplot[[length(devplot)+1]] <- ggdev
           }
           # NPDE plot
@@ -1589,11 +1589,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           
           histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
           suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
         }
       }
       # Forest plot for NPDE
@@ -1606,7 +1606,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
       suppressMessages(suppressWarnings(print(ggplt)))
       forestplot[[length(forestplot)+1]] <- ggplt
-      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
     }else if (case == 4){
       for (g in 1:ngrp){
         for (f in 1:nflag){
@@ -1632,7 +1632,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
                 lheight  <- pdeout$lheight
                 if (printOut=="TRUE"){
                   fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
-                  eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=600)",sep="")))
+                  eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                   suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
                   dev.off()
                 }
@@ -1671,7 +1671,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
-              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
               devplot[[length(devplot)+1]] <- ggdev
             }
             # NPDE plot
@@ -1683,11 +1683,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             
             histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
             suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           }
         }
       }
@@ -1701,7 +1701,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
       suppressMessages(suppressWarnings(print(ggplt)))
       forestplot[[length(forestplot)+1]] <- ggplt
-      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=600)))
+      if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
     }
     
     if (printOut=="TRUE"){
