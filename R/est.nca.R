@@ -142,7 +142,6 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
   
   ntime <- time
   nconc <- conc
-  ndose <- length(dose)
   
   # Exclude zero or negative concentration from calculations
   if (negConcExcl == "TRUE"){
@@ -169,6 +168,7 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
     
     # Calculation of C0
     if (backExtrp == "TRUE"){
+      ndose <- ifelse(!is.null(dose), length(dose), 0)
       if (ndose == 1 | (!is.null(doseNm) & doseNumber == dose[1])){
         if (ntime[1] == 0){
           C0 <- nconc[1]

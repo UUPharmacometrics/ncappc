@@ -182,7 +182,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   # check requirements for infusion data
   if (adminType == "iv-infusion" & is.null(TI) & ("AMT"%in%colnames(indf)==F | "RATE"%in%colnames(indf)==F)){setwd(usrdir);stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data\n")}
   
-  # Set backExtrp to FALSE in the absence of simulated data
+  # Set backExtrp to FALSE in the presence of simulated data
   if (!is.null(simFile)){backExtrp <- "FALSE"}
   
   # ignore data with BLQ = 1 or user specified value (optional)
