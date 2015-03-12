@@ -9,6 +9,8 @@ Follow the steps shown below.
 
 install.packages("devtools")
 
-devtools::install_github(“ncappc",username=“cacha0227")
+library(devtools)
+
+devtools::install_github("cacha0227/ncappc")
 
 library(ncappc)
