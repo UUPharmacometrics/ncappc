@@ -8,5 +8,7 @@ The install_github() approach requires that you build from source, i.e. make and
 Follow the steps shown below.
 
 install.packages("devtools")
+
 devtools::install_github(“ncappc",username=“cacha0227")
+
 library(ncappc)
