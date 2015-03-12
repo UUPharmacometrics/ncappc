@@ -26,8 +26,8 @@
 
 nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M].[L]^-3",tunit="[T]"){
   
-  npde <- type <- mcil <- mciu <- sdu <- sducil <- sduciu <- "..density.." <- sdl <- XVAR <- NULL
-  rm(list=c("npde","type","mcil","mciu","sdu","sducil","sduciu","..density..","sdl","XVAR"))
+  "npde" <- "type" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "..density.." <- "sdl" <- "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "scale_linetype_manual" <- "scale_color_manual" <- "guides" <- "guide_legend" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "ggplot" <- "labs" <- NULL
+  rm(list=c("npde","type","mcil","mciu","sdu","sducil","sduciu","..density..","sdl","XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","scale_linetype_manual","scale_color_manual","guides","guide_legend","element_rect","geom_histogram","aes","geom_vline","ggplot","labs"))
   
   if (!is.data.frame(plotdata)) stop("plotdata must be a data frame.")
   if (is.null(xvar)){

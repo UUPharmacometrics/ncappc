@@ -27,8 +27,8 @@
 
 histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit="[M].[L]^-3",tunit="[T]",spread="pi"){
   
-  "..density.." <- TYPE <- Obs <- "arrangeGrob" <- NULL
-  rm(list=c("..density..","TYPE","Obs","arrangeGrob"))
+  "..density.." <- "TYPE" <- "Obs" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "coord_cartesian" <- "facet_grid" <- "labs" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- NULL
+  rm(list=c("..density..","TYPE","Obs","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","coord_cartesian","facet_grid","labs","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar"))
   
   ggOpt_obs <- list(scale_linetype_manual(name="",values=c("mean(obs)"="solid","+/-spread"="dashed")),
                     scale_color_manual(name = "", values=c("mean(obs)"="blue","+/-spread"="blue")),
