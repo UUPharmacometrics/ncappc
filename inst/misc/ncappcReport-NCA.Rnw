@@ -1,0 +1,124 @@
+\documentclass[pdflatex, a4paper, 11pt]{article}
+\usepackage{booktabs, longtable, adjustbox, array, enumerate, mathtools, fancyhdr, graphicx, fancybox, amsmath, lscape, caption}
+\usepackage[hmargin=2.5cm,vmargin=3.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[table]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[affil-it]{authblk}
+
+%%% Hyperref and cref settings
+\usepackage[bookmarksnumbered]{hyperref} % hyperlinks
+\hypersetup{colorlinks,breaklinks,
+            urlcolor=blue,%[rgb]{0.29020,0.52157,0.56078},
+            linkcolor=blue,%[rgb]{0.29020,0.52157,0.56078},
+            citecolor=blue,%[rgb]{00.29020,0.52157,0.56078},
+            linktoc=page}
+
+\captionsetup{labelformat=empty}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Report}}
+\fancyhead[R]{\textit{nca\_ppc}}
+\fancyfoot[C]{\thepage}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{4pt}}m{#1}}
+\title{\textbf{Report of \textit{nca\_ppc} package}}
+\author{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
+\affil{Department of Pharmaceutical Biosciences\\Uppsala University, Sweden}
+\date{\vspace{-5ex}}
+\begin{document}
+\raggedright{}
+\maketitle
+\thispagestyle{empty}
+
+\newpage{}
+\tableofcontents
+\thispagestyle{empty}
+\clearpage
+\pagenumbering{arabic}
+
+\section{Summary of the data set and the results}
+
+<<main, echo=FALSE>>=
+spread   <- fnOut$spread
+nsim     <- fnOut$NSIM
+txt      <- fnOut$TXT
+prnTab   <- fnOut$prnTab
+pddf     <- fnOut$pddf
+conc     <- fnOut$conc
+histobs  <- fnOut$histobs
+pop      <- fnOut$pop
+dev      <- fnOut$dev
+outlier  <- fnOut$outlier
+forest   <- fnOut$forest
+npde     <- fnOut$npde
+histnpde <- fnOut$histnpde
+sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the PK measures obtained from the simulated data")
+@
+
+<<txt, echo=FALSE>>=
+cat(txt)
+@
+
+\paragraph{}
+\begin{center}
+\textbf{Summary table}
+<< Summary table, echo=FALSE, results='asis'>>==
+require(xtable)
+print(xtable(pddf, align=rep("c",ncol(pddf)+1), rotate.colnames = T), file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
+      tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
+@
+\input{sum}
+\end{center}
+\paragraph{}
+
+\section{Description of the tabular output}
+
+% Figure and Table description in the absence of simulated data
+\begin{sloppypar}
+
+\subsection{Table 1 (ncaOutput.tsv)}
+Estimated PK measures using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data. Similar annotation was used for the other PK measures.
+
+\paragraph{}
+\begin{center}
+\textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
+<< Final table, echo=FALSE, results='asis'>>==
+require(xtable)
+print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), file=paste(usrdir,"/tab.tex",sep=""), include.rownames=FALSE,
+      tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
+@
+\input{tab}
+\end{center}
+
+\paragraph{}
+\subsection{Table 2 (Obs\_Stat.tsv)}
+A set of statistical parameters calculated for the population groups for Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
+
+\paragraph{}
+\section{Description of the graphical output}
+
+\subsubsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
+
+\paragraph{}
+<<concplot, echo=FALSE, fig.align='center', fig.height=6, fig.width=6, dpi=500>>=
+for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
+@
+
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
+
+\subsubsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
+
+\paragraph{}
+<<histobsplot, echo=FALSE, fig.height=12, fig.width=10, fig.align='center', dpi=500>>=
+suppressPackageStartupMessages(require(gridExtra))
+for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+@
+
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the PK measures obtained from the study population.
+
+\end{sloppypar}
+
+\end{document}

@@ -185,6 +185,50 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   # Set backExtrp to FALSE in the presence of simulated data
   if (!is.null(simFile)){backExtrp <- "FALSE"}
   
+  # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
+  # For single dose data, dose amount is either taken from doseAmtNm column or from the provided value in doseAmt argument
+  # For multiple dose data, doseAmt is set to NULL and the dose amount will be extracted from the doseAmtNm column after subsetting the data set
+  if (!is.null(doseNm)){
+    if (doseNm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the dose column\n")}else{doseCol <- which(colnames(indf) == doseNm)}
+    oidNm <- doseNm
+    if (is.null(dose)){dose <- unique(sort(indf[,doseCol]))}
+    ndose <- length(dose)
+    for (i in 1:ndose){
+      if (nrow(indf[indf[,doseCol]==dose[i],]) == 0){setwd(usrdir);stop("Dose identifier does not match the dose column\n")}
+    }
+  }else{
+    oidNm <- "OID"; dose <- 1; ndose <- 1
+  }
+  
+  if (ndose == 1){
+    if (!is.null(doseAmt)){
+      if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", as.character(doseAmt))==F) {setwd(usrdir);stop("Dose amount is non-numeric\n")}
+      if (doseAmt == 0){setwd(usrdir);stop("Dose amount can not be zero\n")}
+      doseAmount <- doseAmt[1]
+    }else{
+      if (is.null(doseAmtNm)){
+        if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
+        doseAmtNm <- "AMT"
+      }
+      doseAmount <- indf[indf[,doseAmtNm]>0, doseAmtNm][1]
+    }
+  }else{
+    doseAmt <- NULL
+    if (is.null(doseAmtNm)){
+      if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
+      doseAmtNm <- "AMT"
+    }
+  }
+  
+  # Dose unit
+  if (is.null(doseUnit)) doseUnit <- "[M]"
+  
+  # Preliminary description
+  # Units for dose, time and conc
+  dunit <- ifelse(is.null(doseNormUnit), doseUnit, paste(doseUnit,"/",doseNormUnit))
+  tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
+  cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
+  
   # ignore data with BLQ = 1 or user specified value (optional)
   if (!is.null(blqNm)){
     if (blqNm%in%colnames(indf) == T){
@@ -306,50 +350,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     }
     case <- 4
   }
-  
-  # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
-  # For single dose data, dose amount is either taken from doseAmtNm column or from the provided value in doseAmt argument
-  # For multiple dose data, doseAmt is set to NULL and the dose amount will be extracted from the doseAmtNm column after subsetting the data set
-  if (!is.null(doseNm)){
-    if (doseNm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the dose column\n")}else{doseCol <- which(colnames(indf) == doseNm)}
-    oidNm <- doseNm
-    if (is.null(dose)){dose <- unique(sort(indf[,doseCol]))}
-    ndose <- length(dose)
-    for (i in 1:ndose){
-      if (nrow(indf[indf[,doseCol]==dose[i],]) == 0){setwd(usrdir);stop("Dose identifier does not match the dose column\n")}
-    }
-  }else{
-    oidNm <- "OID"; dose <- 1; ndose <- 1
-  }
-  
-  if (ndose == 1){
-    if (!is.null(doseAmt)){
-      if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", as.character(doseAmt))==F) {setwd(usrdir);stop("Dose amount is non-numeric\n")}
-      if (doseAmt == 0){setwd(usrdir);stop("Dose amount can not be zero\n")}
-      doseAmount <- doseAmt[1]
-    }else{
-      if (is.null(doseAmtNm)){
-        if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-        doseAmtNm <- "AMT"
-      }
-      doseAmount <- indf[indf[,doseAmtNm]>0, doseAmtNm][1]
-    }
-  }else{
-    doseAmt <- NULL
-    if (is.null(doseAmtNm)){
-      if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-      doseAmtNm <- "AMT"
-    }
-  }
-  
-  # Dose unit
-  if (is.null(doseUnit)) doseUnit <- "[M]"
-  
-  # Preliminary description
-  # Units for dose, time and conc
-  dunit <- ifelse(is.null(doseNormUnit), doseUnit, paste(doseUnit,"/",doseNormUnit))
-  tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
-  cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
   
   # Allowed NCA parameters
   alwprm <- c("AUClast","AUClower_upper","AUCINF_obs","AUCINF_pred","AUMClast","Cmax","Tmax","HL_Lambda_z")
@@ -483,7 +483,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
       if (nrow(ifdf) == 0){next}
       idd <- unique(ifdf[,idCol])
-      if (is.null(doseAmt)){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
+      if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
       # Description
       pddf <- rbind(pddf, data.frame(a=DoseNumber, b=doseAmount, c=length(idd)))
       for (i in 1:length(idd)){
@@ -549,7 +549,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         if (nrow(ifdf) == 0){next}
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
-        if (is.null(doseAmt)){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
+        if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
         # Description
         pddf <- rbind(pddf, data.frame(a=grp[g], b=DoseNumber, c=doseAmount, d=length(idd)))
         for (i in 1:length(idd)){
@@ -617,7 +617,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         if (nrow(ifdf) == 0){next}
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
-        if (is.null(doseAmt)){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
+        if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
         # Description
         pddf <- rbind(pddf, data.frame(a=flag[f], b=DoseNumber, c=doseAmount, d=length(idd)))
         for (i in 1:length(idd)){
@@ -686,7 +686,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           if (nrow(ifdf) == 0){next}
           idd <- unique(ifdf[,idCol])
           DoseNumber <- dose[d]
-          if (is.null(doseAmt)){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
+          if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
           # Description
           pddf <- rbind(pddf, data.frame(a=grp[g], b=flag[f], c=DoseNumber, d=doseAmount, e=length(idd)))
           for (i in 1:length(idd)){
@@ -1000,6 +1000,29 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }
       }
       
+      # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
+      # For single dose data, dose amount is either taken from doseAmtNm column or from the provided value in doseAmt argument
+      # For multiple dose data, doseAmt is set to NULL and the dose amount will be extracted from the doseAmtNm column after subsetting the data set
+      if (!is.null(doseNm)){
+        if (doseNm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the dose column\n")}else{doseCol <- which(colnames(nmdf) == doseNm)}
+        oidNm <- doseNm
+        if (is.null(dose)){dose <- unique(sort(nmdf[,doseCol]))}
+        ndose <- length(dose)
+        for (i in 1:ndose){
+          if (nrow(nmdf[nmdf[,doseCol]==dose[i],]) == 0){setwd(usrdir);stop("Dose identifier does not match the dose column\n")}
+        }
+      }else{
+        dose <- 1; ndose <- 1
+      }
+      
+      if (ndose != 1){
+        doseAmt <- NULL
+        if (is.null(doseAmtNm)){
+          if ("AMT"%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
+          doseAmtNm <- "AMT"
+        }
+      }
+      
       # ignore data with BLQ = 1 or user specified value (optional)
       if (!is.null(blqNm)){
         if (blqNm%in%colnames(nmdf) == T){
@@ -1048,41 +1071,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }else{setwd(usrdir);stop("Incorrect filterNm or filterExcl specification in simulation output\n")}
       }
       
-      # Dose identifiers
-      if (!is.null(doseNm)){
-        if (doseNm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the dose column in simulation output\n")}else{doseCol <- which(colnames(nmdf) == doseNm)}
-        if (is.null(dose)){dose <- unique(sort(nmdf[,doseCol]))}
-        ndose <- length(dose)
-        for (i in 1:ndose){
-          if (nrow(nmdf[nmdf[,doseCol]==dose[i],]) == 0){setwd(usrdir);stop("Dose identifier does not match the dose column in simulation output\n")}
-        }
-      }else{dose <- 1; ndose <- 1}
-
-      if (ndose == 1){
-        if (!is.null(doseAmt)){
-          if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", as.character(doseAmt))==F) {setwd(usrdir);stop("Dose amount is non-numeric\n")}
-          if (doseAmt == 0){setwd(usrdir);stop("Dose amount can not be zero\n")}
-          doseAmount <- doseAmt[1]
-        }else{
-          if (is.null(doseAmtNm)){
-            if ("AMT"%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-            doseAmtNm <- "AMT"
-          }
-          doseAmount <- nmdf[nmdf[,doseAmtNm]>0, doseAmtNm][1]
-        }
-      }else{
-        doseAmt <- NULL
-        if (is.null(doseAmtNm)){
-          if ("AMT"%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-          doseAmtNm <- "AMT"
-        }
-      }
-      
       # Calculate AUC parameters for the simulation output
       dset = "sim"
       # Function to extract time and conc data for NCA metrics calculation for simulated data
       simNcaId <- function(ifdf,ID){
-        if (is.null(doseAmt)){doseAmount <- ifdf[ifdf[,idNmSim]==ID & ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
+        if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,idNmSim]==ID & ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
         if(adminType == "iv-infusion" & is.null(TI)){
           amt  <- ifdf[ifdf[,idCol]==ID & ifdf$AMT > 0,"AMT"][1]
           rate <- ifdf[ifdf[,idCol]==ID & ifdf$RATE > 0,"RATE"][1]
@@ -1880,21 +1873,28 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   setwd(usrdir)
   misc <- system.file("misc", package = "ncappc")
   if (printOut=="TRUE"){
-    knit2html(paste(misc,"ncappcReport.Rmd",sep="/"), style=paste(misc,"custom.css",sep="/"))
+    if (is.null(simFile)){
+      mdFile <- paste(misc,"ncappcReport-NCA.Rmd",sep="/")
+      nwFile <- paste(misc,"ncappcReport-NCA.Rnw",sep="/")
+    }else{
+      mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
+      nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
+    }
+    
+    knit2html(mdFile, style=paste(misc,"custom.css",sep="/"))
+    knit(nwFile)
     if (.Platform$OS.type == "unix"){
       texcomp <- system('which texi2pdf')
       if (texcomp == 0){
-        knit2pdf(paste(misc,"ncappcReport.Rnw",sep="/"))
+        knit2pdf(nwFile)
       }else{
-        knit(paste(misc,"ncappcReport.Rnw",sep="/"))
         print("Please install \"texi2pdf\" to compile the produced tex file into a PDF report")
       }
     }else if (.Platform$OS.type == "windows"){
       texcomp <- system('kpsewhich pdftex --version')
       if (texcomp == 0){
-        knit2pdf(paste(misc,"ncappcReport.Rnw",sep="/"))
+        knit2pdf(nwFile)
       }else{
-        knit(paste(misc,"ncappcReport.Rnw",sep="/"))
         print("Please install \"pdftex\" to compile the produced tex file into a PDF report")
       }
     }
