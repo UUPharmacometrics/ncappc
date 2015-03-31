@@ -18,13 +18,13 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\textbf{Report}}
-\fancyhead[R]{\textit{nca\_ppc}}
+\fancyhead[R]{\textit{ncappc}}
 \fancyfoot[C]{\thepage}
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{4pt}}m{#1}}
-\title{\textbf{Report of \textit{nca\_ppc} package}}
+\title{\textbf{Report of \textit{ncappc} package}}
 \author{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
 \affil{Department of Pharmaceutical Biosciences\\Uppsala University, Sweden}
 \date{\vspace{-5ex}}

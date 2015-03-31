@@ -1,5 +1,5 @@
 -
-# Report of *nca_ppc* package
+# Report of *ncappc* package
 -
 ### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
 ### *Department of Pharmaceutical Biosciences*
@@ -9,19 +9,12 @@
 ==============================================================
 
 ```{r main, echo=FALSE}
-spread   <- fnOut$spread
-nsim     <- fnOut$NSIM
 txt      <- fnOut$TXT
-prnTab   <- fnOut$prnTab
 pddf     <- fnOut$pddf
+prnTab   <- fnOut$prnTab
+spread   <- fnOut$spread
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
-pop      <- fnOut$pop
-dev      <- fnOut$dev
-outlier  <- fnOut$outlier
-forest   <- fnOut$forest
-npde     <- fnOut$npde
-histnpde <- fnOut$histnpde
 sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the PK measures obtained from the simulated data")
 ```
 
@@ -73,7 +66,11 @@ for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]])
 -
 
 ```{r histobsplot, echo=FALSE, fig.align='center',fig.height=7, fig.width=6, dpi=100}
-for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+if (length(histobs)>0){
+  for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+}else{
+  print("No available histogram of the NCA metrics from the observed data!")
+}
 ```
 
 **Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval of the PK measures obtained from the study population.

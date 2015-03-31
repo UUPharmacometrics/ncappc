@@ -153,6 +153,21 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     concCol <- which(colnames(indf) == concNmObs)
   }
   
+  # exclude data based on specific values on filter column (optional)
+  if (!is.null(filterNm)){
+    if (filterNm%in%colnames(indf)==T & !is.null(filterExcl)){
+      # filterExcl  == values to be excluded
+      filterCol <- which(colnames(indf) == filterNm)
+      for (i in 1:length(filterExcl)){
+        if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i])){
+          indf <- indf[indf[,filterCol] != filterExcl[i],]
+        }else{
+          indf <- eval(parse(text=paste("subset(indf, !",filterNm,"%in% indf[indf[,",filterCol,"]",filterExcl[i],",filterCol])",sep="")))
+        }
+      }
+    }else{setwd(usrdir);stop("Incorrect filterNm or filterExcl specification\n")}
+  }
+  
   if (!is.null(grNm)){
     if (grNm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the group column\n")}else{grCol <- which(colnames(indf) == grNm)}
     if (is.null(grp)){grp <- unique(sort(indf[,grCol]))}
@@ -254,21 +269,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
   if (mdv == "TRUE"){
     if ("MDV"%in%colnames(indf) == T){indf <- indf[indf$MDV == 0,]}
-  }
-  
-  # exclude data based on specific values on filter column (optional)
-  if (!is.null(filterNm)){
-    if (filterNm%in%colnames(indf)==T & !is.null(filterExcl)){
-      # filterExcl  == values to be excluded
-      filterCol <- which(colnames(indf) == filterNm)
-      for (i in 1:length(filterExcl)){
-        if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i])){
-          indf <- indf[indf[,filterCol] != filterExcl[i],]
-        }else{
-          indf <- eval(parse(text=paste("subset(indf, !",filterNm,"%in% indf[indf[,",filterCol,"]",filterExcl[i],",filterCol])",sep="")))
-        }
-      }
-    }else{setwd(usrdir);stop("Incorrect filterNm or filterExcl specification\n")}
   }
   
   # Appropriate date format
@@ -496,20 +496,22 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         counter <- counter+1
       }
       plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-      figlbl      <- paste(oidNm,"-",dose[d],sep="")
-      histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
-      gdr         <- histobsgrob$gdr
-      mylegend    <- histobsgrob$legend
-      lheight     <- histobsgrob$lheight
-      if (printOut=="TRUE"){
-        fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-        eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+      if (nrow(plotData)>1){
+        figlbl      <- paste(oidNm,"-",dose[d],sep="")
+        histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
+        gdr         <- histobsgrob$gdr
+        mylegend    <- histobsgrob$legend
+        lheight     <- histobsgrob$lheight
+        if (printOut=="TRUE"){
+          fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
+          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+          dev.off()
+        }
         suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-        dev.off()
+        ggr <- grid.grab()
+        histobsplot[[length(histobsplot)+1]] <- ggr
       }
-      suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-      ggr <- grid.grab()
-      histobsplot[[length(histobsplot)+1]] <- ggr
     }
     
     names(pddf) <- cnm
@@ -552,31 +554,33 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
         # Description
         pddf <- rbind(pddf, data.frame(a=grp[g], b=DoseNumber, c=doseAmount, d=length(idd)))
+        igr  <- grp[g]
         for (i in 1:length(idd)){
           tc   <- ncaId(ifdf,idd[i])
           time <- tc$time
           conc <- tc$conc
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          igr    <- grp[g]
           outData[counter,] <- cbind(igr,idd[i],DoseNumber,doseAmount,t(NCAprm))
           counter <- counter+1
         }
-        plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-        figlbl      <- paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")
-        histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
-        gdr         <- histobsgrob$gdr
-        mylegend    <- histobsgrob$legend
-        lheight     <- histobsgrob$lheight
-        if (printOut=="TRUE"){
-          fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+        plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+        if (nrow(plotData)>1){
+          figlbl      <- paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")
+          histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
+          gdr         <- histobsgrob$gdr
+          mylegend    <- histobsgrob$legend
+          lheight     <- histobsgrob$lheight
+          if (printOut=="TRUE"){
+            fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
+            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+            suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+            dev.off()
+          }
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-          dev.off()
+          ggr <- grid.grab()
+          histobsplot[[length(histobsplot)+1]] <- ggr
         }
-        suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-        ggr <- grid.grab()
-        histobsplot[[length(histobsplot)+1]] <- ggr
       }
     }
     names(pddf) <- cnm
@@ -619,32 +623,34 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         DoseNumber <- dose[d]
         if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
         # Description
-        pddf <- rbind(pddf, data.frame(a=flag[f], b=DoseNumber, c=doseAmount, d=length(idd)))
+        pddf   <- rbind(pddf, data.frame(a=flag[f], b=DoseNumber, c=doseAmount, d=length(idd)))
+        iflag  <- flag[f]
         for (i in 1:length(idd)){
           tc   <- ncaId(ifdf,idd[i])
           time <- tc$time
           conc <- tc$conc
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          iflag  <- flag[f]
           outData[counter,] <- cbind(iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
           counter <- counter+1
         }
-        plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-        figlbl      <- paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
-        histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
-        gdr         <- histobsgrob$gdr
-        mylegend    <- histobsgrob$legend
-        lheight     <- histobsgrob$lheight
-        if (printOut=="TRUE"){
-          fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-          eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+        plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+        if (nrow(plotData)>1){
+          figlbl      <- paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
+          histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
+          gdr         <- histobsgrob$gdr
+          mylegend    <- histobsgrob$legend
+          lheight     <- histobsgrob$lheight
+          if (printOut=="TRUE"){
+            fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
+            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+            suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+            dev.off()
+          }
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-          dev.off()
+          ggr <- grid.grab()
+          histobsplot[[length(histobsplot)+1]] <- ggr
         }
-        suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-        ggr <- grid.grab()
-        histobsplot[[length(histobsplot)+1]] <- ggr
       }
     }
     names(pddf) <- cnm
@@ -688,33 +694,35 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           DoseNumber <- dose[d]
           if (is.null(doseAmt) & ndose!=1){doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]}
           # Description
-          pddf <- rbind(pddf, data.frame(a=grp[g], b=flag[f], c=DoseNumber, d=doseAmount, e=length(idd)))
+          pddf  <- rbind(pddf, data.frame(a=grp[g], b=flag[f], c=DoseNumber, d=doseAmount, e=length(idd)))
+          igr   <- grp[g]
+          iflag <- flag[f]
           for (i in 1:length(idd)){
             tc   <- ncaId(ifdf,idd[i])
             time <- tc$time
             conc <- tc$conc
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            igr    <- grp[g]
-            iflag  <- flag[f]
             outData[counter,] <- cbind(igr,iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
             counter <- counter+1
           }
-          plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-          figlbl      <- paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
-          histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
-          gdr         <- histobsgrob$gdr
-          mylegend    <- histobsgrob$legend
-          lheight     <- histobsgrob$lheight
-          if (printOut=="TRUE"){
-            fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
-            eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+          plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+          if (nrow(plotData)>1){
+            figlbl      <- paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
+            histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
+            gdr         <- histobsgrob$gdr
+            mylegend    <- histobsgrob$legend
+            lheight     <- histobsgrob$lheight
+            if (printOut=="TRUE"){
+              fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
+              eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
+              suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+              dev.off()
+            }
             suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-            dev.off()
+            ggr <- grid.grab()
+            histobsplot[[length(histobsplot)+1]] <- ggr
           }
-          suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-          ggr <- grid.grab()
-          histobsplot[[length(histobsplot)+1]] <- ggr
         }
       }
     }
@@ -933,7 +941,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=2)))
     }
     prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
-    fnOut <- list(TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=0, spread=spread, conc=concplot, histobs=histobsplot)
+    fnOut <- list(TXT=txt, pddf=pddf, prnTab=prnTab, spread=spread, conc=concplot, histobs=histobsplot)
     setwd(usrdir)
   }else{
     od <- paste(usrdir,"/SIMDATA",sep="")

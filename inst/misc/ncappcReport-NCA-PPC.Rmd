@@ -1,5 +1,5 @@
 -
-# Report of *nca_ppc* package
+# Report of *ncappc* package
 -
 ### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
 ### *Department of Pharmaceutical Biosciences*
@@ -9,11 +9,11 @@
 ==============================================================
 
 ```{r main, echo=FALSE}
-spread   <- fnOut$spread
-nsim     <- fnOut$NSIM
 txt      <- fnOut$TXT
-prnTab   <- fnOut$prnTab
 pddf     <- fnOut$pddf
+prnTab   <- fnOut$prnTab
+nsim     <- fnOut$NSIM
+spread   <- fnOut$spread
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
 pop      <- fnOut$pop
