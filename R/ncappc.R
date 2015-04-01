@@ -1849,6 +1849,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     # Create HTML output
     simFileNm <- ifelse(is.data.frame(simFile), deparse(substitute(simFile)), simFile)
     txt <- paste(txt,paste("Name of the NONMEM simulation output file: \"",simFileNm,"\"",sep=""),sep="\n")
+    txt <- paste(txt,paste("Number of simulations performed: ",nsim,sep=""),sep="\n")
     pddf <- cbind(pddf,OTL); names(pddf)[c((ncol(pddf)-1),ncol(pddf))] <- c("No. of outlier","Selected outliers ID and NCA metrics")
     for (i in 1:length(concplot)){print(concplot[i])}
     for (i in 1:length(histobsplot)){print(histobsplot[i])}
