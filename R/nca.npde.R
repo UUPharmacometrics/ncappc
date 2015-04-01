@@ -32,6 +32,8 @@ nca.npde <- function(pdedata,pdecol){
   }
   npde                <- pdedata
   npde[,pdecol]       <- lapply(npde[,pdecol], FUN=function(x) qnorm(as.numeric(x)))
+  npde[mapply(is.infinite, npde)] <- 0
+  
   names(npde)[which(names(npde)%in%pdecol)] <- paste("npde",names(npde)[which(names(npde)%in%pdecol)],sep="")
   return(npde)
 }
