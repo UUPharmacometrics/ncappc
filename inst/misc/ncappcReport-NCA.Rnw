@@ -48,7 +48,7 @@ prnTab   <- fnOut$prnTab
 spread   <- fnOut$spread
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the PK measures obtained from the simulated data")
+sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 @
 
 <<txt, echo=FALSE>>=
@@ -74,7 +74,7 @@ print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
 \begin{sloppypar}
 
 \subsection{Table 1 (ncaOutput.tsv)}
-Estimated PK measures using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data. Similar annotation was used for the other PK measures.
+Estimated NCA metrics using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data. Similar annotation was used for the other NCA metrics.
 
 \paragraph{}
 \begin{center}
@@ -111,11 +111,11 @@ if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
-  print("No available histogram of the NCA metrics from the observed data!")
+  cat("No histogram is available as the number of individuals is less than 5 in\nall population strata!")
 }
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the PK measures obtained from the study population.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the NCA metrics obtained from the study population.
 
 \end{sloppypar}
 

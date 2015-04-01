@@ -496,7 +496,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         counter <- counter+1
       }
       plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-      if (nrow(plotData)>1){
+      if (nrow(plotData)>5){
         figlbl      <- paste(oidNm,"-",dose[d],sep="")
         histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
         gdr         <- histobsgrob$gdr
@@ -565,7 +565,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- counter+1
         }
         plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-        if (nrow(plotData)>1){
+        if (nrow(plotData)>5){
           figlbl      <- paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")
           histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
           gdr         <- histobsgrob$gdr
@@ -635,7 +635,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- counter+1
         }
         plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-        if (nrow(plotData)>1){
+        if (nrow(plotData)>5){
           figlbl      <- paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
           histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
           gdr         <- histobsgrob$gdr
@@ -707,7 +707,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             counter <- counter+1
           }
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-          if (nrow(plotData)>1){
+          if (nrow(plotData)>5){
             figlbl      <- paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
             histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
             gdr         <- histobsgrob$gdr
@@ -761,19 +761,19 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     tmpdf <- outData
     if (case == 1){
       names(outData)[2]         <- oidNm
-      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) round(as.numeric(x),digits=2)))
+      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
     }
     if (case == 2){
       names(outData)[c(1,3)]    <- c(grNm,oidNm)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=2)))
+      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
     }
     if (case == 3){
       names(outData)[c(1,3)]    <- c(flNm,oidNm)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=2)))
+      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
     }
     if (case == 4){
       names(outData)[c(1,2,4)]  <- c(grNm,flNm,oidNm)
-      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) round(as.numeric(x),digits=2)))
+      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
     }
     write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
     outData <- tmpdf; rm(tmpdf)
@@ -803,7 +803,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- counter + 1
         }
         if (nrow(pm) == 0) next
-        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=3)}else{x}}))
+        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
         tmpStat <- t(cbind(nm, pm))
         rownames(tmpStat)[1] <- "Name"
         tmpStat <- cbind(DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -836,7 +836,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             counter <- counter + 1
           }
           if (nrow(pm) == 0) next
-          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
           tmpStat <- cbind(GRP=grp[g],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -870,7 +870,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             counter <- counter + 1
           }
           if (nrow(pm) == 0) next
-          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
           tmpStat <- cbind(GRP=flag[f],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -905,7 +905,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               counter <- counter + 1
             }
             if (nrow(pm) == 0) next
-            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
             tmpStat <- t(cbind(nm, pm))
             rownames(tmpStat)[1] <- "Name"
             tmpStat <- cbind(GRP=grp[g],FLG=flag[f],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -926,21 +926,21 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     if (case == 1){
       prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)), 100)
       names(prnTab)[2] <- oidNm
-      prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) round(as.numeric(x),digits=2)))
+      prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
     }else if (case == 2){
       prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
       names(prnTab)[c(1,3)] <- c(grNm,oidNm)
-      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=2)))
+      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
     }else if (case == 3){
       prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
       names(prnTab)[c(1,3)] <- c(flNm,oidNm)
-      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=2)))
+      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
     }else if (case == 4){
       prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
       names(prnTab)[c(1,2,4)] <- c(grNm,flNm,oidNm)
-      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=2)))
+      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
     }
-    prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+    prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
     fnOut <- list(TXT=txt, pddf=pddf, prnTab=prnTab, spread=spread, conc=concplot, histobs=histobsplot)
     setwd(usrdir)
   }else{
@@ -1384,7 +1384,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
       tmpdf <- outData
       names(outData)[2] <- oidNm
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=2)))
+      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
@@ -1475,7 +1475,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
       tmpdf <- outData
       names(outData)[c(1,3)] <- c(grNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=2)))
+      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       for (g in 1:ngrp){  
@@ -1566,7 +1566,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
       tmpdf <- outData
       names(outData)[c(1,3)] <- c(flNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=2)))
+      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       for (f in 1:nflag){  
@@ -1659,7 +1659,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
       tmpdf <- outData
       names(outData)[c(1,3,4)] <- c(grNm,flNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=2)))
+      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       for (g in 1:ngrp){
@@ -1729,7 +1729,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             counter <- counter + 1
           }
           if (nrow(pm) == 0) next
-          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=3)}else{x}}))
+          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
           tmpStat <- cbind(DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -1762,7 +1762,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               counter <- counter + 1
             }
             if (nrow(pm) == 0) next
-            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
             tmpStat <- t(cbind(nm, pm))
             rownames(tmpStat)[1] <- "Name"
             tmpStat <- cbind(GRP=grp[g],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -1796,7 +1796,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               counter <- counter + 1
             }
             if (nrow(pm) == 0) next
-            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
             tmpStat <- t(cbind(nm, pm))
             rownames(tmpStat)[1] <- "Name"
             tmpStat <- cbind(GRP=flag[f],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -1831,7 +1831,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
                 counter <- counter + 1
               }
               if (nrow(pm) == 0) next
-              pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+              pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
               tmpStat <- t(cbind(nm, pm))
               rownames(tmpStat)[1] <- "Name"
               tmpStat <- cbind(GRP=grp[g],FLG=flag[f],DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
@@ -1860,22 +1860,22 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     for (i in 1:length(histnpdeplot)){print(histnpdeplot[i])}
     if (case == 1){
       prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=3)))
+      prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
       names(prnTab)[2] <- oidNm
     }else if (case == 2){
       prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=3)))
+      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
       names(prnTab)[c(1,3)] <- c(grNm,oidNm)
     }else if (case == 3){
       prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=3)))
+      prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
       names(prnTab)[c(1,3)] <- c(flNm,oidNm)
     }else if (case == 4){
       prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-      prnTab[,6:ncol(prnTab)] <- data.frame(lapply(prnTab[,6:ncol(prnTab)], function(x) round(as.numeric(x),digits=3)))
+      prnTab[,6:ncol(prnTab)] <- data.frame(lapply(prnTab[,6:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
       names(prnTab)[c(1,2,4)] <- c(grNm,flNm,oidNm)
     }
-    prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=2)}else{x}}))
+    prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
     fnOut <- list(TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot)
   }
   setwd(usrdir)
@@ -1907,7 +1907,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
     }
   }
-  unlink(list.files(pattern = "ncappcReport.[a,t,l,m,o]"))
-  unlink(list.files(pattern = "sum.tex"))
-  unlink(list.files(pattern = "tab.tex"))
+  #unlink(list.files(pattern = "ncappcReport.[a,t,l,m,o]"))
+  #unlink(list.files(pattern = "sum.tex"))
+  #unlink(list.files(pattern = "tab.tex"))
 }

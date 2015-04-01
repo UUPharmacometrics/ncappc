@@ -55,7 +55,7 @@ outlier  <- fnOut$outlier
 forest   <- fnOut$forest
 npde     <- fnOut$npde
 histnpde <- fnOut$histnpde
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the PK measures obtained from the simulated data")
+sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 @
 
 <<txt, echo=FALSE>>=
@@ -81,7 +81,7 @@ print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
 \begin{sloppypar}
 
 \subsection{Table 1 (ncaOutput.tsv)}
-Estimated PK measures using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data, \textbf{simAUClast} = mean AUC from the time of dose to the time of the last sampled plasma concentration estimated from \Sexpr{round(nsim)} sets of simulated data, \textbf{dAUClast} = deviation of simAUClast from AUClast scaled by the "spread" (\Sexpr{print(sprtxt)}) of the simulated AUClast, \textbf{npdeAUClast} = Normalized prediction distribution error (NPDE) of AUClast. Similar annotation was used for the other PK measures.
+Estimated NCA metrics using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data, \textbf{simAUClast} = mean AUC from the time of dose to the time of the last sampled plasma concentration estimated from \Sexpr{round(nsim)} sets of simulated data, \textbf{dAUClast} = deviation of simAUClast from AUClast scaled by the "spread" (\Sexpr{print(sprtxt)}) of the simulated AUClast, \textbf{npdeAUClast} = Normalized prediction distribution error (NPDE) of AUClast. Similar annotation was used for the other NCA metrics.
 
 \paragraph{}
 \begin{center}
@@ -105,7 +105,7 @@ A set of statistical parameters calculated for the population groups for Tmax, C
 Simulated concentration-time profiles for each individual obtained from each simulation. "NSUB" column denotes the simulation number.
 
 \subsection{Table 5 (ncaSimEst.tsv)}
-Estimated PK measures for each individual using the simulated concentration-time profile obtained from each simulation. "NSUB" column denotes the simulation number.
+Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. "NSUB" column denotes the simulation number.
 
 \paragraph{}
 \section{Description of the graphical output}
@@ -124,10 +124,14 @@ Concentration vs time profile for each individual stratified by dose or populati
 \paragraph{}
 <<histobsplot, echo=FALSE, fig.height=12, fig.width=10, fig.align='center', dpi=500>>=
 suppressPackageStartupMessages(require(gridExtra))
-for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+if (length(histobs)>0){
+  for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
+}else{
+  cat("No histogram is available as the number of individuals is less than 5 in\nall population strata!")
+}
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data.The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the PK measures obtained from the study population.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data.The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the NCA metrics obtained from the study population.
 
 \subsubsection{Figure 3. [Population level] Histogram of the simulated population means of the NCA metrics}
 
@@ -137,7 +141,7 @@ suppressPackageStartupMessages(require(gridExtra))
 for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
 @
 
-Histogram of the population mean of the PK measures obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the PK measure obtained from the observed data and the mean of the population means of the same PK measure obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as \Sexpr{print(sprtxt)}.
+Histogram of the population mean of the NCA metrics obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as \Sexpr{print(sprtxt)}.
 
 \subsubsection{Figure 4. [Individual level] Deviation of the simulated NCA metrics from the observed value}
 
@@ -146,7 +150,7 @@ Histogram of the population mean of the PK measures obtained from the simulated 
 for (i in 1:length(dev)){suppressMessages(suppressWarnings(print(dev[[i]]))); Sys.sleep(0.5)}
 @
 
-Deviation of the mean of the PK measures for each individual estimated from the simulated data obtained from \Sexpr{round(nsim)} simulations (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (\Sexpr{print(sprtxt)}) proximal to the observed value (\textbf{Deviation = (Obs - meanSim)/ spread}). The negative value of the deviation signifies over-prediction of the corresponding PK measure, while a positive value of the deviation signifies under-prediction of the same.
+Deviation of the mean of the NCA metrics for each individual estimated from the simulated data obtained from \Sexpr{round(nsim)} simulations (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (\Sexpr{print(sprtxt)}) proximal to the observed value (\textbf{Deviation = (Obs - meanSim)/ spread}). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same.
 
 \subsubsection{Figure 5. [Individual level] Distribution of the simulated NCA metrics for the outliers}
 
@@ -156,7 +160,7 @@ suppressPackageStartupMessages(require(gridExtra))
 for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
 @
 
-Distribution of the PK measures obtained from the simulated data for the outlier individuals. The individuals are labelled as outliers because the absolute value of the scaled deviation for at least one of the PK measures used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed PK measure value and the mean of the simulated PK measure values for that individual, respectively. The dashed blue vertical lines represent the "spread" (\Sexpr{print(sprtxt)}) of the simulated distribution.
+Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labelled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (\Sexpr{print(sprtxt)}) of the simulated distribution.
 
 \subsubsection{Figure 6. [Population level] Forest plot for the NPDE type analysis}
 
@@ -165,7 +169,7 @@ Distribution of the PK measures obtained from the simulated data for the outlier
 for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
 @
 
-Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the PK measures for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95\% confidence intervals.
+Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95\% confidence intervals.
 
 \paragraph{}
 <<npdeplot, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', dpi=500>>=
@@ -173,7 +177,7 @@ for (i in 1:length(npde)){suppressMessages(suppressWarnings(print(npde[[i]]))); 
 @
 
 \subsubsection{Figure 7. [Individual level] NPDE values of the NCA metrics for each individual}
-NPDE values of the PK measures for each individual within a given population group calculated from the corresponding observed and simulated values of the PK measures. The negative value of the NPDE signifies over-prediction of the corresponding PK measure, while a positive value of the NPDE signifies under-prediction of the same.
+NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same.
 
 \paragraph{}
 <<histnpdeplot, echo=FALSE, fig.height=8, fig.width=8, fig.align='center', dpi=500>>=
@@ -181,7 +185,7 @@ for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[
 @
 
 \subsubsection{Figure 8. [Population level] Histogram of the NPDE values of the NCA metrics within a given population group}
-Histogram of the NPDE values of the PK measures for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
 
 \end{sloppypar}
 
