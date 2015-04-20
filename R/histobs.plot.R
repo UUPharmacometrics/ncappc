@@ -18,14 +18,15 @@
 #'   (\strong{c("AUClast","AUCINF_obs","Cmax","Tmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
-#' @param spread measure of the spread of simulated data (sd or pi (95\%
-#'   nonparametric prediction interval)) (\strong{"pi"})
+#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
+#'   prediction interval) or npi (95\% nonparametric prediction interval))
+#'   (\strong{"npi"})
 #'
 #' @return returns a graphical object created by arrangeGrob function
 #' @export
 #'
 
-histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit="[M].[L]^-3",tunit="[T]",spread="pi"){
+histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit="[M].[L]^-3",tunit="[T]",spread="npi"){
   
   "..density.." <- "TYPE" <- "Obs" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "coord_cartesian" <- "facet_grid" <- "labs" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- NULL
   rm(list=c("..density..","TYPE","Obs","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","coord_cartesian","facet_grid","labs","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar"))
@@ -69,16 +70,16 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
     }
   }
     
-  devtag <- ifelse (spread=="sd","2*SD","95% nonparametric prediction interval")
+  devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
   
   meanObs  <- sapply(plotData, FUN=function(x) mean(as.numeric(x), na.rm=T))
   sdObs    <- sapply(plotData, FUN=function(x) sd(as.numeric(x), na.rm=T))
   xlow     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.02, na.rm=T)))
   xhgh     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.98, na.rm=T)))
-  if (spread=="sd"){
-    sprlow <- meanObs-2*sdObs
-    sprhgh <- meanObs+2*sdObs
-  }else if (spread=="pi"){
+  if (spread=="ppi"){
+    sprlow <- meanObs-1.96*sdObs
+    sprhgh <- meanObs+1.96*sdObs
+  }else if (spread=="npi"){
     sprlow <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.025, na.rm=T)))
     sprhgh <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.975, na.rm=T)))
   }

@@ -8,17 +8,17 @@
 #' errors (PDE) and scaled deviation of NCA metrics estimated from observed and
 #' simulated data. Identifies outlier to population PK model.
 #' 
-#' \pkg{nca.pde.deviation.outlier} calculates individual prediction distribution 
+#' \pkg{nca.pde.deviation.outlier} calculates individual prediction distribution
 #' errors (PDE) and scaled deviation of NCA metrics estimated from observed and 
 #' simulated data. The deviation of each estimated NCA metrics is scaled by the 
-#' "spread" of the simulated values. The "spread" is measured either by the 
-#' standard deviation or 95\% non-parametric prediction interval. Any individual
-#' yielding an absolute value of the scaled deviation for any of the selected
-#' NCA metrics greater than 1, is assigned as an outlier to the corresponding
-#' population PK model. The allowed NCA metrics for this diagnostic tests are
-#' "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax",
-#' "Tmax" and "HL_Lambda_z". By default, this function uses AUClast and Cmax
-#' metrics for the comparison.
+#' "spread" of the simulated values. The "spread" is measured either by the 95\%
+#' parametric prediction interval or 95\% non-parametric prediction interval.
+#' Any individual yielding an absolute value of the scaled deviation for any of
+#' the selected NCA metrics greater than 1, is assigned as an outlier to the
+#' corresponding population PK model. The allowed NCA metrics for this
+#' diagnostic tests are "AUClast", "AUClower_upper", "AUCINF_obs",
+#' "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
+#' function uses AUClast and Cmax metrics for the comparison.
 #' 
 #' @param obsdata A data frame containing the NCA metrics values estimated from
 #'   the observed data
@@ -26,8 +26,9 @@
 #'   the simulated data
 #' @param idNm Column name for ID (\strong{"ID"})
 #' @param id ID of the individual whose data is being evaluated
-#' @param spread measure of the spread of simulated data (sd or pi (95\%
-#'   nonparametric prediction interval)) (\strong{"pi"})
+#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
+#'   prediction interval) or npi (95\% nonparametric prediction interval))
+#'   (\strong{"npi"})
 #' @param figlbl Figure label based on dose identifier and/or population
 #'   stratifier, in addition to ID (\strong{NULL})
 #' @param calcparam A character array of the NCA metrics used for calculations 
@@ -49,7 +50,7 @@
 #' @export
 #'
 
-nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="pi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]"){
+nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]"){
   
   "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- NULL
   rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar"))
@@ -103,11 +104,11 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         sdsimval  <- sd(simval)
         sdsimmean <- sdsimval*(simval-msimval)
         sdobsmean <- sdsimval*(obsval-msimval)
-        if (spread == "sd"){
+        if (spread == "ppi"){
           distprm <- ifelse(sdsimval==0, (obsval-msimval), (obsval-msimval)/(2*sdsimval))
-          lldist  <- msimval-2*sdsimval
-          uldist  <- msimval+2*sdsimval
-        }else if (spread == "pi"){
+          lldist  <- msimval-1.96*sdsimval
+          uldist  <- msimval+1.96*sdsimval
+        }else if (spread == "npi"){
           distprm <- ifelse((obsval-msimval)>0, (obsval-msimval)/(unname(quantile(simval, 0.975))-msimval), (obsval-msimval)/(msimval-unname(quantile(simval, 0.025))))
           lldist  <- unname(quantile(simval, 0.025))
           uldist  <- unname(quantile(simval, 0.975))
@@ -168,7 +169,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
                             legend.background = element_rect(),
                             legend.key.size = unit(0.8, "cm"),
                             strip.text.x = element_text(size=10, face="bold")))
-    devtag <- ifelse (spread=="sd","2*SD","95% nonparametric prediction interval")
+    devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
     gplt   <- list()
     figttl <- ifelse(is.null(figlbl),
                      paste("Outlier_ID-",id,"\n(spread = ",devtag,")\n\n",sep=""),

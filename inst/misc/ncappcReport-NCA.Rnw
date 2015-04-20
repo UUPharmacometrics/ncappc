@@ -101,7 +101,7 @@ A set of statistical parameters calculated for the population groups for Tmax, C
 for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 @
 
-Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
 
 \subsubsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
 

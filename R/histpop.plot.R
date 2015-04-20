@@ -25,14 +25,15 @@
 #'   (\strong{c("AUClast","Cmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
-#' @param spread measure of the spread of simulated data (sd or pi (95\%
-#'   nonparametric prediction interval)) (\strong{"pi"})
+#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
+#'   prediction interval) or npi (95\% nonparametric prediction interval))
+#'   (\strong{"npi"})
 #'
 #' @return returns a graphical object created by arrangeGrob function
 #' @export
 #'
 
-histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",spread="pi"){
+histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",spread="npi"){
   
   "..density.." <- "TYPE" <- "obs" <- "sim" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "labs" <- "coord_cartesian" <- "facet_wrap" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- NULL
   rm(list=c("..density..","TYPE","obs","sim","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","labs","coord_cartesian","facet_wrap","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar"))
@@ -72,10 +73,10 @@ histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("
   sdMean   <- sapply(simdata, FUN=function(x) sd(as.numeric(x), na.rm=T))
   xlow     <- sapply(simdata, FUN=function(x) unname(quantile(as.numeric(x),0.02,na.rm=T)))
   xhgh     <- sapply(simdata, FUN=function(x) unname(quantile(as.numeric(x),0.98,na.rm=T)))
-  if (spread=="sd"){
-    sprlow <- meanMean-2*sdMean
-    sprhgh <- meanMean+2*sdMean
-  }else if (spread=="pi"){
+  if (spread=="ppi"){
+    sprlow <- meanMean-1.96*sdMean
+    sprhgh <- meanMean+1.96*sdMean
+  }else if (spread=="npi"){
     sprlow <- sapply(simdata, FUN=function(x) unname(quantile(as.numeric(x),0.025,na.rm=T)))
     sprhgh <- sapply(simdata, FUN=function(x) unname(quantile(as.numeric(x),0.975,na.rm=T)))
   }
@@ -105,7 +106,7 @@ histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("
     longData[longData$TYPE==param[p],"xhgh"]   <- max(xhgh[param[p]],meanMean[param[p]]+2.5*sdMean[param[p]],obsVal[param[p]])
   }
   
-  devtag <- ifelse (spread=="sd","2*SD","95% nonparametric prediction interval")
+  devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
   gplt <- list()
   for (p in 1:npr){
     df <- subset(longData, TYPE==param[p])

@@ -23,15 +23,16 @@
 #'   data (\strong{NULL})
 #' @param figlbl Figure label based on dose identifier and/or population
 #'   stratifier (\strong{NULL})
-#' @param spread measure of the spread of simulated data (sd or pi (95\%
-#'   nonparametric prediction interval)) (\strong{"pi"})
+#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
+#'   prediction interval) or npi (95\% nonparametric prediction interval))
+#'   (\strong{"npi"})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
 #' @return returns the data frame with the NPDE values based on the input data.
 #' @export
 #'
 
-nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread="pi",cunit="[M].[L]^-3",tunit="[T]"){
+nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread="npi",cunit="[M].[L]^-3",tunit="[T]"){
   
   "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "ggplot" <- "aes" <- "labs" <- NULL
   rm(list=c("XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","ggplot","aes","labs"))
@@ -93,8 +94,8 @@ nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread
     
     longdata$type <- factor(longdata$type, levels=fctNm$prmNm, labels=fctNm$prmUnit)
     if (is.null(figlbl)) figlbl <- ""
-    ttl <- ifelse (spread=="sd",
-                   paste("Deviation = (obs-meanSim)/(2*SD)\n",figlbl,"\n\n",sep=""),
+    ttl <- ifelse (spread=="ppi",
+                   paste("Deviation = (obs-meanSim)/(1.96*SD)\n",figlbl,"\n\n",sep=""),
                    paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep="")
     )
     ggplt <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(dist)))) +
