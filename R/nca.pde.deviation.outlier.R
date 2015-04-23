@@ -78,12 +78,12 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
     if (length(id)!=1 | (!is.element(id, obsdata[,idNm])) | (!is.element(id, simdata[,idNm]))){stop("Either more than one values are provided to id argument, or provided id value is not present in observed and/or simulated data.")}
   }
   
-  iobslst  <- as.list(apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
-  isimlst  <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
+  iobslst    <- as.list(apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
+  isimlst    <- t(as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf])))))
   
-  npr    <- length(diagparam)
-  metric <- ""                                                # NCA metric associated with the outlier
-  pdata  <- data.frame(oval=numeric(0),sval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
+  npr        <- length(diagparam)
+  metric     <- ""                                                # NCA metric associated with the outlier
+  pdata      <- data.frame(oval=numeric(0),sval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
   pde        <- data.frame(matrix(ncol=length(calcparam),nrow=1))   # store PDE values
   names(pde) <- calcparam
   if (length(iobslst)==0 | length(isimlst)==0){
@@ -99,7 +99,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         obsdata[,paste("sim",pnm,sep="")] <- "NaN"
       }else{
         obsval    <- iobslst[[pnm]]
-        simval    <- isimlst[,pnm]
+        simval    <- unlist(isimlst[,pnm])
         msimval   <- mean(simval)
         sdsimval  <- sd(simval)
         sdsimmean <- sdsimval*(simval-msimval)

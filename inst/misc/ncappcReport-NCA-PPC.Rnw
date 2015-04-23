@@ -123,8 +123,8 @@ Concentration vs time profile for each individual stratified by dose or populati
 
 \paragraph{}
 <<histobsplot, echo=FALSE, fig.height=12, fig.width=10, fig.align='center', dpi=500>>=
-suppressPackageStartupMessages(require(gridExtra))
 if (length(histobs)>0){
+  suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
   cat("No histogram is available as the number of individuals is less than 5 in\nall population strata!")
@@ -156,8 +156,12 @@ Deviation of the mean of the NCA metrics for each individual estimated from the 
 
 \paragraph{}
 <<outlierplot, echo=FALSE, fig.align='center', dpi=500>>=
-suppressPackageStartupMessages(require(gridExtra))
-for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
+if (length(outlier)>0){
+  suppressPackageStartupMessages(require(gridExtra))
+  for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
+}else{
+  cat("No outlier plot is available as the number of outlier is 0!")
+}
 @
 
 Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labelled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (\Sexpr{print(sprtxt)}) of the simulated distribution.
