@@ -76,7 +76,6 @@
 #' @param LambdaExclude User-defined excluded observation time points for estimation of 
 #'   elimination rate-constant (\strong{"NULL"})
 #' @param doseAmtNm Column name to specify dose amount (\strong{"NULL"})
-#' @param doseAmt Dose amounts (\strong{"NULL"})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
@@ -116,7 +115,7 @@
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,doseAmtNm=NULL,doseAmt=NULL,method="linear",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),printOut="TRUE",figFormat="tiff"){
+ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,doseAmtNm=NULL,method="linear",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),printOut="TRUE",figFormat="tiff"){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- NULL
   rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit"))
@@ -203,8 +202,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   if (!is.null(simFile)){backExtrp <- "FALSE"}
   
   # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
-  # For single dose data, dose amount is either taken from doseAmtNm column or from the provided value in doseAmt argument
-  # For multiple dose data, doseAmt is set to NULL and the dose amount will be extracted from the doseAmtNm column after subsetting the data set
+  # Dose amount is extracted from doseAmtNm column
   if (!is.null(doseNm)){
     if (doseNm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the dose column\n")}else{doseCol <- which(colnames(indf) == doseNm)}
     oidNm <- doseNm
@@ -217,24 +215,9 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     oidNm <- "OID"; dose <- 1; ndose <- 1
   }
   
-  if (ndose == 1){
-    if (!is.null(doseAmt)){
-      if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", as.character(doseAmt))==F) {setwd(usrdir);stop("Dose amount is non-numeric\n")}
-      if (doseAmt == 0){setwd(usrdir);stop("Dose amount can not be zero\n")}
-      doseAmount <- as.numeric(doseAmt[1])
-    }else{
-      if (is.null(doseAmtNm)){
-        if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-        doseAmtNm <- "AMT"
-      }
-      doseAmount <- as.numeric(refdf[refdf[,doseAmtNm]>0, doseAmtNm][1])
-    }
-  }else{
-    doseAmt <- NULL
-    if (is.null(doseAmtNm)){
-      if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-      doseAmtNm <- "AMT"
-    }
+  if (is.null(doseAmtNm)){
+    if ("AMT"%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column is required as AMT column is absent\n")}
+    doseAmtNm <- "AMT"
   }
   
   # Dose unit
@@ -489,9 +472,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
       if (nrow(ifdf) == 0){next}
       idd <- unique(ifdf[,idCol])
-      if (is.null(doseAmt) & ndose!=1){
+      if(is.null(doseNm)){
+        doseAmount <- as.numeric(refdf[refdf[,doseNm]==dose[d], doseAmtNm][1])
+      }else{
         doseAmount <- as.numeric(refdf[refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
-        #doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]
       }
       # Description
       pddf <- rbind(pddf, data.frame(a=DoseNumber, b=doseAmount, c=length(idd)))
@@ -562,9 +546,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         if (nrow(ifdf) == 0){next}
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
-        if (is.null(doseAmt) & ndose!=1){
+        if (is.null(doseNm)){
+          doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+        }else{
           doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
-          #doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]
         }
         # Description
         pddf <- rbind(pddf, data.frame(a=grp[g], b=DoseNumber, c=doseAmount, d=length(idd)))
@@ -637,9 +622,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         if (nrow(ifdf) == 0){next}
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
-        if (is.null(doseAmt) & ndose!=1){
+        if (is.null(doseNm)){
+          doseAmount <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+        }else{
           doseAmount <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
-          #doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]
         }
         # Description
         pddf   <- rbind(pddf, data.frame(a=flag[f], b=DoseNumber, c=doseAmount, d=length(idd)))
@@ -713,9 +699,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           if (nrow(ifdf) == 0){next}
           idd <- unique(ifdf[,idCol])
           DoseNumber <- dose[d]
-          if (is.null(doseAmt) & ndose!=1){
+          if (is.null(doseNm)){
+            doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          }else{
             doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
-            #doseAmount <- ifdf[ifdf[,doseAmtNm] > 0,doseAmtNm][1]
           }
           # Description
           pddf  <- rbind(pddf, data.frame(a=grp[g], b=flag[f], c=DoseNumber, d=doseAmount, e=length(idd)))
@@ -1037,8 +1024,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
       
       # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
-      # For single dose data, dose amount is either taken from doseAmtNm column or from the provided value in doseAmt argument
-      # For multiple dose data, doseAmt is set to NULL and the dose amount will be extracted from the doseAmtNm column after subsetting the data set
+      # Dose amount is extracted from doseAmtNm column
       if (!is.null(doseNm)){
         if (doseNm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the dose column\n")}else{doseCol <- which(colnames(nmdf) == doseNm)}
         oidNm <- doseNm
@@ -1051,12 +1037,9 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         dose <- 1; ndose <- 1
       }
       
-      if (ndose != 1){
-        doseAmt <- NULL
-        if (is.null(doseAmtNm)){
-          if ("AMT"%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column is required as doseAmt is absent\n")}
-          doseAmtNm <- "AMT"
-        }
+      if (is.null(doseAmtNm)){
+        if ("AMT"%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column is required as AMT column is absent\n")}
+        doseAmtNm <- "AMT"
       }
       
       # ignore data with BLQ = 1 or user specified value (optional)
@@ -1132,9 +1115,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             if (!is.null(doseNm)){ifdf <- smdf[smdf[,doseNm]==dose[d],]}else{ifdf <- smdf}
             if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
             if (nrow(ifdf) == 0){next}
-            if (is.null(doseAmt) & ndose!=1){
-              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
-            }
+            doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
             idd  <- unique(ifdf[,idCol])
             for (i in 1:length(idd)){
               stc  <- simNcaId(ifdf,idd[i])
@@ -1152,9 +1133,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               if (!is.null(doseNm)){ifdf <- smdf[smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d],]}else{ifdf <- smdf[smdf[,grCol]==grp[g],]}
               if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
               if (nrow(ifdf) == 0){next}
-              if (is.null(doseAmt) & ndose!=1){
-                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grCol]==grp[g] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
-              }
+              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grCol]==grp[g] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
               idd <- unique(ifdf[,idCol])
               for (i in 1:length(idd)){
                 stc  <- simNcaId(ifdf,idd[i])
@@ -1175,9 +1154,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               if (!is.null(doseNm)){ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,doseNm]==dose[d],]}else{ifdf <- smdf[smdf[,flCol]==flag[f],]}
               if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
               if (nrow(ifdf) == 0){next}
-              if (is.null(doseAmt) & ndose!=1){
-                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
-              }
+              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
               idd  <- unique(ifdf[,idCol])
               for (i in 1:length(idd)){
                 stc  <- simNcaId(ifdf,idd[i])
@@ -1199,9 +1176,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
                 if (!is.null(doseNm)){ifdf <- smdf[(smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d]),]}else{ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g],]}
                 if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
                 if (nrow(ifdf) == 0){next}
-                if (is.null(doseAmt) & ndose!=1){
-                  doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grNm]==flag[f] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
-                }
+                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grNm]==flag[f] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
                 idd  <- unique(ifdf[,idCol])
                 for (i in 1:length(idd)){
                   stc  <- simNcaId(ifdf,idd[i])
