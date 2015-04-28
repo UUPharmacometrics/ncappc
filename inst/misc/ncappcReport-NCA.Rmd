@@ -65,7 +65,7 @@ for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]])
 
 -
 
-```{r histobsplot, echo=FALSE, fig.align='center',fig.height=7, fig.width=6, dpi=100}
+```{r histobsplot, echo=FALSE, fig.align='center',fig.height=8, fig.width=6, dpi=100}
 if (length(histobs)>0){
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{

@@ -106,7 +106,7 @@ Concentration vs time profile for each individual stratified by dose or populati
 \subsubsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
 
 \paragraph{}
-<<histobsplot, echo=FALSE, fig.height=12, fig.width=10, fig.align='center', dpi=500>>=
+<<histobsplot, echo=FALSE, fig.height=16, fig.width=10, fig.align='center', dpi=500>>=
 if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
