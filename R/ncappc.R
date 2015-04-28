@@ -481,8 +481,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       pddf <- rbind(pddf, data.frame(a=DoseNumber, b=doseAmount, c=length(idd)))
       for (i in 1:length(idd)){
         tc   <- ncaId(ifdf,idd[i])
-        time <- tc$time
-        conc <- tc$conc
+        time <- as.numeric(tc$time)
+        conc <- as.numeric(tc$conc)
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(oidNm,"-",dose[d],sep="")))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData[counter,] <- cbind(idd[i],DoseNumber,doseAmount,t(NCAprm))
@@ -556,8 +556,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         igr  <- grp[g]
         for (i in 1:length(idd)){
           tc   <- ncaId(ifdf,idd[i])
-          time <- tc$time
-          conc <- tc$conc
+          time <- as.numeric(tc$time)
+          conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData[counter,] <- cbind(igr,idd[i],DoseNumber,doseAmount,t(NCAprm))
@@ -632,8 +632,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         iflag  <- flag[f]
         for (i in 1:length(idd)){
           tc   <- ncaId(ifdf,idd[i])
-          time <- tc$time
-          conc <- tc$conc
+          time <- as.numeric(tc$time)
+          conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData[counter,] <- cbind(iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
@@ -710,8 +710,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           iflag <- flag[f]
           for (i in 1:length(idd)){
             tc   <- ncaId(ifdf,idd[i])
-            time <- tc$time
-            conc <- tc$conc
+            time <- as.numeric(tc$time)
+            conc <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             outData[counter,] <- cbind(igr,iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
@@ -998,7 +998,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       nmdf <- IPSIM(simFile,MDV.rm=F); simID <- unique(nmdf$NSUB); nsim <- length(unique(nmdf$NSUB))
       if (printOut=="TRUE") write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
-      srdf <- nmdf # cope simulated data before processing
+      srdf <- nmdf # copy simulated data before processing
 
       if (idNmSim%in%colnames(nmdf)==F | timeNmSim%in%colnames(nmdf)==F | concNmSim%in%colnames(nmdf)==F){
         setwd(usrdir);stop("Incorrect column names of ID, TIME and/or DV in simulation output\n")
@@ -1112,15 +1112,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         # Calculate AUC parameters
         if (case == 1){
           for (d in 1:ndose){
-            if (!is.null(doseNm)){ifdf <- smdf[smdf[,doseNm]==dose[d],]}else{ifdf <- smdf}
+            if (!is.null(doseNm)){
+              ifdf <- smdf[smdf[,doseNm]==dose[d],]
+              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+            }else{
+              ifdf <- smdf
+              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+            }
             if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
             if (nrow(ifdf) == 0){next}
-            doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
             idd  <- unique(ifdf[,idCol])
             for (i in 1:length(idd)){
               stc  <- simNcaId(ifdf,idd[i])
-              time <- stc$time
-              conc <- stc$conc
+              time <- as.numeric(stc$time)
+              conc <- as.numeric(stc$conc)
               NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
               simData[i,] <- cbind(idd[i],dose[d],doseAmount,t(NCAprm),s)
             }
@@ -1130,15 +1135,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- 1
           for (g in 1:ngrp){
             for (d in 1:ndose){
-              if (!is.null(doseNm)){ifdf <- smdf[smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d],]}else{ifdf <- smdf[smdf[,grCol]==grp[g],]}
+              if (!is.null(doseNm)){
+                ifdf <- smdf[smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d],]
+                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grCol]==grp[g] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+              }else{
+                ifdf <- smdf[smdf[,grCol]==grp[g],]
+                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,grCol]==grp[g] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+              }
               if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
               if (nrow(ifdf) == 0){next}
-              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grCol]==grp[g] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
               idd <- unique(ifdf[,idCol])
               for (i in 1:length(idd)){
                 stc  <- simNcaId(ifdf,idd[i])
-                time <- stc$time
-                conc <- stc$conc
+                time <- as.numeric(stc$time)
+                conc <- as.numeric(stc$conc)
                 NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                 igr    <- grp[g]
                 simData[counter,] <- cbind(igr,idd[i],dose[d],doseAmount,t(NCAprm),s)
@@ -1151,15 +1161,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- 1
           for (f in 1:nflag){
             for (d in 1:ndose){
-              if (!is.null(doseNm)){ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,doseNm]==dose[d],]}else{ifdf <- smdf[smdf[,flCol]==flag[f],]}
+              if (!is.null(doseNm)){
+                ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,doseNm]==dose[d],]
+                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+              }else{
+                ifdf <- smdf[smdf[,flCol]==flag[f],]
+                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+              }
               if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
               if (nrow(ifdf) == 0){next}
-              doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
               idd  <- unique(ifdf[,idCol])
               for (i in 1:length(idd)){
                 stc  <- simNcaId(ifdf,idd[i])
-                time <- stc$time
-                conc <- stc$conc
+                time <- as.numeric(stc$time)
+                conc <- as.numeric(stc$conc)
                 NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                 iflag  <- flag[f]
                 simData[counter,] <- cbind(iflag,idd[i],dose[d],doseAmount,t(NCAprm),s)
@@ -1173,15 +1188,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           for (f in 1:nflag){
             for (g in 1:ngrp){
               for (d in 1:ndose){
-                if (!is.null(doseNm)){ifdf <- smdf[(smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d]),]}else{ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g],]}
+                if (!is.null(doseNm)){
+                  ifdf <- smdf[(smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g] & smdf[,doseNm]==dose[d]),]
+                  doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grNm]==flag[f] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+                }else{
+                  ifdf <- smdf[smdf[,flCol]==flag[f] & smdf[,grCol]==grp[g],]
+                  doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,grNm]==flag[f] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
+                }
                 if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
                 if (nrow(ifdf) == 0){next}
-                doseAmount <- as.numeric(srdf[srdf$NSUB==simID[s] & srdf[,doseNm]==dose[d] & srdf[,grNm]==flag[f] & srdf[,flNm]==flag[f] & srdf[,doseAmtNm] > 0, doseAmtNm][1])
                 idd  <- unique(ifdf[,idCol])
                 for (i in 1:length(idd)){
                   stc  <- simNcaId(ifdf,idd[i])
-                  time <- stc$time
-                  conc <- stc$conc
+                  time <- as.numeric(stc$time)
+                  conc <- as.numeric(stc$conc)
                   NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                   igr    <- grp[g]
                   iflag  <- flag[f]
