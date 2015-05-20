@@ -1406,10 +1406,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
       npdeNm <- paste("npde",alwprm,sep="")
       for (r in 1:nrow(outData)){
-        if (nrow(npde[(npde$ID==outData$ID[r] & NPDE$DoseNumber==outData$DoseNumber[r]),])!=1){
+        if (nrow(npde[(npde$ID==outData$ID[r] & npde$DoseNumber==outData$DoseNumber[r]),])!=1){
           outData[r,npdeNm] <- "NaN"
         }else{
-          outData[r,npdeNm] <- npde[(npde$ID==outData$ID[r] & NPDE$DoseNumber==outData$DoseNumber[r]),npdeNm]
+          outData[r,npdeNm] <- npde[(npde$ID==outData$ID[r] & npde$DoseNumber==outData$DoseNumber[r]),npdeNm]
         }
       }
       tmpdf <- outData
@@ -1562,7 +1562,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             figlbl  <- paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
             pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit)
             pde     <- rbind(pde, cbind(data.frame(ID=id[i],FLAG=flag[f],DoseNumber=dose[d]), pdeout$pde))
-            outData[(outData$ID==id[i] & FLAG==flag[f] & outData$DoseNumber==dose[d]),] <- pdeout$obsdata
+            outData[(outData$ID==id[i] & outData$FLAG==flag[f] & outData$DoseNumber==dose[d]),] <- pdeout$obsdata
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
@@ -1588,10 +1588,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
       npdeNm <- paste("npde",alwprm,sep="")
       for (r in 1:nrow(outData)){
-        if (nrow(npde[(npde$ID==outData$ID[r] & npde$FLAG==outData$FLAG[r] & NPDE$DoseNumber==outData$DoseNumber[r]),])!=1){
+        if (nrow(npde[(npde$ID==outData$ID[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),])!=1){
           outData[r,npdeNm] <- "NaN"
         }else{
-          outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$FLAG==outData$FLAG[r] & NPDE$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
+          outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
         }
       }
       tmpdf <- outData
@@ -1654,7 +1654,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               figlbl  <- paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")
               pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit)
               pde     <- rbind(pde, cbind(data.frame(ID=id[i],GROUP=grp[g],FLAG=flag[f],DoseNumber=dose[d]), pdeout$pde))
-              outData[(outData$ID==id[i] & GROUP==grp[g] & FLAG==flag[f] & outData$DoseNumber==dose[d]),] <- pdeout$obsdata
+              outData[(outData$ID==id[i] & outData$GROUP==grp[g] & outData$FLAG==flag[f] & outData$DoseNumber==dose[d]),] <- pdeout$obsdata
               if (pdeout$metric != ""){
                 nout     <- nout + 1
                 metric   <- paste(metric,pdeout$metric,sep=", ")
@@ -1681,10 +1681,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
       npdeNm <- paste("npde",alwprm,sep="")
       for (r in 1:nrow(outData)){
-        if (nrow(npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$FLAG==outData$FLAG[r] & NPDE$DoseNumber==outData$DoseNumber[r]),])!=1){
+        if (nrow(npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),])!=1){
           outData[r,npdeNm] <- "NaN"
         }else{
-          outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$FLAG==outData$FLAG[r] & NPDE$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
+          outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
         }
       }
       tmpdf <- outData

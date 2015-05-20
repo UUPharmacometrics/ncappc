@@ -5,6 +5,7 @@
 \usepackage[table]{xcolor}
 \usepackage[T1]{fontenc}
 \usepackage[affil-it]{authblk}
+\usepackage{needspace}
 
 %%% Hyperref and cref settings
 \usepackage[bookmarksnumbered]{hyperref} % hyperlinks
@@ -24,14 +25,22 @@
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{4pt}}m{#1}}
-\title{\textbf{Report of \textit{ncappc} package}}
-\author{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
-\affil{Department of Pharmaceutical Biosciences\\Uppsala University, Sweden}
-\date{\vspace{-5ex}}
+\title{\textbf{Report of \textit{ncappc}\textsuperscript{*} package}}
+\author{\vspace{-0cm}}
+\date{\today}
+
 \begin{document}
 \raggedright{}
 \maketitle
 \thispagestyle{empty}
+
+\vfill
+\textit{\textsuperscript{*} \textbf{ncappc} package is created and maintained by:}
+\newline
+\textit{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
+\newline
+\textit{Department of Pharmaceutical Biosciences, Uppsala University, Sweden}
+\clearpage
 
 \newpage{}
 \tableofcontents
@@ -48,7 +57,7 @@ prnTab   <- fnOut$prnTab
 spread   <- fnOut$spread
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
+sprtxt   <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 @
 
 <<txt, echo=FALSE>>=
@@ -115,8 +124,9 @@ if (length(histobs)>0){
 }
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the NCA metrics obtained from the study population.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{print(sprtxt)} of the NCA metrics obtained from the study population.
 
+\paragraph{}
 \end{sloppypar}
 
 \end{document}

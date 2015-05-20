@@ -43,7 +43,7 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 \item{LambdaTimeRange}{User-defined window of time to estimate elimination
 rate-constant (\strong{"NULL"})}
 
-\item{LambdaExclude}{User-defined excluded observations during estimation of
+\item{LambdaExclude}{User-defined excluded observation time points for estimation of
 elimination rate-constant (\strong{"NULL"})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}

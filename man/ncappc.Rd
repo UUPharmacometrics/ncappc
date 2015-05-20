@@ -13,13 +13,12 @@ ncappc(obsFile = NULL, simFile = NULL, grNm = NULL, grp = NULL,
   concNmSim = "DV", AUCTimeRange = NULL, backExtrp = "FALSE",
   LambdaTimeRange = NULL, LambdaExclude = NULL,
   adminType = "extravascular", doseType = "ns", Tau = NULL, TI = NULL,
-  doseAmtNm = NULL, doseAmt = NULL, method = "linear", blqNm = NULL,
-  blqExcl = 1, evid = "FALSE", evidIncl = 0, mdv = "FALSE",
-  filterNm = NULL, filterExcl = NULL, negConcExcl = "FALSE",
-  param = c("AUClast", "Cmax"), timeFormat = "number", dateColNm = NULL,
-  dateFormat = NULL, spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax",
-  "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z"), printOut = "TRUE",
-  figFormat = "tiff")
+  doseAmtNm = NULL, method = "linear", blqNm = NULL, blqExcl = 1,
+  evid = "FALSE", evidIncl = 0, mdv = "FALSE", filterNm = NULL,
+  filterExcl = NULL, negConcExcl = "FALSE", param = c("AUClast", "Cmax"),
+  timeFormat = "number", dateColNm = NULL, dateFormat = NULL,
+  spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
+  "Vz_obs", "Cl_obs", "HL_Lambda_z"), printOut = "TRUE", figFormat = "tiff")
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -81,7 +80,7 @@ FALSE) (\strong{"FALSE"})}
 \item{LambdaTimeRange}{User-defined window of time to estimate elimination
 rate-constant (\strong{"NULL"})}
 
-\item{LambdaExclude}{User-defined excluded observations during estimation of
+\item{LambdaExclude}{User-defined excluded observation time points for estimation of
 elimination rate-constant (\strong{"NULL"})}
 
 \item{adminType}{Route of administration
@@ -95,8 +94,6 @@ elimination rate-constant (\strong{"NULL"})}
 \item{TI}{Infusion duration (\strong{"NULL"})}
 
 \item{doseAmtNm}{Column name to specify dose amount (\strong{"NULL"})}
-
-\item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
 \item{method}{linear, loglinear or mixed (\strong{"linear"})}
 

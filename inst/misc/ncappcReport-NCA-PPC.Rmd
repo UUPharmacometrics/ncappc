@@ -1,9 +1,6 @@
 -
-# Report of *ncappc* package
+# Report of *ncappc* package [*]
 -
-### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
-### *Department of Pharmaceutical Biosciences*
-### *Uppsala University, Sweden*
 ------------------------------------------------------------------
 
 ==============================================================
@@ -22,7 +19,7 @@ outlier  <- fnOut$outlier
 forest   <- fnOut$forest
 npde     <- fnOut$npde
 histnpde <- fnOut$histnpde
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
+sprtxt   <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 ```
 
 -
@@ -86,7 +83,7 @@ if (length(histobs)>0){
 }
 ```
 
-**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval of the NCA metrics obtained from the study population.
+**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r print(sprtxt)` of the NCA metrics obtained from the study population.
 
 -
 
@@ -139,5 +136,14 @@ for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[
 ```
 
 **Figure 8.** [Population level] Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+
+
+
+
+-
+[*] Created and maintained by:
+### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
+### *Department of Pharmaceutical Biosciences*
+### *Uppsala University, Sweden*
 
 

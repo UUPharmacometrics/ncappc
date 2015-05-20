@@ -24,14 +24,22 @@
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{4pt}}m{#1}}
-\title{\textbf{Report of \textit{ncappc} package}}
-\author{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
-\affil{Department of Pharmaceutical Biosciences\\Uppsala University, Sweden}
-\date{\vspace{-5ex}}
+\title{\textbf{Report of \textit{ncappc}\textsuperscript{*} package}}
+\author{\vspace{-0cm}}
+\date{\today}
+
 \begin{document}
 \raggedright{}
 \maketitle
 \thispagestyle{empty}
+
+\vfill
+\textit{\textsuperscript{*} \textbf{ncappc} package is created and maintained by:}
+\newline
+\textit{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
+\newline
+\textit{Department of Pharmaceutical Biosciences, Uppsala University, Sweden}
+\clearpage
 
 \newpage{}
 \tableofcontents
@@ -55,7 +63,7 @@ outlier  <- fnOut$outlier
 forest   <- fnOut$forest
 npde     <- fnOut$npde
 histnpde <- fnOut$histnpde
-sprtxt   <- ifelse(spread=="sd", "standard deviation", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
+sprtxt   <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 @
 
 <<txt, echo=FALSE>>=
@@ -131,7 +139,7 @@ if (length(histobs)>0){
 }
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data.The "spread" is either defined by the standard deviation or by the 95\% nonparametric prediction interval of the NCA metrics obtained from the study population.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{print(sprtxt)} of the NCA metrics obtained from the study population.
 
 \subsubsection{Figure 3. [Population level] Histogram of the simulated population means of the NCA metrics}
 
@@ -141,7 +149,7 @@ suppressPackageStartupMessages(require(gridExtra))
 for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
 @
 
-Histogram of the population mean of the NCA metrics obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as \Sexpr{print(sprtxt)}.
+Histogram of the population mean of the NCA metrics obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined by \Sexpr{print(sprtxt)} of the NCA metrics obtained from the study population.
 
 \subsubsection{Figure 4. [Individual level] Deviation of the simulated NCA metrics from the observed value}
 
@@ -191,6 +199,8 @@ for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[
 \subsubsection{Figure 8. [Population level] Histogram of the NPDE values of the NCA metrics within a given population group}
 Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
 
+
+\paragraph{}
 \end{sloppypar}
 
 \end{document}
