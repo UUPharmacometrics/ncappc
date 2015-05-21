@@ -1229,7 +1229,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     # Population histogram
     if (case == 1){
       for (d in 1:ndose){
-        if (nrow(dasdf[dasdf[dasdf$DoseNumber==dose[d],],]) == 0) next
+        if (nrow(dasdf[dasdf$DoseNumber==dose[d],]) == 0) next
         smeanData <- data.frame()
         for (i in 1:length(lasdf)){
           tmdf   <- subset(data.frame(lasdf[[i]]), select=param, DoseNumber==dose[d])
@@ -1258,7 +1258,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     if (case == 2){
       for (g in 1:ngrp){
         for (d in 1:ndose){
-          if (nrow(dasdf[dasdf[dasdf$DoseNumber==dose[d],] & dasdf$GROUP==grp[g],]) == 0) next
+          if (nrow(dasdf[dasdf$DoseNumber==dose[d] & dasdf$GROUP==grp[g],]) == 0) next
           smeanData <- data.frame()
           for (i in 1:length(lasdf)){
             tmdf   <- subset(data.frame(lasdf[[i]]), select=param, GROUP==grp[g] & DoseNumber==dose[d])
@@ -1288,7 +1288,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     if (case == 3){
       for (f in 1:nflag){
         for (d in 1:ndose){
-          if (nrow(dasdf[dasdf[dasdf$DoseNumber==dose[d],] & dasdf$FLAG==flag[f],]) == 0) next
+          if (nrow(dasdf[dasdf$DoseNumber==dose[d] & dasdf$FLAG==flag[f],]) == 0) next
           smeanData <- data.frame()
           for (i in 1:length(lasdf)){
             tmdf   <- subset(data.frame(lasdf[[i]]), select=param, FLAG==flag[f] & DoseNumber==dose[d])
@@ -1319,7 +1319,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       for (g in 1:ngrp){
         for (f in 1:nflag){
           for (d in 1:ndose){
-            if (nrow(dasdf[dasdf[dasdf$DoseNumber==dose[d],] & dasdf$GROUP==grp[g] & dasdf$FLAG==flag[f],]) == 0) next
+            if (nrow(dasdf[dasdf$DoseNumber==dose[d] & dasdf$GROUP==grp[g] & dasdf$FLAG==flag[f],]) == 0) next
             smeanData <- data.frame()
             for (i in 1:length(lasdf)){
               tmdf   <- subset(data.frame(lasdf[[i]]), select=param, GROUP==grp[g] & FLAG==flag[f] & DoseNumber==dose[d])
