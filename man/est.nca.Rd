@@ -25,7 +25,7 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 (\strong{"ns"})}
 
 \item{adminType}{Route of administration
-(iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})}
+(iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})}
 
 \item{doseNm}{Column name to specify dose identifiers (\strong{"NULL"})}
 

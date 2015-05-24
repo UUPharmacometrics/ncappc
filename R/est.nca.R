@@ -117,7 +117,7 @@
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
 #' @param adminType Route of administration
-#'   (iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})
+#'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseNm Column name to specify dose identifiers (\strong{"NULL"})
 #' @param dose Dose identifiers used in the entire data (c(1,2)) (\strong{"NULL"})
 #' @param doseNumber Dose identifier used in this estimation (1) (\strong{"NULL"})

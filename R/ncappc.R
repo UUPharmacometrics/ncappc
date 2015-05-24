@@ -77,7 +77,7 @@
 #'   elimination rate-constant (\strong{"NULL"})
 #' @param doseAmtNm Column name to specify dose amount (\strong{"NULL"})
 #' @param adminType Route of administration
-#'   (iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})
+#'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
 #' @param Tau Dosing interval for steady-state data (\strong{"NULL"})
@@ -472,20 +472,25 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
       if (nrow(ifdf) == 0){next}
       idd <- unique(ifdf[,idCol])
-      if(is.null(doseNm)){
-        doseAmount <- as.numeric(refdf[refdf[,doseNm]==dose[d], doseAmtNm][1])
+      if (is.null(doseNm)){
+        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
       }else{
-        doseAmount <- as.numeric(refdf[refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
       }
       # Description
       pddf <- rbind(pddf, data.frame(a=DoseNumber, b=doseAmount, c=length(idd)))
       for (i in 1:length(idd)){
+        if (is.null(doseNm)){
+          idzAmt <- as.numeric(refdf[refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+        }else{
+          idzAmt <- as.numeric(refdf[refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+        }
         tc   <- ncaId(ifdf,idd[i])
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(oidNm,"-",dose[d],sep="")))
-        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-        outData[counter,] <- cbind(idd[i],DoseNumber,doseAmount,t(NCAprm))
+        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+        outData[counter,] <- cbind(idd[i],DoseNumber,idzAmt,t(NCAprm))
         counter <- counter+1
       }
       plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
@@ -547,20 +552,25 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
         if (is.null(doseNm)){
-          doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==grp[g] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
         }else{
-          doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==grp[g] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
         }
         # Description
         pddf <- rbind(pddf, data.frame(a=grp[g], b=DoseNumber, c=doseAmount, d=length(idd)))
         igr  <- grp[g]
         for (i in 1:length(idd)){
+          if (is.null(doseNm)){
+            idzAmt <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          }else{
+            idzAmt <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          }
           tc   <- ncaId(ifdf,idd[i])
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")))
-          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          outData[counter,] <- cbind(igr,idd[i],DoseNumber,doseAmount,t(NCAprm))
+          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+          outData[counter,] <- cbind(igr,idd[i],DoseNumber,idzAmt,t(NCAprm))
           counter <- counter+1
         }
         plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
@@ -623,20 +633,25 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         idd <- unique(ifdf[,idCol])
         DoseNumber <- dose[d]
         if (is.null(doseNm)){
-          doseAmount <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
         }else{
-          doseAmount <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
         }
         # Description
         pddf   <- rbind(pddf, data.frame(a=flag[f], b=DoseNumber, c=doseAmount, d=length(idd)))
         iflag  <- flag[f]
         for (i in 1:length(idd)){
+          if (is.null(doseNm)){
+            idzAmt <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          }else{
+            idzAmt <- as.numeric(refdf[refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          }
           tc   <- ncaId(ifdf,idd[i])
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
-          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          outData[counter,] <- cbind(iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
+          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+          outData[counter,] <- cbind(iflag,idd[i],DoseNumber,idzAmt,t(NCAprm))
           counter <- counter+1
         }
         plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
@@ -700,21 +715,26 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           idd <- unique(ifdf[,idCol])
           DoseNumber <- dose[d]
           if (is.null(doseNm)){
-            doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
           }else{
-            doseAmount <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
           }
           # Description
           pddf  <- rbind(pddf, data.frame(a=grp[g], b=flag[f], c=DoseNumber, d=doseAmount, e=length(idd)))
           igr   <- grp[g]
           iflag <- flag[f]
           for (i in 1:length(idd)){
-            tc   <- ncaId(ifdf,idd[i])
-            time <- as.numeric(tc$time)
-            conc <- as.numeric(tc$conc)
+            if (is.null(doseNm)){
+              idzAmt <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            }else{
+              idzAmt <- as.numeric(refdf[refdf[,grCol]==grp[g] & refdf[,flCol]==flag[f] & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            }
+            tc     <- ncaId(ifdf,idd[i])
+            time   <- as.numeric(tc$time)
+            conc   <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=doseAmount,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            outData[counter,] <- cbind(igr,iflag,idd[i],DoseNumber,doseAmount,t(NCAprm))
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            outData[counter,] <- cbind(igr,iflag,idd[i],DoseNumber,idzAmt,t(NCAprm))
             counter <- counter+1
           }
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))

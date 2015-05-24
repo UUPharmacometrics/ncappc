@@ -84,7 +84,7 @@ rate-constant (\strong{"NULL"})}
 elimination rate-constant (\strong{"NULL"})}
 
 \item{adminType}{Route of administration
-(iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})}
+(iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})}
 
 \item{doseType}{Steady-state (ss) or nonsteady-state (ns) dose
 (\strong{"ns"})}
