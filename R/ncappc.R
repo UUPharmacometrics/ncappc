@@ -58,7 +58,6 @@
 #'   FALSE) (\strong{"FALSE"})
 #' @param psnOut observed data is an output from PsN or in NONMEM output format 
 #'   (TRUE, FALSE) (\strong{"FALSE"})
-#' @param negConcExcl Exclude -ve conc (\strong{"FALSE"})
 #' @param idNmObs Column name for ID in observed data (\strong{"ID"})
 #' @param timeNmObs Column name for time in observed data (\strong{"TIME"})
 #' @param concNmObs Column name for concentration in observed data
@@ -82,7 +81,7 @@
 #'   (\strong{"ns"})
 #' @param Tau Dosing interval for steady-state data (\strong{"NULL"})
 #' @param TI Infusion duration (\strong{"NULL"})
-#' @param method linear, loglinear or mixed (\strong{"linear"})
+#' @param method linear, loglinear or mixed (\strong{"mixed"})
 #' @param blqNm Name of BLQ column if used (\strong{"NULL"})
 #' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or
 #'   c(1,">3")) (\strong{"1"})
@@ -92,6 +91,7 @@
 #' @param filterNm Column name for filter (\strong{"NULL"})
 #' @param filterExcl Filter identifier or logical condition used for row
 #'   exclusion (e.g. c(1,2,"<20",">=100","!=100") ) (\strong{"NULL"})
+#' @param negConcExcl Exclude -ve conc (\strong{"FALSE"})
 #' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs,
 #'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) (c(\strong{"AUClast",
 #'   "Cmax"}))
@@ -115,7 +115,7 @@
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,doseAmtNm=NULL,method="linear",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),printOut="TRUE",figFormat="tiff"){
+ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),printOut="TRUE",figFormat="tiff"){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- NULL
   rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit"))
