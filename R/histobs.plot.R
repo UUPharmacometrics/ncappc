@@ -94,6 +94,10 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
     longData[longData$TYPE==param[p],"xlow"]    <- min(xlow[param[p]],meanObs[param[p]]-2.5*sdObs[param[p]])
     longData[longData$TYPE==param[p],"xhgh"]    <- max(xhgh[param[p]],meanObs[param[p]]+2.5*sdObs[param[p]])
   }
+  longData <- na.omit(longData)
+  longData$TYPE <- factor(longData$TYPE, levels=unique(longData$TYPE), labels=unique(longData$TYPE))
+  param <- as.character(unique(longData$TYPE))
+  fctNm <- fctNm[fctNm$prmNm%in%param,]
   
   gplt <- list()
   for (p in 1:length(param)){

@@ -241,14 +241,12 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   }
   
   # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
-  if (evid == "TRUE"){
-    if ("EVID"%in%colnames(indf) == T){
-      # uevid == unique values in EVID column
-      # evidIncl == EVID values to be included
-      # ievid == EVID values to be ignored
-      uevid <- unique(as.numeric(as.character(indf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
-      if (length(ievid) != 0){for (i in 1:length(ievid)){indf <- indf[indf$EVID != ievid[i],]}}
-    }else{setwd(usrdir);stop("Incorrect EVID column name\n")}
+  if ((evid == "TRUE") & ("EVID"%in%colnames(indf) == T)){
+    # uevid == unique values in EVID column
+    # evidIncl == EVID values to be included
+    # ievid == EVID values to be ignored
+    uevid <- unique(as.numeric(as.character(indf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
+    if (length(ievid) != 0){for (i in 1:length(ievid)){indf <- indf[indf$EVID != ievid[i],]}}
   }
   
   # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
@@ -488,6 +486,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         tc   <- ncaId(ifdf,idd[i])
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
+        if(length(time)==0 | length(conc)==0) next
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(oidNm,"-",dose[d],sep="")))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData[counter,] <- cbind(idd[i],DoseNumber,idzAmt,t(NCAprm))
@@ -568,6 +567,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           tc   <- ncaId(ifdf,idd[i])
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
+          if(length(time)==0 | length(conc)==0) next
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData[counter,] <- cbind(igr,idd[i],DoseNumber,idzAmt,t(NCAprm))
@@ -576,7 +576,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<=5) next
         pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
-        for (p in 1:length(pltPrm)){ if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
+        for (p in 1:length(pltPrm)){if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
         if (length(pltPrm) == 0) next
         figlbl      <- paste(grNm,"-",grp[g],"_",oidNm,"-",dose[d],sep="")
         histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
@@ -649,6 +649,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           tc   <- ncaId(ifdf,idd[i])
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
+          if(length(time)==0 | length(conc)==0) next
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData[counter,] <- cbind(iflag,idd[i],DoseNumber,idzAmt,t(NCAprm))
@@ -732,6 +733,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             tc     <- ncaId(ifdf,idd[i])
             time   <- as.numeric(tc$time)
             conc   <- as.numeric(tc$conc)
+            if(length(time)==0 | length(conc)==0) next
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(grNm,"-",grp[g],"_",flNm,"-",flag[f],"_",oidNm,"-",dose[d],sep="")))
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             outData[counter,] <- cbind(igr,iflag,idd[i],DoseNumber,idzAmt,t(NCAprm))
