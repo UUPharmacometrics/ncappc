@@ -171,7 +171,7 @@ Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estima
 
 \newpage
 \subsection{Figure 3. [Population level] Histogram of the simulated population means of the NCA metrics}
-<<popplot, echo=FALSE, fig.height=hth, fig.width=wth, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<popplot, echo=FALSE, fig.height=12, fig.width=10, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
 if (length(pop)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
