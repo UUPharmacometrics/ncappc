@@ -33,7 +33,8 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   
   ggOpt_obs <- list(scale_linetype_manual(name="",values=c("mean(obs)"="solid","+/-spread"="dashed")),
                     scale_color_manual(name = "", values=c("mean(obs)"="blue","+/-spread"="blue")),
-                    xlab("\nValue"), ylab("Frequency\n"),
+                    xlab("\nValue"), ylab(""),
+                    scale_y_continuous(labels = percent),
                     guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0))),
                     theme(plot.title = element_text(size=9, face="bold"),
                           plot.margin = unit(c(0.2,0.2,0.2,0.2), "cm"),
@@ -46,10 +47,11 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
                           legend.key.size = unit(0.8, "cm"),
                           legend.text  = element_text(size=8,face="bold"),
                           strip.text.x = element_text(size=8, face="bold")),
-                    geom_histogram(aes(y=..density../sum(..density..)), size=0.6, color="black", fill="white"),
+                    geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                     geom_vline(aes(xintercept=as.numeric(meanObs), color="mean(obs)", linetype="mean(obs)"), size=1, show_guide=T),
                     geom_vline(aes(xintercept=as.numeric(sprlow), color="+/-spread", linetype="+/-spread"), size=1),
-                    geom_vline(aes(xintercept=as.numeric(sprhgh), color="+/-spread", linetype="+/-spread"), size=1))
+                    geom_vline(aes(xintercept=as.numeric(sprhgh), color="+/-spread", linetype="+/-spread"), size=1),
+                    scale_y_continuous(labels = percent))
   
   alwprm <- c("AUClast","AUClower_upper","AUCINF_obs","AUCINF_pred","AUMClast","Cmax","Tmax","HL_Lambda_z")
   npr    <- length(param)
@@ -74,8 +76,8 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   
   meanObs  <- sapply(plotData, FUN=function(x) mean(as.numeric(x), na.rm=T))
   sdObs    <- sapply(plotData, FUN=function(x) sd(as.numeric(x), na.rm=T))
-  xlow     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.02, na.rm=T)))
-  xhgh     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.98, na.rm=T)))
+  xlow     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.01, na.rm=T)))
+  xhgh     <- sapply(plotData, FUN=function(x) unname(quantile(as.numeric(x),0.99, na.rm=T)))
   if (spread=="ppi"){
     sprlow <- meanObs-1.96*sdObs
     sprhgh <- meanObs+1.96*sdObs
@@ -91,8 +93,8 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
     longData[longData$TYPE==param[p],"sdObs"]   <- sdObs[param[p]]
     longData[longData$TYPE==param[p],"sprlow"]  <- sprlow[param[p]]
     longData[longData$TYPE==param[p],"sprhgh"]  <- sprhgh[param[p]]
-    longData[longData$TYPE==param[p],"xlow"]    <- min(xlow[param[p]],meanObs[param[p]]-2.5*sdObs[param[p]])
-    longData[longData$TYPE==param[p],"xhgh"]    <- max(xhgh[param[p]],meanObs[param[p]]+2.5*sdObs[param[p]])
+    longData[longData$TYPE==param[p],"xlow"]    <- xlow[param[p]]
+    longData[longData$TYPE==param[p],"xhgh"]    <- xhgh[param[p]]
   }
   longData <- na.omit(longData)
   longData$TYPE <- factor(longData$TYPE, levels=unique(longData$TYPE), labels=unique(longData$TYPE))

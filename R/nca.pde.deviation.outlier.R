@@ -41,6 +41,8 @@
 #'   and "HL_Lambda_z". (\strong{c("AUClast","Cmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
+#' @param noplot Perform only NCA calculations without any plot generation
+#'   (TRUE, FALSE) (\strong{"FALSE"})
 #'
 #' @return returns the observed data frame with added distance and simulation
 #'   mean of the nCA metrics, and a data frame with the PDE values of the NCA
@@ -50,7 +52,7 @@
 #' @export
 #'
 
-nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]"){
+nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noplot="FALSE"){
   
   "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- NULL
   rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar"))
@@ -117,8 +119,8 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         pde[,pnm]                         <- ifelse (obsval<min(simval), 1/length(simval), ifelse (obsval>max(simval), 1-(1/length(simval)), sum(sdsimmean<sdobsmean)/length(simval)))
         obsdata[,paste("d",pnm,sep="")]   <- distprm
         obsdata[,paste("sim",pnm,sep="")] <- msimval
-        pdata  <- rbind(pdata, data.frame(oval=obsval, sval=simval, mval=msimval, devl=lldist, devu=uldist, xl=min(msimval-2.5*sdsimval,unname(quantile(simval, 0.02)),obsval), xu=max(msimval+2.5*sdsimval,unname(quantile(simval, 0.098)),obsval), type=pnm, stringsAsFactors = F))
-        if ((pnm%in%diagparam) & (abs(distprm)>1)){
+        pdata  <- rbind(pdata, data.frame(oval=obsval, sval=simval, mval=msimval, devl=lldist, devu=uldist, xl=min(lldist,obsval), xu=max(uldist,obsval), type=pnm, stringsAsFactors = F))
+        if ((!is.na(distprm) & !is.nan(distprm)) && (pnm%in%diagparam) & (abs(distprm)>1)){
           metric <- paste(metric,paste("ID-",id,"_",pnm,sep=""),sep=", ")
         }
       }
@@ -150,46 +152,50 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         fctNm <- rbind(fctNm, data.frame(prmNm=diagparam[p],prmUnit=paste(diagparam[p]," (",tunit,")",sep="")))
       }
     }
-    ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
-                      scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
-                      xlab("\nValue"), ylab("Frequency\n"),
-                      geom_histogram(aes(y=..density../sum(..density..)), size=0.6, color="black", fill="white"),
-                      geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show_guide=T, size=1),
-                      geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show_guide=T, size=1),
-                      geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
-                      geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
-                      facet_grid(~type, scales="free"),
-                      theme(plot.title = element_text(size=10, face="bold"),
-                            axis.title.x = element_text(size=10,face="bold"),
-                            axis.title.y = element_text(size=10,face="bold"),
-                            axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                            axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-                            panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm"),
-                            legend.position = "bottom", legend.direction = "horizontal",
-                            legend.text  = element_text(size=10,face="bold"),
-                            legend.background = element_rect(),
-                            legend.key.size = unit(0.8, "cm"),
-                            strip.text.x = element_text(size=10, face="bold")))
-    devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
-    gplt   <- list()
-    figttl <- ifelse(is.null(figlbl),
-                     paste("Outlier_ID-",id,"\n(spread = ",devtag,")\n\n",sep=""),
-                     paste("Outlier_ID-",id,"_",figlbl,"\n(spread = ",devtag,")\n\n",sep=""))
-    for (p in 1:npr){
-      df <- subset(pdata, type==diagparam[p])
-      df$type <- factor(df$type, levels=diagparam[p], labels=fctNm[fctNm$prmNm==diagparam[p],"prmUnit"])
-      xl <- df$xl[1]; xu <- df$xu[1]
-      gplt[[p]] <- ggplot(df,aes(x=as.numeric(sval))) + ggOpt_otl +
-        labs(title=paste("Obs=",format(df$oval[1],digits=2),", meanSim=",format(df$mval[1],digits=2),"\n+/-spread=(",format(df$devl[1],digits=2),",",format(df$devu[1],digits=2),")\n",sep="")) +
-        coord_cartesian(xlim=c(xl,xu))
+    
+    if(noplot=="FALSE"){
+      ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
+                        scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
+                        xlab("\nValue"), ylab(""),
+                        geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
+                        scale_y_continuous(labels = percent),
+                        geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show_guide=T, size=1),
+                        geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show_guide=T, size=1),
+                        geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
+                        geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
+                        facet_grid(~type, scales="free"),
+                        theme(plot.title = element_text(size=10, face="bold"),
+                              axis.title.x = element_text(size=10,face="bold"),
+                              axis.title.y = element_text(size=10,face="bold"),
+                              axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
+                              axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
+                              panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm"),
+                              legend.position = "bottom", legend.direction = "horizontal",
+                              legend.text  = element_text(size=10,face="bold"),
+                              legend.background = element_rect(),
+                              legend.key.size = unit(0.8, "cm"),
+                              strip.text.x = element_text(size=10, face="bold")))
+      devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
+      gplt   <- list()
+      figttl <- ifelse(is.null(figlbl),
+                       paste("Outlier_ID-",id,"\n(spread = ",devtag,")\n\n",sep=""),
+                       paste("Outlier_ID-",id,"_",figlbl,"\n(spread = ",devtag,")\n\n",sep=""))
+      for (p in 1:npr){
+        df <- subset(pdata, type==diagparam[p])
+        df$type <- factor(df$type, levels=diagparam[p], labels=fctNm[fctNm$prmNm==diagparam[p],"prmUnit"])
+        xl <- df$xl[1]; xu <- df$xu[1]
+        gplt[[p]] <- ggplot(df,aes(x=as.numeric(sval))) + ggOpt_otl +
+          labs(title=paste("Obs=",format(df$oval[1],digits=2),", meanSim=",format(df$mval[1],digits=2),"\n+/-spread=(",format(df$devl[1],digits=2),",",format(df$devu[1],digits=2),")\n",sep="")) +
+          coord_cartesian(xlim=c(xl,xu))
+      }
+      mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
+      lheight  <- sum(mylegend$heights)
+      for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
+      gdr <- suppressMessages(suppressWarnings(
+        do.call(arrangeGrob, c(gplt,
+                               list(main = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                                    ncol=nc)))))
     }
-    mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
-    lheight  <- sum(mylegend$heights)
-    for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
-    gdr <- suppressMessages(suppressWarnings(
-      do.call(arrangeGrob, c(gplt,
-                             list(main = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                                  ncol=nc)))))
   }
   return(list(obsdata=obsdata,pde=pde,metric=metric,grob=gdr,legend=mylegend,lheight=lheight))
 }

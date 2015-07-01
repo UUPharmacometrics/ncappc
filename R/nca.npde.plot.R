@@ -123,7 +123,7 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
     # ggplot options for histogram of NPDE
     ggOpt_histnpde <- list(scale_linetype_manual(name="",values=c("meanNormal"="solid","meanNPDE"="solid","+/-(SD)"="dashed")),
                            scale_color_manual(name="",values=c("meanNormal"="red","meanNPDE"="blue","+/-(SD)"="blue")),
-                           xlab("\nNPDE"), ylab("Frequency\n"),
+                           xlab("\nNPDE"), ylab(""),
                            guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0 ))),
                            theme(plot.title = element_text(size=10,face="bold"),
                                  axis.title.x = element_text(size=10,face="bold"),
@@ -136,7 +136,8 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
                                  legend.key.size = unit(0.8, "cm"),
                                  panel.margin = unit(0.5, "cm"),
                                  plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
-                           geom_histogram(aes(y=..density../sum(..density..)), size=0.6, color="black", fill="white"),
+                           geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
+                           scale_y_continuous(labels = percent),
                            geom_vline(aes(xintercept=0, color="meanNormal", lty="meanNormal"), size=1, show_guide=T),
                            geom_vline(aes(xintercept=as.numeric(mean), color="meanNPDE", lty="meanNPDE"), size=1),
                            geom_vline(aes(xintercept=as.numeric(sdl), color="+/-(SD)", lty="+/-(SD)"), size=1),

@@ -6,13 +6,14 @@
 ==============================================================
 
 ```{r main, echo=FALSE}
-txt      <- fnOut$TXT
-pddf     <- fnOut$pddf
-prnTab   <- fnOut$prnTab
-spread   <- fnOut$spread
-conc     <- fnOut$conc
-histobs  <- fnOut$histobs
-sprtxt   <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
+arglist <- fnOut$arglist
+txt     <- fnOut$TXT
+pddf    <- fnOut$pddf
+prnTab  <- fnOut$prnTab
+spread  <- fnOut$spread
+conc    <- fnOut$conc
+histobs <- fnOut$histobs
+sprtxt  <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 ```
 
 -
@@ -32,7 +33,16 @@ kable(pddf, align='c')
 ```
 
 -------------------------------
+-
+Command-line arguments passed to ncappc function
+-------------------------------
 
+```{r cmd, echo=FALSE}
+print(arglist)
+```
+
+
+------------------------------
 -
 Description of the tabular output
 ------------------------------
@@ -55,7 +65,11 @@ Description of the graphical output
 ------------------------------
 
 ```{r plot, echo=FALSE, fig.align='center', dpi=80}
-for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
+if (length(conc)>0){
+  for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
+}else{
+  print("No concentration vs time plot is available.")
+}
 ```
 
 **Figure 1.** [Individual level] Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
