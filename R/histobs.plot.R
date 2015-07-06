@@ -33,7 +33,7 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   
   ggOpt_obs <- list(scale_linetype_manual(name="",values=c("mean(obs)"="solid","+/-spread"="dashed")),
                     scale_color_manual(name = "", values=c("mean(obs)"="blue","+/-spread"="blue")),
-                    xlab("\nValue"), ylab(""),
+                    xlab(""), ylab(""),
                     scale_y_continuous(labels = percent),
                     guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0))),
                     theme(plot.title = element_text(size=9, face="bold"),
@@ -50,8 +50,7 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
                     geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                     geom_vline(aes(xintercept=as.numeric(meanObs), color="mean(obs)", linetype="mean(obs)"), size=1, show_guide=T),
                     geom_vline(aes(xintercept=as.numeric(sprlow), color="+/-spread", linetype="+/-spread"), size=1),
-                    geom_vline(aes(xintercept=as.numeric(sprhgh), color="+/-spread", linetype="+/-spread"), size=1),
-                    scale_y_continuous(labels = percent))
+                    geom_vline(aes(xintercept=as.numeric(sprhgh), color="+/-spread", linetype="+/-spread"), size=1))
   
   alwprm <- c("AUClast","AUClower_upper","AUCINF_obs","AUCINF_pred","AUMClast","Cmax","Tmax","HL_Lambda_z")
   npr    <- length(param)
@@ -114,6 +113,7 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   for (p in 1:length(param)){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
   gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,
                                                    c(gplt, list(main = textGrob(paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
+                                                                sub = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
                                                                 ncol=nc)))))
   histobsgrob <- list(gdr=gdr,legend=mylegend,lheight=lheight)
   return(histobsgrob)

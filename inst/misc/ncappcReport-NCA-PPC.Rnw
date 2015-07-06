@@ -146,7 +146,7 @@ Estimated NCA metrics for each individual using the simulated concentration-time
 \section{Description of the graphical output}
 
 \subsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
-<<concplot, echo=FALSE, fig.height=5, fig.width=6, out.width='1\\textwidth', fig.align="center">>=
+<<concplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align="center">>=
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -158,7 +158,7 @@ Concentration vs time profile for each individual stratified by dose or populati
 
 \newpage
 \subsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
-<<histobsplot, echo=FALSE, fig.height=12, fig.width=10, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<histobsplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -171,7 +171,7 @@ Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estima
 
 \newpage
 \subsection{Figure 3. [Population level] Histogram of the simulated population means of the NCA metrics}
-<<popplot, echo=FALSE, fig.height=12, fig.width=10, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<popplot, echo=FALSE, fig.pos="H", fig.height=8, fig.width=4, out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(pop)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -184,7 +184,7 @@ Histogram of the population mean of the NCA metrics obtained from the simulated 
 
 \newpage
 \subsection{Figure 4. [Individual level] Deviation of the simulated NCA metrics from the observed value}
-<<devplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='1\\textwidth', fig.align='center'>>=
+<<devplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(dev)>0){
   for (i in 1:length(dev)){suppressMessages(suppressWarnings(print(dev[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -196,7 +196,7 @@ Deviation of the mean of the NCA metrics for each individual estimated from the 
 
 \newpage
 \subsection{Figure 5. [Individual level] Distribution of the simulated NCA metrics for the outliers}
-<<outlierplot, echo=FALSE, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<outlierplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(outlier)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -209,7 +209,7 @@ Distribution of the NCA metrics obtained from the simulated data for the outlier
 
 \newpage
 \subsection{Figure 6. [Population level] Forest plot for the NPDE type analysis}
-<<forestplot, echo=FALSE, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<forestplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(forest)>0){
   for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -221,7 +221,7 @@ Forest plot of the NPDE type analysis displaying the mean and standard deviation
 
 \newpage
 \subsection{Figure 7. [Individual level] NPDE values of the NCA metrics for each individual}
-<<npdeplot, echo=FALSE, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<npdeplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(npde)>0){
   for (i in 1:length(npde)){suppressMessages(suppressWarnings(print(npde[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -233,7 +233,7 @@ NPDE values of the NCA metrics for each individual within a given population gro
 
 \newpage
 \subsection{Figure 8. [Population level] Histogram of the NPDE values of the NCA metrics within a given population group}
-<<histnpdeplot, echo=FALSE, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
+<<histnpdeplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
 if (length(histnpde)>0){
   for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[i]]))); Sys.sleep(0.5)}
 }else{

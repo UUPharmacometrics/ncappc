@@ -84,7 +84,6 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   isimlst    <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
   if(is.null(colnames(isimlst))) isimlst <- t(isimlst)
   
-  npr        <- length(diagparam)
   metric     <- ""                                                # NCA metric associated with the outlier
   pdata      <- data.frame(oval=numeric(0),sval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
   pde        <- data.frame(matrix(ncol=length(calcparam),nrow=1))   # store PDE values
@@ -96,7 +95,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   }else{
     for (i in 1:length(iobslst)){
       pnm <- colnames(isimlst)[i]
-      if (length(iobslst[[pnm]])==0 | length(isimlst[,pnm])==0){
+      if (length(iobslst[[pnm]])==0 | length(unlist(isimlst[,pnm]))==0){
         pde[,pnm]                         <- "NaN"
         obsdata[,paste("d",pnm,sep="")]   <- "NaN"
         obsdata[,paste("sim",pnm,sep="")] <- "NaN"
@@ -135,10 +134,12 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   
   # ggplot options for outliers
   if (metric != ""){
-    pdata <- subset(pdata, type==diagparam)
-    metric <- gsub("^, ", "", metric)
-    fctNm  <- data.frame()
-    nc     <- ifelse(npr<2, 1, ifelse(npr>=2 & npr<=6, 2, 3))
+    pdata     <- subset(pdata, type%in%diagparam)
+    diagparam <- unique(pdata$type)
+    npr       <- length(diagparam)
+    metric    <- gsub("^, ", "", metric)
+    fctNm     <- data.frame()
+    nc        <- ifelse(npr<2, 1, ifelse(npr>=2 & npr<=6, 2, 3))
     for (p in 1:npr){
       if (diagparam[p] == "AUClast" | diagparam[p] == "AUClower_upper" | diagparam[p] == "AUCINF_obs" | diagparam[p] == "AUCINF_pred"){
         fctNm <- rbind(fctNm, data.frame(prmNm=diagparam[p],prmUnit=paste(diagparam[p]," (",cunit,"*",tunit,")",sep="")))
@@ -156,7 +157,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
     if(noplot=="FALSE"){
       ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
                         scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
-                        xlab("\nValue"), ylab(""),
+                        xlab(""), ylab(""),
                         geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                         scale_y_continuous(labels = percent),
                         geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show_guide=T, size=1),
@@ -164,17 +165,17 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
                         geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
                         geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
                         facet_grid(~type, scales="free"),
-                        theme(plot.title = element_text(size=10, face="bold"),
-                              axis.title.x = element_text(size=10,face="bold"),
-                              axis.title.y = element_text(size=10,face="bold"),
-                              axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                              axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-                              panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm"),
+                        theme(plot.title = element_text(size=9, face="bold"),
+                              axis.title.x = element_text(size=9,face="bold"),
+                              axis.title.y = element_text(size=9,face="bold"),
+                              axis.text.x  = element_text(size=9,face="bold",color="black",angle=45,vjust=1,hjust=1),
+                              axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
+                              panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.2,0.2,0.2,0.2), "cm"),
                               legend.position = "bottom", legend.direction = "horizontal",
-                              legend.text  = element_text(size=10,face="bold"),
+                              legend.text  = element_text(size=8,face="bold"),
                               legend.background = element_rect(),
                               legend.key.size = unit(0.8, "cm"),
-                              strip.text.x = element_text(size=10, face="bold")))
+                              strip.text.x = element_text(size=8, face="bold")))
       devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
       gplt   <- list()
       figttl <- ifelse(is.null(figlbl),
@@ -194,9 +195,9 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       gdr <- suppressMessages(suppressWarnings(
         do.call(arrangeGrob, c(gplt,
                                list(main = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                                    sub = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
                                     ncol=nc)))))
     }
   }
   return(list(obsdata=obsdata,pde=pde,metric=metric,grob=gdr,legend=mylegend,lheight=lheight))
 }
-
