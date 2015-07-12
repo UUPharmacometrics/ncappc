@@ -920,7 +920,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
-          tmpStat <- cbind(GRP=as.character(grp[g]),FLG=as.character(flag[f]),DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
+          tmpStat <- cbind(GRP=as.character(grp[g]),FLAG=as.character(flag[f]),DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
           for (cnum in 5:ncol(tmpStat)){colnames(tmpStat)[cnum] <- as.character(tmpStat[1,cnum])}
           tmpStat <- tmpStat[-1,]
           grStat <- rbind(grStat,tmpStat)
@@ -1860,7 +1860,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           counter <- 1
           for (i in 1:length(stNm)){
             Nm <- stNm[i]
-            tdf <- as.numeric(as.character(dasdf[(dasdf$DoseNumber==dose[d] & dasdf$FLG==as.character(flag[f]) & dasdf[,Nm]!="NaN"),Nm]))
+            tdf <- as.numeric(as.character(dasdf[(dasdf$DoseNumber==dose[d] & dasdf$FLAG==as.character(flag[f]) & dasdf[,Nm]!="NaN"),Nm]))
             if (length(tdf) < 2){
               nm <- rbind(nm, data.frame(Nm))
               pm[counter,] <- rep(NA,13)
@@ -1894,7 +1894,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             counter <- 1
             for (i in 1:length(stNm)){
               Nm <- stNm[i]
-              tdf <- as.numeric(as.character(dasdf[(dasdf$DoseNumber==dose[d] & dasdf$GROUP==as.character(grp[g]) & dasdf$FLG==as.character(flag[f]) & dasdf[,Nm]!="NaN"),Nm]))
+              tdf <- as.numeric(as.character(dasdf[(dasdf$DoseNumber==dose[d] & dasdf$GROUP==as.character(grp[g]) & dasdf$FLAG==as.character(flag[f]) & dasdf[,Nm]!="NaN"),Nm]))
               if (length(tdf) < 2){
                 nm <- rbind(nm, data.frame(Nm))
                 pm[counter,] <- rep(NA,13)
@@ -1910,7 +1910,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
             tmpStat <- t(cbind(nm, pm))
             rownames(tmpStat)[1] <- "Name"
-            tmpStat <- cbind(GRP=as.character(grp[g]),FLG=as.character(flag[f]),DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
+            tmpStat <- cbind(GRP=as.character(grp[g]),FLAG=as.character(flag[f]),DOSE=dose[d],Stat=rownames(tmpStat),tmpStat)
             for (cnum in 5:ncol(tmpStat)){colnames(tmpStat)[cnum] <- as.character(tmpStat[1,cnum])}
             tmpStat <- tmpStat[-1,]
             simGrStat <- rbind(simGrStat,tmpStat)
