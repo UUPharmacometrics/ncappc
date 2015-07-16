@@ -10,7 +10,7 @@ Description: A flexible tool is presented here that can perform
     (ii) simulation-based posterior predictive checks for a population
     pharmacokinetic (PK) model using NCA metrics.
 Depends:
-    R (>= 3.0.2),
+    R (>= 2.15.3),
     ggplot2,
     gridExtra
 Imports:
@@ -19,8 +19,6 @@ Imports:
     knitr,
     xtable,
     reshape2,
-    PerformanceAnalytics,
-    lattice,
     testthat
 License: GPL-3
 LazyData: true

@@ -147,6 +147,9 @@
 # function to estimate NCA parameters
 est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns",adminType="extravascular",doseNm=NULL,dose=NULL,doseNumber=NULL,doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
   
+  "tail" <- "head" <- "lm" <- "coef" <- NULL
+  rm(list=c("tail","head","lm","coef"))
+  
   ## set all NCA metrics, except Tau to "NaN"
   #C0 <- "NaN"; Tmax <- "NaN"; Cmax <- "NaN"; Cmax_D <- "NaN"; Tlast <- "NaN"; Clast <- "NaN"; AUClast <- "NaN"; AUMClast <- "NaN"; MRTlast <- "NaN"; No_points_Lambda_z <- "NaN"
   #AUC_pBack_Ext <- "NaN"; AUClower_upper <- "NaN"; Rsq <- "NaN"; Rsq_adjusted <- "NaN"; Corr_XY <- "NaN"; Lambda_z <- "NaN"; Lambda_z_lower <- "NaN"; Lambda_z_upper <- "NaN"; HL_Lambda_z <- "NaN"

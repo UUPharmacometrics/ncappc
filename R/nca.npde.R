@@ -22,6 +22,9 @@
 #'
 
 nca.npde <- function(pdedata,pdecol){
+  "qnorm" <- NULL
+  rm(list=c("qnorm"))
+  
   if (is.null(pdecol)){
     pdecol <- names(pdedata)
   }else if (!is.null(pdecol) && !is.numeric(pdecol)){

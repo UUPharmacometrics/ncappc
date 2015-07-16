@@ -122,8 +122,6 @@
 #' @import knitr
 #' @import xtable
 #' @import reshape2
-#' @import PerformanceAnalytics
-#' @import lattice
 #' @import testthat
 #' 
 #' @return NCA results and diagnostic test results
