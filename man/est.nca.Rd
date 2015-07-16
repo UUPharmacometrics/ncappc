@@ -29,9 +29,11 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 
 \item{doseNm}{Column name to specify dose identifiers (\strong{"NULL"})}
 
-\item{dose}{Dose identifiers used in the entire data (c(1,2)) (\strong{"NULL"})}
+\item{dose}{Dose identifiers used in the entire data (c(1,2))
+(\strong{"NULL"})}
 
-\item{doseNumber}{Dose identifier used in this estimation (1) (\strong{"NULL"})}
+\item{doseNumber}{Dose identifier used in this estimation (1)
+(\strong{"NULL"})}
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
@@ -43,16 +45,18 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 \item{LambdaTimeRange}{User-defined window of time to estimate elimination
 rate-constant (\strong{"NULL"})}
 
-\item{LambdaExclude}{User-defined excluded observation time points for estimation of
-elimination rate-constant (\strong{"NULL"})}
+\item{LambdaExclude}{User-defined excluded observation time points for
+estimation of elimination rate-constant (\strong{"NULL"})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}
 
 \item{TI}{Infusion duration (\strong{"NULL"})}
 
-\item{simFile}{Name of the simulated concentration-time data if present (\strong{"NULL"})}
+\item{simFile}{Name of the simulated concentration-time data if present
+(\strong{"NULL"})}
 
-\item{dset}{Type, i.e., observed or simulated concentration-time data set ("obs" or "sim") (\strong{"obs"})}
+\item{dset}{Type, i.e., observed or simulated concentration-time data set
+  ("obs" or "sim") (\strong{"obs"})}
 }
 \value{
 An array of estimated NCA metrics

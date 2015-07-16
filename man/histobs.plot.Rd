@@ -10,12 +10,13 @@ histobs.plot(plotData, figlbl = NULL, param = c("AUClast", "AUCINF_obs",
 \arguments{
 \item{plotData}{A data frame with the estimated NCA metrics}
 
-\item{figlbl}{Figure label based on dose identifier and/or population stratifier (\strong{NULL})}
+\item{figlbl}{Figure label based on dose identifier and/or population
+stratifier (\strong{NULL})}
 
 \item{param}{A character array of the NCA metrics. The allowed NCA metrics
 for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
-(\strong{c("AUClast","AUCINF_obs","Cmax","Tmax")})}
+(\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 
@@ -29,12 +30,14 @@ for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 returns a graphical object created by arrangeGrob function
 }
 \description{
-\pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g. AUClast, AUCINF_obs, Cmax and Tmax).
+\pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g.
+AUClast, AUCINF_obs, Cmax and Tmax).
 }
 \details{
-\pkg{histobs.plot} plots histogram of selected set of NCA metrics. The allowed NCA
-metrics for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
-"AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
-function produces histogram of AUClast, AUCINF_obs, Cmax and Tmax.
+\pkg{histobs.plot} plots histogram of selected set of NCA metrics. The
+allowed NCA metrics for this histograms are "AUClast", "AUClower_upper",
+"AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By
+default, this function produces histogram of AUClast, AUCINF_obs, Cmax and
+Tmax.
 }
 

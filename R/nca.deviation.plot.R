@@ -34,8 +34,8 @@
 
 nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread="npi",cunit="[M].[L]^-3",tunit="[T]"){
   
-  "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "ggplot" <- "aes" <- "labs" <- NULL
-  rm(list=c("XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","ggplot","aes","labs"))
+  "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "ggplot" <- "aes" <- "labs" <- "na.omit" <- "dist" <- NULL
+  rm(list=c("XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","ggplot","aes","labs","na.omit","dist"))
   
   if (!is.data.frame(plotdata)) stop("plotdata must be a data frame.")
   if (is.null(xvar)){

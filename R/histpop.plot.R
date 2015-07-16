@@ -10,7 +10,7 @@
 #' diagnosis and compares with the corresponding metrics estimated from the 
 #' observed data. The allowed NCA metrics for this histograms are "AUClast", 
 #' "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and
-#' "HL_Lambda_z". By default, this function produces histogram of AUClast and
+#' "HL_Lambda_z". By default, this function produces histogram of AUClast and 
 #' Cmax.
 #' 
 #' @param obsdata Data frame with the values of the NCA metrics estimated from
@@ -22,7 +22,7 @@
 #' @param param A character array of the NCA metrics. The allowed NCA metrics 
 #'   for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs", 
 #'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
-#'   (\strong{c("AUClast","Cmax")})
+#'   (\strong{c("AUClast", "Cmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric
@@ -35,8 +35,8 @@
 
 histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",spread="npi"){
   
-  "..density.." <- "TYPE" <- "obs" <- "sim" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "labs" <- "coord_cartesian" <- "facet_wrap" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- NULL
-  rm(list=c("..density..","TYPE","obs","sim","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","labs","coord_cartesian","facet_wrap","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar"))
+  "..density.." <- "TYPE" <- "obs" <- "sim" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "labs" <- "coord_cartesian" <- "facet_wrap" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "scale_y_continuous" <- "percent" <- "sd" <- "quantile" <- NULL
+  rm(list=c("..density..","TYPE","obs","sim","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","labs","coord_cartesian","facet_wrap","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar","..count..","..PANEL..","scale_y_continuous","percent","sd","quantile"))
   
   outData <- obsdata; smeanData <- simdata
   

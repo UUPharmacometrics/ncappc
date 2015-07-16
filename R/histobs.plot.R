@@ -3,23 +3,26 @@
 # roxygen comments
 #' Plots histogram of selected set of NCA metrics.
 #'
-#' \pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g. AUClast, AUCINF_obs, Cmax and Tmax).
+#' \pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g.
+#' AUClast, AUCINF_obs, Cmax and Tmax).
 #'
-#' \pkg{histobs.plot} plots histogram of selected set of NCA metrics. The allowed NCA
-#' metrics for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs", 
-#' "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
-#' function produces histogram of AUClast, AUCINF_obs, Cmax and Tmax.
+#' \pkg{histobs.plot} plots histogram of selected set of NCA metrics. The 
+#' allowed NCA metrics for this histograms are "AUClast", "AUClower_upper", 
+#' "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By
+#' default, this function produces histogram of AUClast, AUCINF_obs, Cmax and 
+#' Tmax.
 #' 
 #' @param plotData A data frame with the estimated NCA metrics
-#' @param figlbl Figure label based on dose identifier and/or population stratifier (\strong{NULL})
+#' @param figlbl Figure label based on dose identifier and/or population
+#'   stratifier (\strong{NULL})
 #' @param param A character array of the NCA metrics. The allowed NCA metrics
 #'   for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 #'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
-#'   (\strong{c("AUClast","AUCINF_obs","Cmax","Tmax")})
+#'   (\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
-#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
-#'   prediction interval) or npi (95\% nonparametric prediction interval))
+#' @param spread Measure of the spread of simulated data (ppi (95\% parametric 
+#'   prediction interval) or npi (95\% nonparametric prediction interval)) 
 #'   (\strong{"npi"})
 #'
 #' @return returns a graphical object created by arrangeGrob function
@@ -28,8 +31,8 @@
 
 histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit="[M].[L]^-3",tunit="[T]",spread="npi"){
   
-  "..density.." <- "TYPE" <- "Obs" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "coord_cartesian" <- "facet_grid" <- "labs" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- NULL
-  rm(list=c("..density..","TYPE","Obs","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","coord_cartesian","facet_grid","labs","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar"))
+  "..density.." <- "TYPE" <- "Obs" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "coord_cartesian" <- "facet_grid" <- "labs" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "scale_y_continuous" <- "percent" <- "sd" <- "quantile" <- "na.omit" <- NULL
+  rm(list=c("..density..","TYPE","Obs","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","coord_cartesian","facet_grid","labs","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar","..count..","..PANEL..","scale_y_continuous","percent","sd","quantile","na.omit"))
   
   ggOpt_obs <- list(scale_linetype_manual(name="",values=c("mean(obs)"="solid","+/-spread"="dashed")),
                     scale_color_manual(name = "", values=c("mean(obs)"="blue","+/-spread"="blue")),

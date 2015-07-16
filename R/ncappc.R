@@ -72,8 +72,8 @@
 #'   (\strong{"FALSE"})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
 #'   rate-constant (\strong{"NULL"})
-#' @param LambdaExclude User-defined excluded observation time points for estimation of 
-#'   elimination rate-constant (\strong{"NULL"})
+#' @param LambdaExclude User-defined excluded observation time points for
+#'   estimation of elimination rate-constant (\strong{"NULL"})
 #' @param doseAmtNm Column name to specify dose amount (\strong{"NULL"})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
@@ -83,16 +83,16 @@
 #' @param TI Infusion duration (\strong{"NULL"})
 #' @param method linear, loglinear or mixed (\strong{"mixed"})
 #' @param blqNm Name of BLQ column if used (\strong{"NULL"})
-#' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or
+#' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
 #'   c(1,">3")) (\strong{"1"})
 #' @param evid Use EVID (TRUE, FALSE) (\strong{"FALSE"})
 #' @param evidIncl Included EVID (\strong{"0"})
 #' @param mdv Use MDV (TRUE(includes data for MDV==0), FALSE) (\strong{"FALSE"})
 #' @param filterNm Column name for filter (\strong{"NULL"})
 #' @param filterExcl Filter identifier or logical condition used for row
-#'   exclusion (e.g. c(1,2,"<20",">=100","!=100") ) (\strong{"NULL"})
+#'   exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{"NULL"})
 #' @param negConcExcl Exclude -ve conc (\strong{"FALSE"})
-#' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs,
+#' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs, 
 #'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) (c(\strong{"AUClast",
 #'   "Cmax"}))
 #' @param timeFormat time format (number, H:M, H:M:S) (\strong{"number"})
@@ -108,21 +108,32 @@
 #'   "Cl_obs", "HL_Lambda_z")})
 #' @param figFormat format of the produced figures (bmp, jpeg, tiff, png)
 #'   (\strong{"tiff"})
-#' @param noplot Perform only NCA calculations without any plot generation
+#' @param noPlot Perform only NCA calculations without any plot generation
 #'   (TRUE, FALSE) (\strong{"FALSE"})
 #' @param printOut Write/print output on the disk. No plot will be saved if
-#'   noplot is set to TRUE (TRUE, FALSE) (\strong{"TRUE"})
+#'   noPlot is set to TRUE (TRUE, FALSE) (\strong{"TRUE"})
 #' @param studyName Name of the study to be added as a description in the report
 #'   (\strong{"NULL"})
 #'
+#' @import ggplot2
+#' @import gridExtra
+#' @import scales
+#' @import gtable
+#' @import knitr
+#' @import xtable
+#' @import reshape2
+#' @import PerformanceAnalytics
+#' @import lattice
+#' @import testthat
+#' 
 #' @return NCA results and diagnostic test results
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),figFormat="tiff",noplot="FALSE",printOut="TRUE",studyName=NULL){
+ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),figFormat="tiff",noPlot="FALSE",printOut="TRUE",studyName=NULL){
   
-  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- NULL
-  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit"))
+  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- NULL
+  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd"))
   
   options(warning.length=5000)
   options(scipen=999)
@@ -456,7 +467,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm)))
       }
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<=5) next
         pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -481,7 +492,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     cnm         <- c(paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noplot=="FALSE"){
+    if(noPlot=="FALSE"){
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
       for (p in seq(1,nfct,3)){
@@ -541,7 +552,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           outData <- rbind(outData, cbind(data.frame(GROUP=igr),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
         }
         
-        if(noplot=="FALSE"){
+        if(noPlot=="FALSE"){
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -567,7 +578,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     cnm         <- c(paste("GID (",grNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noplot=="FALSE"){
+    if(noPlot=="FALSE"){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -628,7 +639,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           outData <- rbind(outData, cbind(data.frame(FLAG=iflag),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
         }
         
-        if(noplot=="FALSE"){
+        if(noPlot=="FALSE"){
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -654,7 +665,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     cnm         <- c(paste("GID (",flNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noplot=="FALSE"){
+    if(noPlot=="FALSE"){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -717,7 +728,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             outData <- rbind(outData, cbind(data.frame(GROUP=igr,FLAG=iflag),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
           }
           
-          if(noplot=="FALSE"){
+          if(noPlot=="FALSE"){
             plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
             if (nrow(plotData)<=5) next
             pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -744,7 +755,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     cnm         <- c(paste("GID (",grNm,")",sep=""),paste("SGID (",flNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noplot=="FALSE"){
+    if(noPlot=="FALSE"){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -934,8 +945,9 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
   ############################################################################
   # Analyze the simulated data if exists
   if (is.null(simFile)){
-    if(exists("outData")) assign("ncaOutput",  outData,   envir=globalenv())
-    if(exists("grStat"))  assign("ObsStat",    grStat,    envir=globalenv())
+    streamsEnv <- parent.frame()
+    if(exists("outData")) assign("ncaOutput",  outData,   envir=streamsEnv)
+    if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut=="TRUE"){
       if (case == 1){
@@ -1248,7 +1260,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
           smeanData <- rbind(smeanData, tmpPrm)
         }
-        if(noplot=="FALSE"){
+        if(noPlot=="FALSE"){
           obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d])
           figlbl      <- paste(oidNm,"-",dose[d],sep="")
           histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
@@ -1279,7 +1291,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
             smeanData <- rbind(smeanData, tmpPrm)
           }
-          if(noplot=="FALSE"){
+          if(noPlot=="FALSE"){
             obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & GROUP==as.character(grp[g]))
             figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",oidNm,"-",dose[d],sep="")
             histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
@@ -1311,7 +1323,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
             smeanData <- rbind(smeanData, tmpPrm)
           }
-          if(noplot=="FALSE"){
+          if(noPlot=="FALSE"){
             obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & FLAG==as.character(flag[f]))
             figlbl      <- paste(flNm,"-",as.character(flag[f]),"_",oidNm,"-",dose[d],sep="")
             histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
@@ -1344,7 +1356,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
               smeanData <- rbind(smeanData, tmpPrm)
             }
-            if(noplot=="FALSE"){
+            if(noPlot=="FALSE"){
               obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & GROUP==as.character(grp[g]) & FLAG==as.character(flag[f]))
               figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",flNm,"-",as.character(flag[f]),"_",oidNm,"-",dose[d],sep="")
               histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
@@ -1399,13 +1411,13 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           obsdata <- subset(outData, ID==id[i] & DoseNumber==dose[d])
           simdata <- subset(tdasdf, ID==id[i])
           figlbl  <- paste(oidNm,"-",dose[d],sep="")
-          pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noplot=noplot)
+          pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noPlot=noPlot)
           pde     <- rbind(pde, cbind(data.frame(ID=id[i],DoseNumber=dose[d]), pdeout$pde))
           outData[(outData$ID==id[i] & outData$DoseNumber==dose[d]),] <- pdeout$obsdata
           if (pdeout$metric != ""){
             nout     <- nout + 1
             metric   <- paste(metric,pdeout$metric,sep=", ")
-            if(noplot=="FALSE"){
+            if(noPlot=="FALSE"){
               gdr      <- pdeout$grob
               mylegend <- pdeout$legend
               lheight  <- pdeout$lheight
@@ -1440,7 +1452,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         for (d in 1:ndose){
           plotdata <- subset(outData, DoseNumber==dose[d])
           if (nrow(plotdata) == 0) next
@@ -1469,7 +1481,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }
       }
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1501,7 +1513,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(noplot=="FALSE"){
+              if(noPlot=="FALSE"){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
@@ -1537,7 +1549,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         for (g in 1:ngrp){  
           for (d in 1:ndose){
             plotdata <- subset(outData, GROUP==as.character(grp[g]) & DoseNumber==dose[d])
@@ -1568,7 +1580,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }
       }
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1600,7 +1612,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(noplot=="FALSE"){
+              if(noPlot=="FALSE"){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
@@ -1636,7 +1648,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         for (f in 1:nflag){  
           for (d in 1:ndose){
             plotdata <- subset(outData, FLAG==as.character(flag[f]) & DoseNumber==dose[d])
@@ -1667,7 +1679,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }
       }
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1700,7 +1712,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
               if (pdeout$metric != ""){
                 nout     <- nout + 1
                 metric   <- paste(metric,pdeout$metric,sep=", ")
-                if(noplot=="FALSE"){
+                if(noPlot=="FALSE"){
                   gdr      <- pdeout$grob
                   mylegend <- pdeout$legend
                   lheight  <- pdeout$lheight
@@ -1737,7 +1749,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         for (g in 1:ngrp){
           for (f in 1:nflag){  
             for (d in 1:ndose){
@@ -1770,7 +1782,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         }
       }
       
-      if(noplot=="FALSE"){
+      if(noPlot=="FALSE"){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1922,11 +1934,12 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     
     if (printOut=="TRUE") write.table(simGrStat, file=paste(usrdir,"/SimStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
     
-    if(exists("outData"))   assign("ncaOutput",  outData,   envir=globalenv())
-    if(exists("grStat"))    assign("ObsStat",    grStat,    envir=globalenv())
-    if(exists("simGrStat")) assign("SimStat",    simGrStat, envir=globalenv())
-    if(exists("nmdf"))      assign("ncaSimData", nmdf,      envir=globalenv())
-    if(exists("dasdf"))     assign("ncaSimEst",  dasdf,     envir=globalenv())
+    streamsEnv <- parent.frame()
+    if(exists("outData"))   assign("ncaOutput",  outData,   envir=streamsEnv)
+    if(exists("grStat"))    assign("ObsStat",    grStat,    envir=streamsEnv)
+    if(exists("simGrStat")) assign("SimStat",    simGrStat, envir=streamsEnv)
+    if(exists("nmdf"))      assign("ncaSimData", nmdf,      envir=streamsEnv)
+    if(exists("dasdf"))     assign("ncaSimEst",  dasdf,     envir=streamsEnv)
     
     if (printOut=="TRUE"){
       # Create HTML output

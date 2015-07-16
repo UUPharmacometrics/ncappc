@@ -21,7 +21,7 @@ stratifier (\strong{NULL})}
 \item{param}{A character array of the NCA metrics. The allowed NCA metrics
 for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
-(\strong{c("AUClast","Cmax")})}
+(\strong{c("AUClast", "Cmax")})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 

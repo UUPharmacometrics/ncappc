@@ -34,14 +34,14 @@
 #' @param calcparam A character array of the NCA metrics used for calculations 
 #'   of PDE and deviation. The allowed NCA metrics for this histograms are 
 #'   "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", 
-#'   "Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast","Cmax")})
+#'   "Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})
 #' @param diagparam A character array of the NCA metrics used for diagnostic 
 #'   test. The allowed NCA metrics for this histograms are "AUClast", 
 #'   "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" 
-#'   and "HL_Lambda_z". (\strong{c("AUClast","Cmax")})
+#'   and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
-#' @param noplot Perform only NCA calculations without any plot generation
+#' @param noPlot Perform only NCA calculations without any plot generation
 #'   (TRUE, FALSE) (\strong{"FALSE"})
 #'
 #' @return returns the observed data frame with added distance and simulation
@@ -52,10 +52,10 @@
 #' @export
 #'
 
-nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noplot="FALSE"){
+nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noPlot="FALSE"){
   
-  "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- NULL
-  rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar"))
+  "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "sd" <- "quantile" <- "scale_y_continuous" <- "percent" <- NULL
+  rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar","..count..","..PANEL..","sd","quantile","scale_y_continuous","percent"))
   
   # Check the mandatory arguments
   if(is.null(obsdata) | is.null(simdata)){stop("None of the obsdata and simdata arguments can be empty.")}
@@ -154,7 +154,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       }
     }
     
-    if(noplot=="FALSE"){
+    if(noPlot=="FALSE"){
       ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
                         scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
                         xlab(""), ylab(""),

@@ -11,14 +11,15 @@ ncappc(obsFile = NULL, simFile = NULL, grNm = NULL, grp = NULL,
   psnOut = "FALSE", idNmObs = "ID", timeNmObs = "TIME",
   concNmObs = "DV", idNmSim = "ID", timeNmSim = "TIME",
   concNmSim = "DV", AUCTimeRange = NULL, backExtrp = "FALSE",
-  LambdaTimeRange = NULL, LambdaExclude = NULL,
+  LambdaTimeRange = NULL, LambdaExclude = NULL, doseAmtNm = NULL,
   adminType = "extravascular", doseType = "ns", Tau = NULL, TI = NULL,
-  doseAmtNm = NULL, method = "linear", blqNm = NULL, blqExcl = 1,
-  evid = "FALSE", evidIncl = 0, mdv = "FALSE", filterNm = NULL,
-  filterExcl = NULL, negConcExcl = "FALSE", param = c("AUClast", "Cmax"),
+  method = "mixed", blqNm = NULL, blqExcl = 1, evid = "FALSE",
+  evidIncl = 0, mdv = "FALSE", filterNm = NULL, filterExcl = NULL,
+  negConcExcl = "FALSE", param = c("AUClast", "Cmax"),
   timeFormat = "number", dateColNm = NULL, dateFormat = NULL,
   spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
-  "Vz_obs", "Cl_obs", "HL_Lambda_z"), printOut = "TRUE", figFormat = "tiff")
+  "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff", noPlot = "FALSE",
+  printOut = "TRUE", studyName = NULL)
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -80,8 +81,10 @@ FALSE) (\strong{"FALSE"})}
 \item{LambdaTimeRange}{User-defined window of time to estimate elimination
 rate-constant (\strong{"NULL"})}
 
-\item{LambdaExclude}{User-defined excluded observation time points for estimation of
-elimination rate-constant (\strong{"NULL"})}
+\item{LambdaExclude}{User-defined excluded observation time points for
+estimation of elimination rate-constant (\strong{"NULL"})}
+
+\item{doseAmtNm}{Column name to specify dose amount (\strong{"NULL"})}
 
 \item{adminType}{Route of administration
 (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})}
@@ -93,9 +96,7 @@ elimination rate-constant (\strong{"NULL"})}
 
 \item{TI}{Infusion duration (\strong{"NULL"})}
 
-\item{doseAmtNm}{Column name to specify dose amount (\strong{"NULL"})}
-
-\item{method}{linear, loglinear or mixed (\strong{"linear"})}
+\item{method}{linear, loglinear or mixed (\strong{"mixed"})}
 
 \item{blqNm}{Name of BLQ column if used (\strong{"NULL"})}
 
@@ -111,7 +112,7 @@ c(1,">3")) (\strong{"1"})}
 \item{filterNm}{Column name for filter (\strong{"NULL"})}
 
 \item{filterExcl}{Filter identifier or logical condition used for row
-exclusion (e.g. c(1,2,"<20",">=100","!=100") ) (\strong{"NULL"})}
+exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{"NULL"})}
 
 \item{negConcExcl}{Exclude -ve conc (\strong{"FALSE"})}
 
@@ -135,11 +136,17 @@ dose and population strata information (list of NCA metrics in a string
 array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
 "Cl_obs", "HL_Lambda_z")})}
 
-\item{printOut}{Write/print output on the disk (TRUE, FALSE)
-(\strong{"TRUE"})}
-
 \item{figFormat}{format of the produced figures (bmp, jpeg, tiff, png)
-  (\strong{"tiff"})}
+(\strong{"tiff"})}
+
+\item{noPlot}{Perform only NCA calculations without any plot generation
+(TRUE, FALSE) (\strong{"FALSE"})}
+
+\item{printOut}{Write/print output on the disk. No plot will be saved if
+noPlot is set to TRUE (TRUE, FALSE) (\strong{"TRUE"})}
+
+\item{studyName}{Name of the study to be added as a description in the report
+  (\strong{"NULL"})}
 }
 \value{
 NCA results and diagnostic test results

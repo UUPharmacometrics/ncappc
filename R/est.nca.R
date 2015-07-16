@@ -119,20 +119,24 @@
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseNm Column name to specify dose identifiers (\strong{"NULL"})
-#' @param dose Dose identifiers used in the entire data (c(1,2)) (\strong{"NULL"})
-#' @param doseNumber Dose identifier used in this estimation (1) (\strong{"NULL"})
+#' @param dose Dose identifiers used in the entire data (c(1,2))
+#'   (\strong{"NULL"})
+#' @param doseNumber Dose identifier used in this estimation (1)
+#'   (\strong{"NULL"})
 #' @param doseAmt Dose amounts (\strong{"NULL"})
 #' @param method linear, loglinear or mixed (\strong{"linear"})
-#' @param AUCTimeRange User-defined window of time used to estimate AUC
+#' @param AUCTimeRange User-defined window of time used to estimate AUC 
 #'   (\strong{"NULL"})
-#' @param LambdaTimeRange User-defined window of time to estimate elimination
+#' @param LambdaTimeRange User-defined window of time to estimate elimination 
 #'   rate-constant (\strong{"NULL"})
-#' @param LambdaExclude User-defined excluded observation time points for estimation of 
-#'   elimination rate-constant (\strong{"NULL"})
+#' @param LambdaExclude User-defined excluded observation time points for
+#'   estimation of elimination rate-constant (\strong{"NULL"})
 #' @param Tau Dosing interval for steady-state data (\strong{"NULL"})
 #' @param TI Infusion duration (\strong{"NULL"})
-#' @param simFile Name of the simulated concentration-time data if present (\strong{"NULL"})
-#' @param dset Type, i.e., observed or simulated concentration-time data set ("obs" or "sim") (\strong{"obs"})
+#' @param simFile Name of the simulated concentration-time data if present
+#'   (\strong{"NULL"})
+#' @param dset Type, i.e., observed or simulated concentration-time data set
+#'   ("obs" or "sim") (\strong{"obs"})
 #' 
 #' @return An array of estimated NCA metrics
 #' @export

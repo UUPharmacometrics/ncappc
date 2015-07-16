@@ -30,12 +30,11 @@ AUCTimeRange | Numeric array of two elements | NULL | User-defined window of tim
 backExtrp | String | "FALSE" | If back-extrapolation is needed for AUC ("TRUE" or "FALSE")
 LambdaTimeRange | Numeric array of two elements | NULL | User-defined window of time to estimate elimination rate-constant
 LambdaExclude | Numeric array | NULL | User-defined excluded observation time points for estimation of elimination rate-constant
+doseAmtNm | String | NULL | Column name to specify dose amount
 adminType | String | "extravascular" | Route of administration (iv-bolus, iv-infusion, extravascular)
 doseType | String | "ns" | steady-state (ss) or nonsteady-state (ns) dose
 Tau | Numeric | NULL | dosing interval for steady-state data
 TI | Numeric | NULL | Infusion duration
-doseAmtNm | String | NULL | Column name to specify dose amount
-doseAmt | Numeric array | NULL | Dose amounts
 method | String | "linear" | Method to estimate area under the curve (e.g. "linear", "loglinear" or "mixed")
 blqNm | String | NULL | Name of BLQ column if used
 blqExcl | String or numeric | "1" | Excluded BLQ value or logical condition (e.g. 1, ">=1", c(1,">3"))
@@ -51,8 +50,9 @@ dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
 dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combination of D, M and Y)
 spread | String | "npi" | measure of the spread of simulated data ("ppi" (95% parametric prediction interval) or "npi" (95% nonparametric prediction interval))
 tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
-printOut | String | "TRUE" | Write/print output on the disk ("TRUE", "FALSE")
 figFormat | String | "tiff" | Format of the produced figures ("bmp", "jpeg", "tiff", "png")
+noPlot | String | "FALSE" | Perform only NCA calculations without any plot generation ("TRUE", "FALSE")
+printOut | String | "TRUE" | Write/print output on the disk ("TRUE", "FALSE")
 
 
 **obsFile**  
@@ -112,6 +112,9 @@ This argument lets the user to choose a specific window of time to be used to es
 **LambdaExclude**
 This argument lets the user exclude observation time points for the estimation of elimination rate-constant (Lambda) in the elimination phase. The accepted format for the input to this argument is a numeric array of time points; c(8,10) will exclude time points 8 and 10 while estimating the Lambda. The default value for this argument is ***NULL***.
 
+**doseAmtNm**  
+Column name to specify the dose amount. This argument is unused if the value of the dose amount is provided in the "doseAmt" argument. If the "doseAmt" argument is empty, the value of the dose amount is extracted from the column specified in this argument or from the "AMT" column. The default value for this argument is ***"AMT"***.
+
 **adminType**  
 This argument is used to specify the route of the drug administration. The allowed values for this argument are "iv-bolus", "iv-infusion" and "extravascular". The default route of administration is ***"extravascular"***
 
@@ -123,12 +126,6 @@ The dosing interval for the steady-state data. This is a mandatory argument if t
 
 **TI**  
 The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the "RATE" and "AMT" values. This is a mandatory argument if the *doseType* argument is assigned to "ss" and the input data file does not contain "RATE" and "AMT" columns. The default value to this argument is ***NULL***.
-
-**doseAmtNm**  
-Column name to specify the dose amount. This argument is unused if the value of the dose amount is provided in the "doseAmt" argument. If the "doseAmt" argument is empty, the value of the dose amount is extracted from the column specified in this argument or from the "AMT" column. The default value for this argument is ***"AMT"***.
-
-**doseAmt**  
-Dose amount. A numeric array with the number of elements equal to that of the dose identifier is expected for this argument. For single dose data, if this argument is empty, either the "doseAmtNm" argument must be non-empty or the input data must contain a column named "AMT" to retrieve the dosage amount. The default value for this argument is ***NULL***.
 
 **method**  
 The user is allowed to choose the method of area estimation (AUC, AUMC). The "linear" option uses linear trapezoidal method of area estimation; while the "loglinear" method uses log-linear trapezoidal method. The "mixed" option uses the linear approximation for the ascending part of the curve and log-linear approximation for the descending part of the curve during the area estimation. The default value for this argument is ***"linear"***.
@@ -176,9 +173,12 @@ This argument determines the metric that will be used to measure the spread of t
 **tabCol**
 This argument selects the table columns, in addition to ID, dose and population strata, to print in the produced report. This argument accepts a list of NCA metrics in a string array. The default value of this argument is ***c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")***.
 
-**printOut**
-This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk, Acceptable value for this argument is either "TRUE" or "FALSE". The default value is ***"TRUE"***.
-
 **figFormat**
 This argument selects the format of the produced figures. Acceptable value for this argument is either bmp, jpeg, tiff or png. The default value is ***"tiff"***.
+
+**noPlot**
+This argument can turn on/off plot generation during NCA calculations. Acceptable value for this argument is either "TRUE" (turns off plot generation) or "FALSE" (turns on plot generation). The default value is ***"FALSE"***.
+
+**printOut**
+This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk. Acceptable value for this argument is either "TRUE" or "FALSE". The default value is ***"TRUE"***.
 
