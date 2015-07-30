@@ -445,17 +445,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       idd        <- unique(ifdf[,idCol])
       DoseNumber <- dose[d]
       if (is.null(doseNm)){
-        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
       }else{
-        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+        doseAmount <- paste(as.numeric(unique(refdf[refdf[,doseNm]==dose[d] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
       }
       # Description
       pddf <- rbind(pddf, data.frame(a=DoseNumber, b=doseAmount, c=length(idd)))
       for (i in 1:length(idd)){
         if (is.null(doseNm)){
-          idzAmt <- as.numeric(refdf[refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          idzAmt <- as.numeric(refdf[refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
         }else{
-          idzAmt <- as.numeric(refdf[refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+          idzAmt <- as.numeric(refdf[refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
         }
         tc   <- ncaId(ifdf,idd[i])
         if(nrow(tc)==0) next
@@ -529,17 +529,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         DoseNumber <- dose[d]
         igr        <- as.character(grp[g])
         if (is.null(doseNm)){
-          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
         }else{
-          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
         }
         # Description
         pddf <- rbind(pddf, data.frame(a=as.character(grp[g]), b=DoseNumber, c=doseAmount, d=length(idd)))
         for (i in 1:length(idd)){
           if (is.null(doseNm)){
-            idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
           }else{
-            idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
           }
           tc   <- ncaId(ifdf,idd[i])
           if(nrow(tc)==0) next
@@ -616,17 +616,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         DoseNumber <- dose[d]
         iflag      <- as.character(flag[f])
         if (is.null(doseNm)){
-          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
         }else{
-          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+          doseAmount <- paste(as.numeric(unique(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
         }
         # Description
         pddf   <- rbind(pddf, data.frame(a=as.character(flag[f]), b=DoseNumber, c=doseAmount, d=length(idd)))
         for (i in 1:length(idd)){
           if (is.null(doseNm)){
-            idzAmt <- as.numeric(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            idzAmt <- as.numeric(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
           }else{
-            idzAmt <- as.numeric(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+            idzAmt <- as.numeric(refdf[refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
           }
           tc   <- ncaId(ifdf,idd[i])
           if(nrow(tc)==0) next
@@ -705,17 +705,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
           igr        <- as.character(grp[g])
           iflag      <- as.character(flag[f])
           if (is.null(doseNm)){
-            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
           }else{
-            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm] > 0, doseAmtNm])), collapse=", ")
+            doseAmount <- paste(as.numeric(unique(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
           }
           # Description
           pddf  <- rbind(pddf, data.frame(a=as.character(grp[g]), b=as.character(flag[f]), c=DoseNumber, d=doseAmount, e=length(idd)))
           for (i in 1:length(idd)){
             if (is.null(doseNm)){
-              idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+              idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
             }else{
-              idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm] > 0, doseAmtNm][1])
+              idzAmt <- as.numeric(refdf[refdf[,grCol]==as.character(grp[g]) & refdf[,flCol]==as.character(flag[f]) & refdf[,doseNm]==dose[d] & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
             }
             tc     <- ncaId(ifdf,idd[i])
             if(nrow(tc)==0) next
