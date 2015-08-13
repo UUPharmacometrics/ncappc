@@ -2005,7 +2005,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
       }
     }
   }
-  
   #unlink(list.files(pattern = "ncappcReport.[a,t,l,m,o]"))
   #unlink(list.files(pattern = "sum.tex"))
   #unlink(list.files(pattern = "tab.tex"))

@@ -300,7 +300,7 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
         if (coef(mlr)[2] >= 0) next
         n    <- (lnPt-r)+1
         rsq  <- summary(mlr)$r.squared
-        trsq <- 1-((1-rsq^2)*(n-1)/(n-2))  # adjusted r^2
+        trsq <- 1-((1-rsq)*(n-1)/(n-2))  # adjusted r^2
         tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]))
         infd <- rbind(infd,tmp)
       }
