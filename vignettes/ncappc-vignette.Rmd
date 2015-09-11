@@ -1,7 +1,8 @@
 ---
 title: "ncappc"
 author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
-date: "`r Sys.Date()`"
+date: "`Sys.Date()`"
+
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ncappc}

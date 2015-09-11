@@ -6,7 +6,7 @@
 \usage{
 histpop.plot(obsdata = outData, simdata = smeanData, figlbl = NULL,
   param = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]",
-  spread = "pi")
+  spread = "npi")
 }
 \arguments{
 \item{obsdata}{Data frame with the values of the NCA metrics estimated from
@@ -21,14 +21,15 @@ stratifier (\strong{NULL})}
 \item{param}{A character array of the NCA metrics. The allowed NCA metrics
 for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
-(\strong{c("AUClast","Cmax")})}
+(\strong{c("AUClast", "Cmax")})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 
 \item{tunit}{Unit for time (\strong{"[T]"})}
 
-\item{spread}{measure of the spread of simulated data (sd or pi (95\%
-  nonparametric prediction interval)) (\strong{"pi"})}
+\item{spread}{Measure of the spread of simulated data (ppi (95\% parametric
+  prediction interval) or npi (95\% nonparametric prediction interval))
+  (\strong{"npi"})}
 }
 \value{
 returns a graphical object created by arrangeGrob function

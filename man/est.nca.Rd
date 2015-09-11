@@ -25,13 +25,15 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 (\strong{"ns"})}
 
 \item{adminType}{Route of administration
-(iv-bolus,iv-infusion,ss,extravascular) (\strong{"extravascular"})}
+(iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})}
 
 \item{doseNm}{Column name to specify dose identifiers (\strong{"NULL"})}
 
-\item{dose}{Dose identifiers used in the entire data (c(1,2)) (\strong{"NULL"})}
+\item{dose}{Dose identifiers used in the entire data (c(1,2))
+(\strong{"NULL"})}
 
-\item{doseNumber}{Dose identifier used in this estimation (1) (\strong{"NULL"})}
+\item{doseNumber}{Dose identifier used in this estimation (1)
+(\strong{"NULL"})}
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
@@ -43,16 +45,18 @@ est.nca(time, conc, backExtrp = "FALSE", negConcExcl = "FALSE",
 \item{LambdaTimeRange}{User-defined window of time to estimate elimination
 rate-constant (\strong{"NULL"})}
 
-\item{LambdaExclude}{User-defined excluded observations during estimation of
-elimination rate-constant (\strong{"NULL"})}
+\item{LambdaExclude}{User-defined excluded observation time points for
+estimation of elimination rate-constant (\strong{"NULL"})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}
 
 \item{TI}{Infusion duration (\strong{"NULL"})}
 
-\item{simFile}{Name of the simulated concentration-time data if present (\strong{"NULL"})}
+\item{simFile}{Name of the simulated concentration-time data if present
+(\strong{"NULL"})}
 
-\item{dset}{Type, i.e., observed or simulated concentration-time data set ("obs" or "sim") (\strong{"obs"})}
+\item{dset}{Type, i.e., observed or simulated concentration-time data set
+  ("obs" or "sim") (\strong{"obs"})}
 }
 \value{
 An array of estimated NCA metrics
@@ -146,18 +150,21 @@ below.
  sampled time extrapolated to infinity based on the last predicted
  concentration obtained from the regression line used to estimate Lambda_z
  (Clast_pred).
- \item \strong{Vss_obs and Vss_pred} are estimated volume of distribution at
- steady-state based on Clast_obs and Clast_pred, respectively.
  \item \strong{Tau} is the dosing interval for steady-state data. This value
  is assumed equarion over multiple doses.
  \item \strong{Cmin and Tmin} are the minimum concentration between 0 and
  Tau and the corresponding time, respectively.
  \item \strong{Cavg} is the average concentration between 0 and Tau for
  steady-state data.
+ \item \strong{AUCtau and AUMCtau} are AUC and AUMC between 0 and Tau for
+ steady-state data.
+ \item \strong{Clss} is an estimate of the total body clearance for
+ steady-state data.
+ \item \strong{Vss_obs and Vss_pred} are estimated volume of distribution at
+ steady-state based on Clast_obs and Clast_pred, respectively.
  \item \strong{p_Fluctuation} is the percentage of the fluctuation of the
  concentration between 0 and Tau for steady-state data.
  \item \strong{Accumulation_Index} is \eqn{1/(1-e^(-\lambda_z*\tau))}
- \item \strong{Clss} is an estimate of the total body clearance for steady-state data.
 }
 }
 

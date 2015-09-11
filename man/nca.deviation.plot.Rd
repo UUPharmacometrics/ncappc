@@ -6,7 +6,7 @@
 data}
 \usage{
 nca.deviation.plot(plotdata, xvar = NULL, devcol = NULL, figlbl = NULL,
-  spread = "pi", cunit = "[M].[L]^-3", tunit = "[T]")
+  spread = "npi", cunit = "[M].[L]^-3", tunit = "[T]")
 }
 \arguments{
 \item{plotdata}{A data frame containing the scaled deviation values of the
@@ -21,8 +21,9 @@ data (\strong{NULL})}
 \item{figlbl}{Figure label based on dose identifier and/or population
 stratifier (\strong{NULL})}
 
-\item{spread}{measure of the spread of simulated data (sd or pi (95\%
-nonparametric prediction interval)) (\strong{"pi"})}
+\item{spread}{Measure of the spread of simulated data (ppi (95\% parametric
+prediction interval) or npi (95\% nonparametric prediction interval))
+(\strong{"npi"})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 

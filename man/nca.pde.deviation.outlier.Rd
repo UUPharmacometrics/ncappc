@@ -7,8 +7,9 @@ deviation of NCA metrics estimated from observed and simulated data.
 Identifies outlier to population PK model.}
 \usage{
 nca.pde.deviation.outlier(obsdata, simdata, idNm = "ID", id = NULL,
-  spread = "pi", figlbl = NULL, calcparam = c("AUClast", "Cmax"),
-  diagparam = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]")
+  spread = "npi", figlbl = NULL, calcparam = c("AUClast", "Cmax"),
+  diagparam = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]",
+  noPlot = "FALSE")
 }
 \arguments{
 \item{obsdata}{A data frame containing the NCA metrics values estimated from
@@ -21,8 +22,9 @@ the simulated data}
 
 \item{id}{ID of the individual whose data is being evaluated}
 
-\item{spread}{measure of the spread of simulated data (sd or pi (95\%
-nonparametric prediction interval)) (\strong{"pi"})}
+\item{spread}{Measure of the spread of simulated data (ppi (95\% parametric
+prediction interval) or npi (95\% nonparametric prediction interval))
+(\strong{"npi"})}
 
 \item{figlbl}{Figure label based on dose identifier and/or population
 stratifier, in addition to ID (\strong{NULL})}
@@ -30,16 +32,19 @@ stratifier, in addition to ID (\strong{NULL})}
 \item{calcparam}{A character array of the NCA metrics used for calculations
 of PDE and deviation. The allowed NCA metrics for this histograms are
 "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast",
-"Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast","Cmax")})}
+"Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
 
 \item{diagparam}{A character array of the NCA metrics used for diagnostic
 test. The allowed NCA metrics for this histograms are "AUClast",
 "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax"
-and "HL_Lambda_z". (\strong{c("AUClast","Cmax")})}
+and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 
 \item{tunit}{Unit for time (\strong{"[T]"})}
+
+\item{noPlot}{Perform only NCA calculations without any plot generation
+  (TRUE, FALSE) (\strong{"FALSE"})}
 }
 \value{
 returns the observed data frame with added distance and simulation
@@ -57,13 +62,13 @@ simulated data. Identifies outlier to population PK model.
 \pkg{nca.pde.deviation.outlier} calculates individual prediction distribution
 errors (PDE) and scaled deviation of NCA metrics estimated from observed and
 simulated data. The deviation of each estimated NCA metrics is scaled by the
-"spread" of the simulated values. The "spread" is measured either by the
-standard deviation or 95\% non-parametric prediction interval. Any individual
-yielding an absolute value of the scaled deviation for any of the selected
-NCA metrics greater than 1, is assigned as an outlier to the corresponding
-population PK model. The allowed NCA metrics for this diagnostic tests are
-"AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax",
-"Tmax" and "HL_Lambda_z". By default, this function uses AUClast and Cmax
-metrics for the comparison.
+"spread" of the simulated values. The "spread" is measured either by the 95\%
+parametric prediction interval or 95\% non-parametric prediction interval.
+Any individual yielding an absolute value of the scaled deviation for any of
+the selected NCA metrics greater than 1, is assigned as an outlier to the
+corresponding population PK model. The allowed NCA metrics for this
+diagnostic tests are "AUClast", "AUClower_upper", "AUCINF_obs",
+"AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
+function uses AUClast and Cmax metrics for the comparison.
 }
 

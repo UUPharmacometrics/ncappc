@@ -29,7 +29,7 @@ The calculated statistics are
  \item SE = Standard error value of the array
  \item CVp = Percent coefficient of variation of the array
  \item CI95u = Upper limit of the 95\% confidence interval of the array
- \item CI95l = Lower limit of the 95\% confidence interval of the array
+ \item cI95l = Lower limit of the 95\% confidence interval of the array
  \item gMean = Geometric mean value of the array
  \item gCVp = Geometric percent coefficient of variation of the array
 }

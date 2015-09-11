@@ -9,7 +9,7 @@ The ***ncappc*** functionality produces this table to report the estimated value
 
 If simulated data is provided, this table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the mean of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the mean of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics.
 
-### Obs\_Stat\_[population and/or occasion stratifier].tsv  
+### Obs\_Stat.tsv  
 This table reports a set of statistical parameters calculated for the entire population or the stratified population for the following NCA metrics estimated from the observed data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
   * Ntot = Total number of data points, Nunique = number of unique data points
   * Min = minimum value
@@ -23,7 +23,7 @@ This table reports a set of statistical parameters calculated for the entire pop
   * gMean = geometric mean
   * gCVp = geometric coefficient of variation %.
 
-### Sim\_Stat\_[population and/or occasion stratifier].tsv  
+### Sim\_Stat.tsv  
 This table reports a set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
   * Ntot = Total number of data points, Nunique = number of unique data points
   * Min = minimum value
@@ -43,17 +43,20 @@ This table reports the simulated concentration-time profiles for each individual
 ### ncaSimEst.tsv  
 This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSIM" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
 
+
 ## Graphical output
 ### [Individual level] Concentration *vs.* time profile  
-<img src="conc.png" height="350px" width="500px" align="middle" />  
+<img src="conc.jpeg" height="350px" width="500px" align="middle" />  
 
-The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every two strata. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth. The above figure shows a typical example of the concentration-time profile.
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
+
+The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. Each of the lines represents individual data. The above figure shows a typical example of the concentration-time profile. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
 
 
 ### [Population level] Histogram of the selected NCA metrics estimated from the observed data  
 <img src="histobs.png" height="600px" width="550px" align="middle" />  
 
-The second set of figures represent the histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. The solid and dotted blue vertical lines represent the population mean and the "spread" of the data, respectively. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval of the PK measures obtained from the simulated data. The above figure shows a typical example of this set of plots.
+The second set of figures represent the histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. The solid and dotted blue vertical lines represent the population mean and the "spread" of the data, respectively. The "spread" is either defined by the 95% parametric prediction interval or by the 95% nonparametric prediction interval of the PK measures obtained from the simulated data. The above figure shows a typical example of this set of plots.
 
 
 ### [Population level] Histogram of the simulated population means of the NCA metrics  
@@ -65,7 +68,7 @@ The third set of figures represent the histograms of the population means of the
 ### [Individual level] Deviation of the simulated NCA metrics from the observed value  
 <img src="deviation.png" height="350px" width="500px" align="middle" />  
 
-The fourth set of plots represent the deviation of the mean of the NCA metrics for each individual estimated from the sets of simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the "spread" of the simulated data as defined either by the standard deviation or by the distance between the meanSim and the 95% nonparametric prediction interval boundary of the simulated NCA metric distribution nearer to the observed value (Deviation = (Obs - meanSim)/ standard deviation) or (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% nonparametric prediction interval boundary nearer to the Obs). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+The fourth set of plots represent the deviation of the mean of the NCA metrics for each individual estimated from the sets of simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the "spread" of the simulated data as defined either by the distance between the meanSim and the 95% parametric prediction interval or by the distance between the meanSim and the 95% nonparametric prediction interval boundary of the simulated NCA metric distribution nearer to the observed value (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% parametric prediction interval boundary) or (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% nonparametric prediction interval boundary nearer to the Obs). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
 
 
 ### [Individual level] Distribution of the simulated NCA metrics for the outliers}  

@@ -5,35 +5,39 @@
 \title{Plots histogram of selected set of NCA metrics.}
 \usage{
 histobs.plot(plotData, figlbl = NULL, param = c("AUClast", "AUCINF_obs",
-  "Cmax", "Tmax"), cunit = "[M].[L]^-3", tunit = "[T]", spread = "pi")
+  "Cmax", "Tmax"), cunit = "[M].[L]^-3", tunit = "[T]", spread = "npi")
 }
 \arguments{
 \item{plotData}{A data frame with the estimated NCA metrics}
 
-\item{figlbl}{Figure label based on dose identifier and/or population stratifier (\strong{NULL})}
+\item{figlbl}{Figure label based on dose identifier and/or population
+stratifier (\strong{NULL})}
 
 \item{param}{A character array of the NCA metrics. The allowed NCA metrics
 for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
-(\strong{c("AUClast","AUCINF_obs","Cmax","Tmax")})}
+(\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})}
 
 \item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
 
 \item{tunit}{Unit for time (\strong{"[T]"})}
 
-\item{spread}{measure of the spread of simulated data (sd or pi (95\%
-  nonparametric prediction interval)) (\strong{"pi"})}
+\item{spread}{Measure of the spread of simulated data (ppi (95\% parametric
+  prediction interval) or npi (95\% nonparametric prediction interval))
+  (\strong{"npi"})}
 }
 \value{
 returns a graphical object created by arrangeGrob function
 }
 \description{
-\pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g. AUClast, AUCINF_obs, Cmax and Tmax).
+\pkg{histobs.plot} plots histogram of selected set of NCA metrics (e.g.
+AUClast, AUCINF_obs, Cmax and Tmax).
 }
 \details{
-\pkg{histobs.plot} plots histogram of selected set of NCA metrics. The allowed NCA
-metrics for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
-"AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
-function produces histogram of AUClast, AUCINF_obs, Cmax and Tmax.
+\pkg{histobs.plot} plots histogram of selected set of NCA metrics. The
+allowed NCA metrics for this histograms are "AUClast", "AUClower_upper",
+"AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By
+default, this function produces histogram of AUClast, AUCINF_obs, Cmax and
+Tmax.
 }
 
