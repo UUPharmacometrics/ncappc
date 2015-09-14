@@ -1729,6 +1729,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
             for (i in 1:length(id)){
               obsdata <- subset(outData, ID==id[i] & GROUP==as.character(grp[g]) & FLAG==as.character(flag[f]) & DoseNumber==dose[d])
               simdata <- subset(tdasdf, ID==id[i])
+              if(nrow(obsdata)==0 | nrow(simdata)==0) next
               figlbl  <- paste(grNm,"-",as.character(grp[g]),"_",flNm,"-",as.character(flag[f]),"_",oidNm,"-",dose[d],sep="")
               pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit)
               pde     <- rbind(pde, cbind(data.frame(ID=id[i],GROUP=as.character(grp[g]),FLAG=as.character(flag[f]),DoseNumber=dose[d]), pdeout$pde))

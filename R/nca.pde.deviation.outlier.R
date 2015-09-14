@@ -84,7 +84,8 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   isimlst    <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x) as.numeric(as.character(x[x!="NaN" & !is.na(x) & x!=Inf & x!=-Inf]))))
   if(is.null(colnames(isimlst))) isimlst <- t(isimlst)
   
-  metric     <- ""                                                # NCA metric associated with the outlier
+  metric     <- ""    # NCA metric associated with the outlier
+  diagNm     <- ""    # List of outliers for each NCA diagnostic metric
   pdata      <- data.frame(oval=numeric(0),sval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
   pde        <- data.frame(matrix(ncol=length(calcparam),nrow=1))   # store PDE values
   names(pde) <- calcparam
