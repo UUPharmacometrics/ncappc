@@ -78,6 +78,9 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
       longdata[longdata$type==npdecol[i],"sd1"]    <- abs(sd(npdeval)-(sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.975,length(npdeval)-1))))
       longdata[longdata$type==npdecol[i],"sd2"]    <- abs(sd(npdeval)-(sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.025,length(npdeval)-1))))
     }
+    
+    longdata$FCT    <- paste0(longdata$type,"\nmean=", signif(longdata$mean,3), "+/-", signif(longdata$ci,3), "\nSD=", signif(longdata$sd,3), "(-", signif(longdata$sd1,3), ",+", signif(longdata$sd2,3),")")
+    
     longdata$mcil   <- longdata$mean - longdata$ci
     longdata$mciu   <- longdata$mean + longdata$ci
     longdata$sdl    <- longdata$mean - longdata$sd
@@ -142,7 +145,7 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
                            geom_vline(aes(xintercept=as.numeric(mean), color="meanNPDE", lty="meanNPDE"), size=1),
                            geom_vline(aes(xintercept=as.numeric(sdl), color="+/-(SD)", lty="+/-(SD)"), size=1),
                            geom_vline(aes(xintercept=as.numeric(sdu), color="+/-(SD)", lty="+/-(SD)"), size=1),
-                           facet_wrap(~type, ncol=nc, scales="free"),
+                           facet_wrap(~FCT, ncol=nc, scales="free"),
                            theme(strip.text.x = element_text(size=10, face="bold")))
     
     if (is.null(figlbl)){
