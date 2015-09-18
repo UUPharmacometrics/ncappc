@@ -1,6 +1,6 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
-Version: 0.2.0.1
+Version: 0.2.0.9000
 Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email =
     "chayan.acharya@farmbio.uu.se"), person("Andrew C.", "Hooker", role =
     "aut"), person("Siv", "Jonsson", role = "aut"), person("Mats O.",
@@ -12,6 +12,7 @@ Description: A flexible tool is presented here that can perform
 Depends:
     R (>= 2.15.3),
     ggplot2,
+    grid,
     gridExtra
 Imports:
     scales,
