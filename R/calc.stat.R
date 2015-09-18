@@ -45,9 +45,29 @@ calc.stat <- function(x){
   CVp     <- 100*SD/Mean
   CI95l   <- Mean-abs(qt(0.025,Ntot-1)*SE)  # two-tailed
   CI95u   <- Mean+abs(qt(0.975,Ntot-1)*SE)  # two-tailed
-  gMean   <- exp(mean(log(x)))
-  gCVp    <- sqrt(exp(sd(log(x))^2)-1)*100
+  
+  gm_mean = function(x, na.rm=TRUE){
+    if(any(x < 0, na.rm = TRUE)){
+      return(NaN)
+    }
+    if(any(x == 0, na.rm = TRUE)){
+      return(0)
+    }
+    exp(mean(log(x), na.rm = na.rm))
+  }
+  
+  gm_cv_p = function(x, na.rm=TRUE){
+    if(any(x <= 0, na.rm = TRUE)){
+      return(NaN)
+    }
+    sqrt(exp(sd(log(x))^2)-1)*100
+  }
+  
+  gMean   <- gm_mean(x)
+  gCVp    <- gm_cv_p(x)
   stPrm   <- c(Ntot,Nunique,Min,Max,Mean,Median,SD,SE,CVp,CI95l,CI95u,gMean,gCVp)
   names(stPrm) <- c("Ntot","Nunique","Min","Max","Mean","Median","SD","SE","CVp","CI95l","CI95u","gMean","gCVp")
   return(stPrm)
 }
+
+
