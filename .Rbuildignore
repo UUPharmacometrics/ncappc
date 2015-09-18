@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^sync_fork.sh$
+^to_change.txt$
+
