@@ -120,10 +120,19 @@ histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("
   mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
   lheight  <- sum(mylegend$heights)
   for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
-  gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,
-                                                   c(gplt, list(main = textGrob(paste("Histogram of simulated population means (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                                                                sub = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                                                                ncol=nc)))))
+  
+  plot_args <- list(top = textGrob(paste("Histogram of simulated population means (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                    bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                    ncol=nc)
+  if(packageVersion("gridExtra") < "0.9.2"){
+    arg_names <- names(plot_args)
+    arg_names <- sub("top","main",arg_names)
+    arg_names <- sub("bottom","sub",arg_names)
+    names(plot_args) <- arg_names
+  }  
+  gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,c(gplt,plot_args))))
+  #grid.arrange(gdr)
+  
   histpopgrob <- list(gdr=gdr,legend=mylegend,lheight=lheight)
   return(histpopgrob)
 }

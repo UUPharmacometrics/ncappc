@@ -193,11 +193,18 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
       lheight  <- sum(mylegend$heights)
       for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
-      gdr <- suppressMessages(suppressWarnings(
-        do.call(arrangeGrob, c(gplt,
-                               list(main = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                                    sub = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                                    ncol=nc)))))
+      
+      plot_args <- list(top = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                        bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+                        ncol=nc)
+      if(packageVersion("gridExtra") < "0.9.2"){
+        arg_names <- names(plot_args)
+        arg_names <- sub("top","main",arg_names)
+        arg_names <- sub("bottom","sub",arg_names)
+        names(plot_args) <- arg_names
+      }  
+      gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,c(gplt,plot_args))))
+      #grid.arrange(gdr)
     }
   }
   return(list(obsdata=obsdata,pde=pde,metric=metric,grob=gdr,legend=mylegend,lheight=lheight))
