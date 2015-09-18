@@ -1051,7 +1051,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       IPSIM <- function(table.sim,MDV.rm=T){
 
         #table.sim <-  "nca_simulation.1.npctab.dta"
-        # this is faster
+        # this is faster but doesn't read correctly with the extra lines between simulations
         #library(readr)
         #sim_2 <- read_table(table.sim, col_names = TRUE,skip = 1)
         
