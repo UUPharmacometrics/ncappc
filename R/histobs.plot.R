@@ -73,7 +73,7 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
       fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",tunit,")",sep="")))
     }
   }
-    
+  
   devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
   
   meanObs  <- sapply(plotData, FUN=function(x) mean(as.numeric(x), na.rm=T))
@@ -114,10 +114,18 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
   lheight  <- sum(mylegend$heights)
   for (p in 1:length(param)){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
-  gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,
-                                                   c(gplt, list(main = textGrob(paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
-                                                                sub = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
-                                                                ncol=nc)))))
+  
+  plot_args <- list(top = textGrob(paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
+                    bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
+                    ncol=nc)
+  if(packageVersion("gridExtra") < "0.9.2"){
+    arg_names <- names(plot_args)
+    arg_names <- sub("top","main",arg_names)
+    arg_names <- sub("bottom","sub",arg_names)
+    names(plot_args) <- arg_names
+  }  
+  gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,c(gplt,plot_args))))
+  #grid.arrange(gdr)
   histobsgrob <- list(gdr=gdr,legend=mylegend,lheight=lheight)
   return(histobsgrob)
 }

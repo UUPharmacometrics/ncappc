@@ -128,7 +128,21 @@
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,concUnit=NULL,timeUnit=NULL,doseUnit=NULL,doseNormUnit=NULL,obsLog="FALSE",simLog="FALSE",psnOut="FALSE",idNmObs="ID",timeNmObs="TIME",concNmObs="DV",idNmSim="ID",timeNmSim="TIME",concNmSim="DV",AUCTimeRange=NULL,backExtrp="FALSE",LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid="FALSE",evidIncl=0,mdv="FALSE",filterNm=NULL,filterExcl=NULL,negConcExcl="FALSE",param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,dateFormat=NULL,spread="npi",tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),figFormat="tiff",noPlot="FALSE",printOut="TRUE",studyName=NULL){
+ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
+                   flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,
+                   concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
+                   doseNormUnit=NULL,obsLog=FALSE,simLog=TRUE,
+                   psnOut=FALSE,idNmObs="ID",timeNmObs="TIME",
+                   concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
+                   concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
+                   LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,
+                   adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,
+                   method="mixed",blqNm=NULL,blqExcl=1,evid=FALSE,evidIncl=0,
+                   mdv=FALSE,filterNm=NULL,filterExcl=NULL,negConcExcl=FALSE,
+                   param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,
+                   dateFormat=NULL,spread="npi",
+                   tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
+                   figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- NULL
   rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd"))
@@ -610,7 +624,21 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut=="TRUE"){
+          #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)     
+          
+          #figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",oidNm,"-",dose[d],sep="")
+          #histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
+          #gdr         <- histobsgrob$gdr
+          #mylegend    <- histobsgrob$legend
+          #lheight     <- histobsgrob$lheight
+          #if (printOut=="TRUE"){
+          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          dev.off()
+          #}
+        }
       } 
     }
   }
@@ -701,7 +729,13 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut=="TRUE"){
+          #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          dev.off()
+        }
       }
     }
   }
@@ -795,7 +829,13 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        #if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut=="TRUE"){
+          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          dev.off()
+        }
       }
     }
   }
@@ -1008,13 +1048,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
     
     if (dirTest != 3){
       # read NONMEM output into individual simulation data file
-      IPSIM <- function(table.sim,MDV.rm){
-        if(missing(MDV.rm)){MDV.rm=T}
+      IPSIM <- function(table.sim,MDV.rm=T){
+
+        #table.sim <-  "nca_simulation.1.npctab.dta"
+        # this is faster but doesn't read correctly with the extra lines between simulations
+        #library(readr)
+        #sim_2 <- read_table(table.sim, col_names = TRUE,skip = 1)
+        
         sim <- read.table(table.sim,skip=1,header=T,fill=T,as.is=T)
-        sim <- as.data.frame(apply(sim,2,as.numeric))
+        #sim <- as.data.frame(apply(sim,2,as.numeric))
+        sim <- as.data.frame(apply(sim,2,function(x) suppressWarnings(as.numeric(x))))
         Nro <- min(which(is.na(sim[,1])))-1
         sim <- sim[!is.na(sim[,1]),]
         sim$NSUB <- rep(1:(nrow(sim)/Nro),each=Nro)
+        #nsim <- max(sim$NSUB)
         if(MDV.rm==T){
           if(any(colnames(sim)=='MDV')){sim <- sim[sim[,'MDV']==0,]
           }else{cat('\nWarning MDV data item not listed in header,
@@ -1023,6 +1070,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,flNm=NULL,flag=N
         assign("nmdf", sim)
         return(nmdf)
       }
+
       nmdf <- IPSIM(simFile,MDV.rm=F); simID <- unique(nmdf$NSUB); nsim <- length(unique(nmdf$NSUB))
       if (printOut=="TRUE") write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
