@@ -342,13 +342,13 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
       }
       
       if (doseType == "ss" && Tau > max(ltime) & AUCtau != 0){
-        uptime  <- max(AUCTimeRange)
-        lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
+        uptime  <- Tau
+        lowtime <- max(ltime)
         upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
-        lowconc <- ifelse(lowtime==max(ltime), exp(lconc[lnPt]), exp(slope*lowtime+intercept))
-        delauc   <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
-        delaumc  <- ((((upconc*lowconc)-(lowconc*lowtime))*(uptime-lowtime))/(log(upconc/lowconc))) - ((upconc-lowconc)*((uptime-lowtime)**2)/((log(upconc/lowconc))**2))
-        AUCtau <- sum(AUCtau, delauc)
+        lowconc <- exp(lconc[lnPt])
+        delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
+        delaumc <- ((((upconc*lowconc)-(lowconc*lowtime))*(uptime-lowtime))/(log(upconc/lowconc))) - ((upconc-lowconc)*((uptime-lowtime)**2)/((log(upconc/lowconc))**2))
+        AUCtau  <- sum(AUCtau, delauc)
         AUMCtau <- sum(AUMCtau, delaumc)
       }
       

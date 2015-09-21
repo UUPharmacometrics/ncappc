@@ -17,9 +17,9 @@ concUnit | String | NULL | Unit of concentration
 timeUnit | String | NULL | Unit of time
 doseUnit | String | NULL | Unit of dose amount
 doseNormUnit | String | NULL | Normalization factor of dose amount (e.g. "kg")
-obsLog | String | "FALSE" | DV in Observed data in logarithmic form ("TRUE", "FALSE")
-simLog | String | "FALSE" | DV in NONMEM output in logarithmic form ("TRUE", "FALSE")
-psnOut | String | "FALSE" | if the observed data is an output from PsN
+obsLog | String | FALSE | DV in Observed data in logarithmic form (TRUE, FALSE)
+simLog | String | FALSE | DV in NONMEM output in logarithmic form (TRUE, FALSE)
+psnOut | String | FALSE | if the observed data is an output from PsN
 idNmObs | String | "ID" | Column name for ID in observed data
 timeNmObs | String | "TIME" | Column name for time in observed data
 concNmObs | String | "DV" | Column name for conc in observed data
@@ -27,7 +27,7 @@ idNmSim | String | "ID" | Column name for ID in simulated data
 timeNmSim | String | "TIME" | Column name for time in simulated data
 concNmSim | String | "DV" | Column name for conc in simulated data
 AUCTimeRange | Numeric array of two elements | NULL | User-defined window of time used to estimate AUC
-backExtrp | String | "FALSE" | If back-extrapolation is needed for AUC ("TRUE" or "FALSE")
+backExtrp | String | FALSE | If back-extrapolation is needed for AUC (TRUE or FALSE)
 LambdaTimeRange | Numeric array of two elements | NULL | User-defined window of time to estimate elimination rate-constant
 LambdaExclude | Numeric array | NULL | User-defined excluded observation time points for estimation of elimination rate-constant
 doseAmtNm | String | NULL | Column name to specify dose amount
@@ -38,12 +38,12 @@ TI | Numeric | NULL | Infusion duration
 method | String | "linear" | Method to estimate area under the curve (e.g. "linear", "loglinear" or "mixed")
 blqNm | String | NULL | Name of BLQ column if used
 blqExcl | String or numeric | "1" | Excluded BLQ value or logical condition (e.g. 1, ">=1", c(1,">3"))
-evid | String | "FALSE" | Use EVID (yes, no)
-evidIncl | Numeric | "0" | Included EVID
-mdv | String | "FALSE" | Use MDV ("TRUE" (includes data for MDV==0), "FALSE")
+evid | String | FALSE | Use EVID (yes, no)
+evidIncl | Numeric | 0 | Included EVID
+mdv | String | FALSE | Use MDV (TRUE (includes data for MDV==0), FALSE)
 filterNm | String | NULL | Column name for filter
 filterExcl | String or numeric | NULL | Filter identifier or logical condition used for row exclusion (e.g. c(1,2, "<20", ">=100", "!=100") )
-negConcExcl | String | "FALSE" | Exclude negative values for concentration
+negConcExcl | String | FALSE | Exclude negative values for concentration
 param | String array | c("AUClast", "Cmax") | NCA metrics that can be used to perform diagnostic tests ("AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z") 
 timeFormat | String | "number" | time format ("number", "H:M", "H:M:S")
 dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
@@ -51,8 +51,8 @@ dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combinat
 spread | String | "npi" | measure of the spread of simulated data ("ppi" (95% parametric prediction interval) or "npi" (95% nonparametric prediction interval))
 tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
 figFormat | String | "tiff" | Format of the produced figures ("bmp", "jpeg", "tiff", "png")
-noPlot | String | "FALSE" | Perform only NCA calculations without any plot generation ("TRUE", "FALSE")
-printOut | String | "TRUE" | Write/print output on the disk ("TRUE", "FALSE")
+noPlot | String | FALSE | Perform only NCA calculations without any plot generation (TRUE, FALSE)
+printOut | String | TRUE | Write/print output on the disk (TRUE, FALSE)
 
 
 **obsFile**  
@@ -86,10 +86,10 @@ Unit for the dosage amount (e.g. "ng"). The default value for this argument is *
 Normalization factor for the dosage amount (e.g. body weight in "kg"). The default value for this argument is ***NULL***.
 
 **obsLog and simLog**  
-These arguments decide if the concentration values in the observed and simulated data sets are in logarithmic form. The accepted input to these arguments is either "TRUE" or "FALSE". The default value for these arguments is ***"FALSE"***.
+These arguments decide if the concentration values in the observed and simulated data sets are in logarithmic form. The accepted input to these arguments is either TRUE or FALSE. The default value for these arguments is ***FALSE***.
 
 **psnOut**  
-It is possible to generate the input file with the observed data using PsN. This argument lets the function know if the input data is in PsN or NONMEM output format. The possible values to this argument are "TRUE" and "FALSE", ***"FALSE"*** being the default value.
+It is possible to generate the input file with the observed data using PsN. This argument lets the function know if the input data is in PsN or NONMEM output format. The possible values to this argument are TRUE and FALSE, ***FALSE*** being the default value.
 
 **idNmObs and idNmSim**  
 Column name for individual ID in observed and simulated data. The default value for this argument is ***"ID"***.
@@ -104,7 +104,7 @@ Column name for plasma concentration in observed and simulated data. The default
 This argument lets the user to choose a specific window of time to be used to estimate AUC. The accepted format for the input to this argument is a numeric array of two elements; c(1,24) will estimate the AUC values within 1st to 24th unit of time interval. The default value for this argument is ***NULL***.
 
 **backExtrp**  
-This argument lets the user to choose if the back extrapolation for the area estimatation is performed from rhe first observed data to dosing time. The default value for this argument is ***"FALSE"***.
+This argument lets the user to choose if the back extrapolation for the area estimatation is performed from rhe first observed data to dosing time. The default value for this argument is ***FALSE***.
 
 **LambdaTimeRange**  
 This argument lets the user to choose a specific window of time to be used to estimate the elimination rate constant (Lambda) in the elimination phase after the last observed data. The accepted format for the input to this argument is a numeric array of two elements; c(14,24) will estimate the Lambda using the data within the 14th to 24th unit of time interval. The default value for this argument is ***NULL***.
@@ -137,13 +137,13 @@ Name of the BLQ data column, if the user decides to filter the input based on BL
 The BLQ values that will be used to filter the input data. This argument will be used only if the "blqNm" argument is non-empty. This argument accepts either numeric values and/or logical conditions (e.g. 1, ">=1", c(1,">3")). The default value for this argument is ***1***.
 
 **evid**  
-This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either "TRUE" or "FALSE". The default value for this argument is ***"FALSE"***.
+This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
 
 **evidIncl**  
 This arguments accepts the values of the EVID data that will included for the calculations. This argument is used only if the "evid" argument is non-empty. The default value for this argument is ***0***.
 
 **mdv**  
-This argument decides if the MDV column will be used to filter the input data. The accepted input to this argument is either "TRUE" or "FALSE". The default value for this argument is ***"FALSE"***. If chosen "TRUE", all rows with MDV = 0 will be selected for the calculations.
+This argument decides if the MDV column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***. If chosen TRUE, all rows with MDV = 0 will be selected for the calculations.
 
 **filterNm**  
 The name of the column that will be used to filter the input data. The default value for this argument is ***NULL***.
@@ -153,7 +153,7 @@ This arguments accepts the values from the "filterNm" column that will used to e
 ">=100", "!=100", c(1,">3"), or c("a","3")). This argument is used only if the *"filterNm"* argument is non-empty. The default value for this argument is ***NULL***.
 
 **negConcExcl**  
-This argument is used to exclude the data with negative concentration values. The accepted input to this argument is either "TRUE" or "FALSE". The default value for this argument is ***"FALSE"***.
+This argument is used to exclude the data with negative concentration values. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
 
 **param**  
 This argument lists the NCA metrics that will be used to perform the diagnostic tests. Any combination of the following NCA metrics can be assigned to this argument: "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z". The default value for this argument is ***c("AUClast","Cmax")***.
@@ -177,8 +177,8 @@ This argument selects the table columns, in addition to ID, dose and population 
 This argument selects the format of the produced figures. Acceptable value for this argument is either bmp, jpeg, tiff or png. The default value is ***"tiff"***.
 
 **noPlot**
-This argument can turn on/off plot generation during NCA calculations. Acceptable value for this argument is either "TRUE" (turns off plot generation) or "FALSE" (turns on plot generation). The default value is ***"FALSE"***.
+This argument can turn on/off plot generation during NCA calculations. Acceptable value for this argument is either TRUE (turns off plot generation) or FALSE (turns on plot generation). The default value is ***FALSE***.
 
 **printOut**
-This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk. Acceptable value for this argument is either "TRUE" or "FALSE". The default value is ***"TRUE"***.
+This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk. Acceptable value for this argument is either TRUE or FALSE. The default value is ***TRUE***.
 
