@@ -332,7 +332,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         Vz_pred <- doseAmt/(Lambda_z*AUCINF_pred); Cl_pred <- doseAmt/AUCINF_pred
       }
       
-      if(max(AUCTimeRange) >  max(ltime)){
+      if(!is.null(AUCTimeRange) && (max(AUCTimeRange)>max(ltime))){
         uptime  <- max(AUCTimeRange)
         lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
         upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
@@ -341,7 +341,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         AUClower_upper <- AUClower_upper + delauc
       }
       
-      if (doseType == "ss" && Tau > max(ltime) & AUCtau != 0){
+      if (doseType == "ss" && (Tau > max(ltime) & AUCtau != 0)){
         uptime  <- Tau
         lowtime <- max(ltime)
         upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
