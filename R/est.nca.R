@@ -112,8 +112,8 @@
 #' @param time Numeric array for time
 #' @param conc Numeric array for concentration
 #' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE)
-#'   (\strong{"FALSE"})
-#' @param negConcExcl Exclude -ve conc (\strong{"FALSE"})
+#'   (\strong{FALSE})
+#' @param negConcExcl Exclude -ve conc (\strong{FALSE})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
 #' @param adminType Route of administration
@@ -145,7 +145,7 @@
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # function to estimate NCA parameters
-est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns",adminType="extravascular",doseNm=NULL,dose=NULL,doseNumber=NULL,doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
+est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",adminType="extravascular",doseNm=NULL,dose=NULL,doseNumber=NULL,doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
   
   "tail" <- "head" <- "lm" <- "coef" <- NULL
   rm(list=c("tail","head","lm","coef"))
@@ -163,14 +163,14 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
   nconc <- as.numeric(conc)
   
   # Exclude zero or negative concentration from calculations
-  if (negConcExcl == "TRUE"){
+  if (negConcExcl == TRUE){
     zid <- which (nconc < 0)
     if (length(zid) > 0){ntime  <- ntime[-zid]; nconc  <- nconc[-zid]}
   }
   
   if (length(nconc) >= 2){
     # Calculation of C0
-    if (backExtrp == "TRUE"){
+    if (backExtrp == TRUE){
       ndose <- ifelse(!is.null(dose), length(dose), 0)
       if (ndose == 1 | (!is.null(doseNm) & doseNumber == dose[1])){
         if (ntime[1] == 0){
@@ -223,8 +223,8 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
         delaumc  <- 0.5*((nconc[r+1]*ntime[r+1])+(nconc[r]*ntime[r]))*(ntime[r+1]-ntime[r])
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (r>1 & backExtrp == "TRUE"){AUCnoC0 <- sum(AUCnoC0, delauc)}
-        if (!is.null(AUCTimeRange)){if (ntime[r] >= sort(AUCTimeRange)[1] & ntime[r+1] <= sort(AUCTimeRange)[2]){AUClower_upper <- sum(AUClower_upper, delauc)}}
+        if (r>1 & backExtrp == TRUE){AUCnoC0 <- sum(AUCnoC0, delauc)}
+        if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
         if (doseType == "ss" && (ntime[r] >= 0 & ntime[r+1] <= Tau & ssnPt != 0)){
           AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
         }
@@ -233,8 +233,8 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
         delaumc  <- ((((nconc[r+1]*ntime[r+1])-(nconc[r]*ntime[r]))*(ntime[r+1]-ntime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((ntime[r+1]-ntime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (r>1 & backExtrp == "TRUE"){AUCnoC0  <- sum(AUCnoC0, delauc)}
-        if (!is.null(AUCTimeRange)){if (ntime[r] >= sort(AUCTimeRange)[1] & ntime[r+1] <= sort(AUCTimeRange)[2]){AUClower_upper <- sum(AUClower_upper, delauc)}}
+        if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+        if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
         if (doseType == "ss" && (ntime[r] >= 0 & ntime[r+1] <= Tau & ssnPt != 0)){
           AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
         }
@@ -244,8 +244,8 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
           delaumc  <- 0.5*((nconc[r+1]*ntime[r+1])+(nconc[r]*ntime[r]))*(ntime[r+1]-ntime[r])
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (r>1 & backExtrp == "TRUE"){AUCnoC0  <- sum(AUCnoC0, delauc)}
-          if (!is.null(AUCTimeRange)){if (ntime[r] >= sort(AUCTimeRange)[1] & ntime[r+1] <= sort(AUCTimeRange)[2]){AUClower_upper <- sum(AUClower_upper, delauc)}}
+          if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+          if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
           if (doseType == "ss"){
             if (ntime[r] >= 0 & ntime[r+1] <= Tau & ssnPt != 0){AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)}
           }
@@ -254,8 +254,8 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
           delaumc  <- ((((nconc[r+1]*ntime[r+1])-(nconc[r]*ntime[r]))*(ntime[r+1]-ntime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((ntime[r+1]-ntime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (r>1 & backExtrp == "TRUE"){AUCnoC0  <- sum(AUCnoC0, delauc)}
-          if (!is.null(AUCTimeRange)){if (ntime[r] >= sort(AUCTimeRange)[1] & ntime[r+1] <= sort(AUCTimeRange)[2]){AUClower_upper <- sum(AUClower_upper, delauc)}}
+          if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+          if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
           if (doseType == "ss" && (ntime[r] >= 0 & ntime[r+1] <= Tau & ssnPt != 0)){
             AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
           }
@@ -263,7 +263,7 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
       }
     }
     if (is.null(AUCTimeRange)){AUClower_upper <- AUClast}
-    if (backExtrp == "TRUE"){AUC_pBack_Ext <- 100*(AUClast-AUCnoC0)/AUClast} #else{AUC_pBack_Ext <- "NaN"}
+    if (backExtrp == TRUE){AUC_pBack_Ext <- 100*(AUClast-AUCnoC0)/AUClast} #else{AUC_pBack_Ext <- "NaN"}
     
     # MRTlast
     if (adminType != "iv-infusion"){
@@ -330,6 +330,26 @@ est.nca <- function(time,conc,backExtrp="FALSE",negConcExcl="FALSE",doseType="ns
         AUCINF_pred <- AUClast+AUCINF_pred; AUCINF_D_pred <- AUCINF_pred/doseAmt; AUC_pExtrap_pred <- 100*(AUCINF_pred-AUClast)/AUCINF_pred
         Vz_obs  <- doseAmt/(Lambda_z*AUCINF_obs);  Cl_obs  <- doseAmt/AUCINF_obs
         Vz_pred <- doseAmt/(Lambda_z*AUCINF_pred); Cl_pred <- doseAmt/AUCINF_pred
+      }
+      
+      if(max(AUCTimeRange) >  max(ltime)){
+        uptime  <- max(AUCTimeRange)
+        lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
+        upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
+        lowconc <- ifelse(lowtime==max(ltime), exp(lconc[lnPt]), exp(slope*lowtime+intercept))
+        delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
+        AUClower_upper <- AUClower_upper + delauc
+      }
+      
+      if (doseType == "ss" && Tau > max(ltime) & AUCtau != 0){
+        uptime  <- max(AUCTimeRange)
+        lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
+        upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
+        lowconc <- ifelse(lowtime==max(ltime), exp(lconc[lnPt]), exp(slope*lowtime+intercept))
+        delauc   <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
+        delaumc  <- ((((upconc*lowconc)-(lowconc*lowtime))*(uptime-lowtime))/(log(upconc/lowconc))) - ((upconc-lowconc)*((uptime-lowtime)**2)/((log(upconc/lowconc))**2))
+        AUCtau <- sum(AUCtau, delauc)
+        AUMCtau <- sum(AUMCtau, delaumc)
       }
       
       if(AUMClast != 0 & AUMCINF_obs != 0){

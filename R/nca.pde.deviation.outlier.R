@@ -42,7 +42,7 @@
 #' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
 #' @param tunit Unit for time (\strong{"[T]"})
 #' @param noPlot Perform only NCA calculations without any plot generation
-#'   (TRUE, FALSE) (\strong{"FALSE"})
+#'   (TRUE, FALSE) (\strong{FALSE})
 #'
 #' @return returns the observed data frame with added distance and simulation
 #'   mean of the nCA metrics, and a data frame with the PDE values of the NCA
@@ -52,7 +52,7 @@
 #' @export
 #'
 
-nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noPlot="FALSE"){
+nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noPlot=FALSE){
   
   "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "sd" <- "quantile" <- "scale_y_continuous" <- "percent" <- NULL
   rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar","..count..","..PANEL..","sd","quantile","scale_y_continuous","percent"))
@@ -155,7 +155,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       }
     }
     
-    if(noPlot=="FALSE"){
+    if(noPlot==FALSE){
       ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
                         scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
                         xlab(""), ylab(""),

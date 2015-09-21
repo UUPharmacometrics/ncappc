@@ -40,24 +40,24 @@
 #' @param obsFile Observed concentration-time data from an internal data frame
 #'   or an external table with comma, tab or space as separator
 #' @param simFile NONMEM simulation output with the simulated concentration-time
-#'   data from an internal data frame or an external table (\strong{"NULL"})
-#' @param grNm Column name for population stratifier (\strong{"NULL"})
-#' @param grp Stratification ID (e.g c(1,2)) (\strong{"NULL"})
-#' @param flNm Column name for popualtion stratifier (\strong{"NULL"})
-#' @param flag Stratification ID (e.g. c(1,2)) (\strong{"NULL"})
-#' @param doseNm Column name to specify dose identifiers (\strong{"NULL"})
-#' @param dose Dose identifiers to be used (c(1,2)) (\strong{"NULL"})
+#'   data from an internal data frame or an external table (\strong{NULL})
+#' @param grNm Column name for population stratifier (\strong{NULL})
+#' @param grp Stratification ID (e.g c(1,2)) (\strong{NULL})
+#' @param flNm Column name for popualtion stratifier (\strong{NULL})
+#' @param flag Stratification ID (e.g. c(1,2)) (\strong{NULL})
+#' @param doseNm Column name to specify dose identifiers (\strong{NULL})
+#' @param dose Dose identifiers to be used (c(1,2)) (\strong{NULL})
 #' @param concUnit Unit of concentration ("ng/mL") (\strong{"[M].[L]^-3"})
 #' @param timeUnit Unit of time ("h") (\strong{"[T]})
 #' @param doseUnit Unit of dose amount ("ng") (\strong{"[M]"})
 #' @param doseNormUnit Normalization factor of dose amount if used (kg)
-#'   (\strong{"NULL"})
+#'   (\strong{NULL})
 #' @param obsLog Concentration in observed data in logarithmic form (TRUE,
-#'   FALSE) (\strong{"FALSE"})
+#'   FALSE) (\strong{FALSE})
 #' @param simLog Concentration in simulated data in logarithmic form (TRUE,
-#'   FALSE) (\strong{"FALSE"})
+#'   FALSE) (\strong{FALSE})
 #' @param psnOut observed data is an output from PsN or in NONMEM output format 
-#'   (TRUE, FALSE) (\strong{"FALSE"})
+#'   (TRUE, FALSE) (\strong{FALSE})
 #' @param idNmObs Column name for ID in observed data (\strong{"ID"})
 #' @param timeNmObs Column name for time in observed data (\strong{"TIME"})
 #' @param concNmObs Column name for concentration in observed data
@@ -67,38 +67,38 @@
 #' @param concNmSim Column name for concentration in simulated data
 #'   (\strong{"DV"})
 #' @param AUCTimeRange User-defined window of time used to estimate AUC
-#'   (\strong{"NULL"})
+#'   (\strong{NULL})
 #' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE)
-#'   (\strong{"FALSE"})
+#'   (\strong{FALSE})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
-#'   rate-constant (\strong{"NULL"})
+#'   rate-constant (\strong{NULL})
 #' @param LambdaExclude User-defined excluded observation time points for
-#'   estimation of elimination rate-constant (\strong{"NULL"})
-#' @param doseAmtNm Column name to specify dose amount (\strong{"NULL"})
+#'   estimation of elimination rate-constant (\strong{NULL})
+#' @param doseAmtNm Column name to specify dose amount (\strong{NULL})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
-#' @param Tau Dosing interval for steady-state data (\strong{"NULL"})
-#' @param TI Infusion duration (\strong{"NULL"})
+#' @param Tau Dosing interval for steady-state data (\strong{NULL})
+#' @param TI Infusion duration (\strong{NULL})
 #' @param method linear, loglinear or mixed (\strong{"mixed"})
-#' @param blqNm Name of BLQ column if used (\strong{"NULL"})
+#' @param blqNm Name of BLQ column if used (\strong{NULL})
 #' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
 #'   c(1,">3")) (\strong{"1"})
-#' @param evid Use EVID (TRUE, FALSE) (\strong{"FALSE"})
+#' @param evid Use EVID (TRUE, FALSE) (\strong{FALSE})
 #' @param evidIncl Included EVID (\strong{"0"})
-#' @param mdv Use MDV (TRUE(includes data for MDV==0), FALSE) (\strong{"FALSE"})
-#' @param filterNm Column name for filter (\strong{"NULL"})
+#' @param mdv Use MDV (TRUE(includes data for MDV==0), FALSE) (\strong{FALSE})
+#' @param filterNm Column name for filter (\strong{NULL})
 #' @param filterExcl Filter identifier or logical condition used for row
-#'   exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{"NULL"})
-#' @param negConcExcl Exclude -ve conc (\strong{"FALSE"})
+#'   exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{NULL})
+#' @param negConcExcl Exclude -ve conc (\strong{FALSE})
 #' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs, 
 #'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) (c(\strong{"AUClast",
 #'   "Cmax"}))
 #' @param timeFormat time format (number, H:M, H:M:S) (\strong{"number"})
-#' @param dateColNm colunm name for date if used (Date, DATE) (\strong{"NULL"})
+#' @param dateColNm colunm name for date if used (Date, DATE) (\strong{NULL})
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
-#'   D,M,Y) (\strong{"NULL"})
+#'   D,M,Y) (\strong{NULL})
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric
 #'   prediction interval) or npi (95\% nonparametric prediction interval))
 #'   (\strong{"npi"})
@@ -109,11 +109,11 @@
 #' @param figFormat format of the produced figures (bmp, jpeg, tiff, png)
 #'   (\strong{"tiff"})
 #' @param noPlot Perform only NCA calculations without any plot generation
-#'   (TRUE, FALSE) (\strong{"FALSE"})
+#'   (TRUE, FALSE) (\strong{FALSE})
 #' @param printOut Write/print output on the disk. No plot will be saved if
-#'   noPlot is set to TRUE (TRUE, FALSE) (\strong{"TRUE"})
+#'   noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})
 #' @param studyName Name of the study to be added as a description in the report
-#'   (\strong{"NULL"})
+#'   (\strong{NULL})
 #'
 #' @import ggplot2
 #' @import gridExtra
@@ -156,10 +156,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   if (!is.data.frame(obsFile)){
     if (!file_test("-f", obsFile)){stop("File for the observed data does not exist\n")}
     # read observed data file
-    if (psnOut == "FALSE"){
+    if (psnOut == FALSE){
       extn <- tail(unlist(strsplit(obsFile, ".", fixed=T)), n=1)
       if(extn=="csv"){indf <- read.csv(obsFile)}else{indf <- read.table(obsFile, header=T)}
-    }else if (psnOut == "TRUE"){
+    }else if (psnOut == TRUE){
       indf <- read.table(obsFile, header=T, skip=1)
     }
   }else{
@@ -227,7 +227,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   if (adminType == "iv-infusion" & is.null(TI) & ("AMT"%in%colnames(indf)==F | "RATE"%in%colnames(indf)==F)){setwd(usrdir);stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data\n")}
   
   # Set backExtrp to FALSE in the presence of simulated data
-  if (!is.null(simFile)){backExtrp <- "FALSE"}
+  if (!is.null(simFile)){backExtrp <- FALSE}
   
   # Dose identifiers. For missing doseNm argument, data is assumed to have single dose.
   # Dose amount is extracted from doseAmtNm column
@@ -269,7 +269,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   }
   
   # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
-  if ((evid == "TRUE") & ("EVID"%in%colnames(indf) == T)){
+  if ((evid == TRUE) & ("EVID"%in%colnames(indf) == T)){
     # uevid == unique values in EVID column
     # evidIncl == EVID values to be included
     # ievid == EVID values to be ignored
@@ -278,7 +278,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   }
   
   # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
-  if (mdv == "TRUE"){
+  if (mdv == TRUE){
     if ("MDV"%in%colnames(indf) == T){indf <- indf[indf$MDV == 0,]}
   }
   
@@ -437,7 +437,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       time <- time[-zidx]
       conc <- conc[-zidx]
     }
-    if (obsLog == "TRUE"){
+    if (obsLog == TRUE){
       for (c in 1:length(conc)){conc[c] <- ifelse ((conc[c] != 0), exp(conc[c]), 0)}
     }
     
@@ -483,7 +483,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm)))
       }
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         plotData    <- subset(outData, DoseNumber=dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<=5) next
         pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -494,7 +494,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         gdr         <- histobsgrob$gdr
         mylegend    <- histobsgrob$legend
         lheight     <- histobsgrob$lheight
-        if (printOut=="TRUE"){
+        if (printOut==TRUE){
           fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
           eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -508,7 +508,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     cnm         <- c(paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noPlot=="FALSE"){
+    if(noPlot==FALSE){
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
       for (p in seq(1,nfct,3)){
@@ -533,7 +533,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut==TRUE) ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
       }
     }
   }
@@ -572,7 +572,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData <- rbind(outData, cbind(data.frame(GROUP=igr),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
         }
         
-        if(noPlot=="FALSE"){
+        if(noPlot==FALSE){
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -583,7 +583,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           gdr         <- histobsgrob$gdr
           mylegend    <- histobsgrob$legend
           lheight     <- histobsgrob$lheight
-          if (printOut=="TRUE"){
+          if (printOut==TRUE){
             fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
             eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -598,7 +598,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     cnm         <- c(paste("GID (",grNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noPlot=="FALSE"){
+    if(noPlot==FALSE){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -624,7 +624,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE"){
+        if (printOut==TRUE){
           #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)     
           
           #figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",oidNm,"-",dose[d],sep="")
@@ -632,7 +632,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           #gdr         <- histobsgrob$gdr
           #mylegend    <- histobsgrob$legend
           #lheight     <- histobsgrob$lheight
-          #if (printOut=="TRUE"){
+          #if (printOut==TRUE){
           fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -677,7 +677,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData <- rbind(outData, cbind(data.frame(FLAG=iflag),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
         }
         
-        if(noPlot=="FALSE"){
+        if(noPlot==FALSE){
           plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -688,7 +688,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           gdr         <- histobsgrob$gdr
           mylegend    <- histobsgrob$legend
           lheight     <- histobsgrob$lheight
-          if (printOut=="TRUE"){
+          if (printOut==TRUE){
             fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
             eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -703,7 +703,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     cnm         <- c(paste("GID (",flNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noPlot=="FALSE"){
+    if(noPlot==FALSE){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -729,7 +729,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut=="TRUE"){
+        if (printOut==TRUE){
           #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
           fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
@@ -776,7 +776,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             outData <- rbind(outData, cbind(data.frame(GROUP=igr,FLAG=iflag),data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm))))
           }
           
-          if(noPlot=="FALSE"){
+          if(noPlot==FALSE){
             plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
             if (nrow(plotData)<=5) next
             pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -787,7 +787,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             gdr         <- histobsgrob$gdr
             mylegend    <- histobsgrob$legend
             lheight     <- histobsgrob$lheight
-            if (printOut=="TRUE"){
+            if (printOut==TRUE){
               fl <- paste(usrdir,"/HistObs_",figlbl,sep="")
               eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)",sep="")))
               suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -803,7 +803,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     cnm         <- c(paste("GID (",grNm,")",sep=""),paste("SGID (",flNm,")",sep=""),paste("OID (",oidNm,")",sep=""),paste("Dose (",dunit,")",sep=""),"No. of individuals")
     names(pddf) <- cnm
     
-    if(noPlot=="FALSE"){
+    if(noPlot==FALSE){
       # ggplot for conc vs. time
       fct <- unique(cdata$FCT); nfct <- length(fct)
       # ggplot for conc vs. time
@@ -829,8 +829,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        #if (printOut=="TRUE") ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
-        if (printOut=="TRUE"){
+        #if (printOut==TRUE) ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut==TRUE){
           fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -840,7 +840,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     }
   }
   
-  if (printOut=="TRUE" && is.null(simFile)){
+  if (printOut==TRUE && is.null(simFile)){
     # write the output in a file
     tmpdf <- outData
     if (case == 1){
@@ -994,7 +994,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     }
     names(grStat)[c(1:3)] <- c(grNm,flNm,oidNm)
   }
-  if(printOut=="TRUE") write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
+  if(printOut==TRUE) write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
   
   ############################################################################
   # Analyze the simulated data if exists
@@ -1003,7 +1003,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     if(exists("outData")) assign("ncaOutput",  outData,   envir=streamsEnv)
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
-    if(printOut=="TRUE"){
+    if(printOut==TRUE){
       if (case == 1){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)), 100)
         names(prnTab)[2] <- oidNm
@@ -1072,7 +1072,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       }
 
       nmdf <- IPSIM(simFile,MDV.rm=F); simID <- unique(nmdf$NSUB); nsim <- length(unique(nmdf$NSUB))
-      if (printOut=="TRUE") write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
+      if (printOut==TRUE) write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
 
@@ -1127,7 +1127,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       }
       
       # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
-      if (evid == "TRUE"){
+      if (evid == TRUE){
         if ("EVID"%in%colnames(nmdf) == T){
           # uevid == unique values in EVID column
           # evidIncl == EVID values to be included
@@ -1147,7 +1147,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       }
       
       # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
-      if (mdv == "TRUE"){
+      if (mdv == TRUE){
         if ("MDV"%in%colnames(nmdf) == T){
           if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1)) == 0) next
           nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1),]
@@ -1176,7 +1176,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           if (is.na(amt) | is.na(rate) | rate==0){setwd(usrdir);stop(paste("Incorrect AMT and/or RATE value IN NONMEM output for ",ID,sep=""))}else{TI <- amt/rate}
         }else{TI <- "NaN"}
         conc <- as.numeric(as.character(ifdf[ifdf[,idCol]==ID,concCol]))
-        if (simLog == "TRUE"){
+        if (simLog == TRUE){
           for (c in 1:length(conc)){conc[c] <- ifelse ((conc[c] != 0), exp(conc[c]), 0)}
         }
         time   <- as.numeric(as.character(ifdf[ifdf[,idCol]==ID,timeCol]))
@@ -1308,7 +1308,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             }
           }
         }
-        if (printOut=="TRUE") write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        if (printOut==TRUE) write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
       }
     }
     
@@ -1320,7 +1320,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     file_list <- list.files(path=".", pattern="sim_[0-9]*.csv", full.names=T)
     nsim <- length(file_list)
     dasdf <- do.call(rbind, lapply(file_list, read.csv))
-    if (printOut=="TRUE") write.table(dasdf, file=paste(usrdir,"/ncaSimEst.tsv",sep=""), row.names=F, quote=F, sep="\t")
+    if (printOut==TRUE) write.table(dasdf, file=paste(usrdir,"/ncaSimEst.tsv",sep=""), row.names=F, quote=F, sep="\t")
     
     # Population histogram
     if (case == 1){
@@ -1332,14 +1332,14 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
           smeanData <- rbind(smeanData, tmpPrm)
         }
-        if(noPlot=="FALSE"){
+        if(noPlot==FALSE){
           obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d])
           figlbl      <- paste(oidNm,"-",dose[d],sep="")
           histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
           gdr         <- histpopgrob$gdr
           mylegend    <- histpopgrob$legend
           lheight     <- histpopgrob$lheight
-          if(printOut=="TRUE"){
+          if(printOut==TRUE){
             fl <- paste(usrdir,"/popMean_",figlbl,sep="")
             eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
             suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1363,14 +1363,14 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
             smeanData <- rbind(smeanData, tmpPrm)
           }
-          if(noPlot=="FALSE"){
+          if(noPlot==FALSE){
             obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & GROUP==as.character(grp[g]))
             figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",oidNm,"-",dose[d],sep="")
             histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
             gdr         <- histpopgrob$gdr
             mylegend    <- histpopgrob$legend
             lheight     <- histpopgrob$lheight
-            if (printOut=="TRUE"){
+            if (printOut==TRUE){
               fl <- paste(usrdir,"/popMean_",figlbl,sep="")
               eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1395,14 +1395,14 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
             smeanData <- rbind(smeanData, tmpPrm)
           }
-          if(noPlot=="FALSE"){
+          if(noPlot==FALSE){
             obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & FLAG==as.character(flag[f]))
             figlbl      <- paste(flNm,"-",as.character(flag[f]),"_",oidNm,"-",dose[d],sep="")
             histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
             gdr         <- histpopgrob$gdr
             mylegend    <- histpopgrob$legend
             lheight     <- histpopgrob$lheight
-            if (printOut=="TRUE"){
+            if (printOut==TRUE){
               fl <- paste(usrdir,"/popMean_",figlbl,sep="")
               eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1428,14 +1428,14 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
               tmpPrm <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
               smeanData <- rbind(smeanData, tmpPrm)
             }
-            if(noPlot=="FALSE"){
+            if(noPlot==FALSE){
               obsdata     <- subset(outData, select=param, ID!="" & DoseNumber==dose[d] & GROUP==as.character(grp[g]) & FLAG==as.character(flag[f]))
               figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",flNm,"-",as.character(flag[f]),"_",oidNm,"-",dose[d],sep="")
               histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smeanData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
               gdr         <- histpopgrob$gdr
               mylegend    <- histpopgrob$legend
               lheight     <- histpopgrob$lheight
-              if (printOut=="TRUE"){
+              if (printOut==TRUE){
                 fl <- paste(usrdir,"/popMean_",figlbl,sep="")
                 eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1489,11 +1489,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           if (pdeout$metric != ""){
             nout     <- nout + 1
             metric   <- paste(metric,pdeout$metric,sep=", ")
-            if(noPlot=="FALSE"){
+            if(noPlot==FALSE){
               gdr      <- pdeout$grob
               mylegend <- pdeout$legend
               lheight  <- pdeout$lheight
-              if (printOut=="TRUE"){
+              if (printOut==TRUE){
                 fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
                 eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1521,10 +1521,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       tmpdf <- outData
       names(outData)[2] <- oidNm
       outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         for (d in 1:ndose){
           plotdata <- subset(outData, DoseNumber==dose[d])
           if (nrow(plotdata) == 0) next
@@ -1533,7 +1533,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             devplot[[length(devplot)+1]] <- ggdev
           }
           # NPDE plot
@@ -1545,15 +1545,15 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+          if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           
           histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
           suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-          if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+          if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
         }
       }
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1564,7 +1564,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case==2){
       for (g in 1:ngrp){
@@ -1585,11 +1585,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(noPlot=="FALSE"){
+              if(noPlot==FALSE){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
-                if (printOut=="TRUE"){
+                if (printOut==TRUE){
                   fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
                   eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                   suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1618,10 +1618,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       tmpdf <- outData
       names(outData)[c(1,3)] <- c(grNm,oidNm)
       outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         for (g in 1:ngrp){  
           for (d in 1:ndose){
             plotdata <- subset(outData, GROUP==as.character(grp[g]) & DoseNumber==dose[d])
@@ -1631,7 +1631,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
-              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
               devplot[[length(devplot)+1]] <- ggdev
             }
             # NPDE plot
@@ -1643,16 +1643,16 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             
             histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
             suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           }
         }
       }
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1663,7 +1663,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case == 3){
       for (f in 1:nflag){
@@ -1684,11 +1684,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(noPlot=="FALSE"){
+              if(noPlot==FALSE){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
-                if (printOut=="TRUE"){
+                if (printOut==TRUE){
                   fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
                   eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                   suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1717,10 +1717,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       tmpdf <- outData
       names(outData)[c(1,3)] <- c(flNm,oidNm)
       outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         for (f in 1:nflag){  
           for (d in 1:ndose){
             plotdata <- subset(outData, FLAG==as.character(flag[f]) & DoseNumber==dose[d])
@@ -1730,7 +1730,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
-              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
               devplot[[length(devplot)+1]] <- ggdev
             }
             # NPDE plot
@@ -1742,16 +1742,16 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             
             histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
             suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-            if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
           }
         }
       }
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1762,7 +1762,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case == 4){
       for (g in 1:ngrp){
@@ -1785,11 +1785,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
               if (pdeout$metric != ""){
                 nout     <- nout + 1
                 metric   <- paste(metric,pdeout$metric,sep=", ")
-                if(noPlot=="FALSE"){
+                if(noPlot==FALSE){
                   gdr      <- pdeout$grob
                   mylegend <- pdeout$legend
                   lheight  <- pdeout$lheight
-                  if (printOut=="TRUE"){
+                  if (printOut==TRUE){
                     fl <- paste(usrdir,"/Outlier_ID-",id[i],"_",figlbl,sep="")
                     eval(parse(text=paste(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)",sep="")))
                     suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1819,10 +1819,10 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       tmpdf <- outData
       names(outData)[c(1,3,4)] <- c(grNm,flNm,oidNm)
       outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut=="TRUE") write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
       outData <- tmpdf; rm(tmpdf)
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         for (g in 1:ngrp){
           for (f in 1:nflag){  
             for (d in 1:ndose){
@@ -1833,7 +1833,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
               ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
               if (!is.null(ggdev)){
                 suppressMessages(suppressWarnings(print(ggdev)))
-                if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+                if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/Deviation_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
                 devplot[[length(devplot)+1]] <- ggdev
               }
               # NPDE plot
@@ -1845,17 +1845,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
               
               npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
               suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/NPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
               
               histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
               suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-              if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/histNPDE_",figlbl,".",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
             }
           }
         }
       }
       
-      if(noPlot=="FALSE"){
+      if(noPlot==FALSE){
         # Forest plot for NPDE
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
@@ -1866,7 +1866,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut=="TRUE") suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste(usrdir,"/forestNPDE.",figFormat,sep=""),height=hth,width=wth,units="cm",dpi=200)))
       }
     }
     
@@ -2005,7 +2005,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       names(simGrStat)[c(1:3)] <- c(grNm,flNm,oidNm)
     }
     
-    if (printOut=="TRUE") write.table(simGrStat, file=paste(usrdir,"/SimStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
+    if (printOut==TRUE) write.table(simGrStat, file=paste(usrdir,"/SimStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
     
     streamsEnv <- parent.frame()
     if(exists("outData"))   assign("ncaOutput",  outData,   envir=streamsEnv)
@@ -2014,7 +2014,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     if(exists("nmdf"))      assign("ncaSimData", nmdf,      envir=streamsEnv)
     if(exists("dasdf"))     assign("ncaSimEst",  dasdf,     envir=streamsEnv)
     
-    if (printOut=="TRUE"){
+    if (printOut==TRUE){
       # Create HTML output
       simFileNm <- ifelse(is.data.frame(simFile), deparse(substitute(simFile)), simFile)
       txt <- paste(txt,paste0("Name of the NONMEM simulation output file: \"",simFileNm,"\""),sep="\n")
@@ -2052,7 +2052,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   }
   setwd(usrdir)
   
-  if (printOut=="TRUE"){
+  if (printOut==TRUE){
     misc <- system.file("misc", package = "ncappc")
     if (is.null(simFile)){
       mdFile <- paste(misc,"ncappcReport-NCA.Rmd",sep="/")
