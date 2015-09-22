@@ -322,7 +322,27 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         AUMCINF_obs  <- (exp(lconc[lnPt])/(Lambda_z**2))+(ltime[lnPt]*exp(lconc[lnPt])/Lambda_z)
         lastPt       <- exp((slope*ltime[lnPt])+intercept)
         AUCINF_pred  <- lastPt/Lambda_z
-        AUMCINF_pred <- (lastPt/(Lambda_z**2))+(ltime[lnPt]*lastPt/Lambda_z)        
+        AUMCINF_pred <- (lastPt/(Lambda_z**2))+(ltime[lnPt]*lastPt/Lambda_z)  
+        
+        if(!is.null(AUCTimeRange) && (max(AUCTimeRange)>max(ltime))){
+          uptime  <- max(AUCTimeRange)
+          lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
+          upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
+          lowconc <- ifelse(lowtime==max(ltime), exp(lconc[lnPt]), exp(slope*lowtime+intercept))
+          delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
+          AUClower_upper <- AUClower_upper + delauc
+        }
+        
+        if (doseType == "ss" && (Tau > max(ltime) & AUCtau != 0)){
+          uptime  <- Tau
+          lowtime <- max(ltime)
+          upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
+          lowconc <- exp(lconc[lnPt])
+          delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
+          delaumc <- ((((upconc*lowconc)-(lowconc*lowtime))*(uptime-lowtime))/(log(upconc/lowconc))) - ((upconc-lowconc)*((uptime-lowtime)**2)/((log(upconc/lowconc))**2))
+          AUCtau  <- sum(AUCtau, delauc)
+          AUMCtau <- sum(AUMCtau, delaumc)
+        }
       }
       
       if (AUClast != 0 & AUCINF_obs != 0){
@@ -330,26 +350,6 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         AUCINF_pred <- AUClast+AUCINF_pred; AUCINF_D_pred <- AUCINF_pred/doseAmt; AUC_pExtrap_pred <- 100*(AUCINF_pred-AUClast)/AUCINF_pred
         Vz_obs  <- doseAmt/(Lambda_z*AUCINF_obs);  Cl_obs  <- doseAmt/AUCINF_obs
         Vz_pred <- doseAmt/(Lambda_z*AUCINF_pred); Cl_pred <- doseAmt/AUCINF_pred
-      }
-      
-      if(!is.null(AUCTimeRange) && (max(AUCTimeRange)>max(ltime))){
-        uptime  <- max(AUCTimeRange)
-        lowtime <- ifelse(min(AUCTimeRange) < max(ltime), max(ltime), min(AUCTimeRange))
-        upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
-        lowconc <- ifelse(lowtime==max(ltime), exp(lconc[lnPt]), exp(slope*lowtime+intercept))
-        delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
-        AUClower_upper <- AUClower_upper + delauc
-      }
-      
-      if (doseType == "ss" && (Tau > max(ltime) & AUCtau != 0)){
-        uptime  <- Tau
-        lowtime <- max(ltime)
-        upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
-        lowconc <- exp(lconc[lnPt])
-        delauc  <- (upconc-lowconc)*(uptime-lowtime)/log(upconc/lowconc)
-        delaumc <- ((((upconc*lowconc)-(lowconc*lowtime))*(uptime-lowtime))/(log(upconc/lowconc))) - ((upconc-lowconc)*((uptime-lowtime)**2)/((log(upconc/lowconc))**2))
-        AUCtau  <- sum(AUCtau, delauc)
-        AUMCtau <- sum(AUMCtau, delaumc)
       }
       
       if(AUMClast != 0 & AUMCINF_obs != 0){
