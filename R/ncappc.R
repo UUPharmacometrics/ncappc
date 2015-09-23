@@ -131,7 +131,7 @@
 ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
                    flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,
                    concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
-                   doseNormUnit=NULL,obsLog=FALSE,simLog=TRUE,
+                   doseNormUnit=NULL,obsLog=FALSE,simLog=FALSE,
                    psnOut=FALSE,idNmObs="ID",timeNmObs="TIME",
                    concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
                    concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
