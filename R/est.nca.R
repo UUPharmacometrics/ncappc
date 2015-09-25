@@ -276,7 +276,11 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
     # Determine the lower and upper indeces of the time vector used for Lambda calculation
     AUCINF_obs <- AUCINF_pred <- AUMCINF_obs <- AUMCINF_pred <- 0.
     
-    llower <- tail(which(nconc == max(nconc)), 1); lupper <- nPt
+    llower <- tail(which(nconc == max(nconc)),1); lupper <- nPt
+    
+    # Exclude Cmax from elimination phase extrapolation if no. of data points >=3
+    if((lupper-llower)>2) llower <- llower+1
+    
     if (!is.null(LambdaTimeRange)){
       Lambda_z_lower <- sort(LambdaTimeRange)[1]; Lambda_z_upper <- sort(LambdaTimeRange)[2]
       if (length(ntime[ntime >= Lambda_z_lower]) != 0 & length(ntime[ntime <= Lambda_z_upper]) != 0){
