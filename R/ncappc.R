@@ -533,7 +533,13 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut==TRUE) ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
+        if (printOut==TRUE){
+          #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200) 
+          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          dev.off()
+        }
       }
     }
   }
