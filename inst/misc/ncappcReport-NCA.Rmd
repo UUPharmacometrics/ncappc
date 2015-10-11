@@ -10,10 +10,15 @@ arglist <- fnOut$arglist
 txt     <- fnOut$TXT
 pddf    <- fnOut$pddf
 prnTab  <- fnOut$prnTab
-spread  <- fnOut$spread
 conc    <- fnOut$conc
 histobs <- fnOut$histobs
-sprtxt  <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
+
+if(fnOut$spread=="ppi"){
+  sprtxt <- "95% parametric prediction interval of the NCA metrics"
+}else if(fnOut$spread=="npi"){
+  sprtxt <- "95% nonparametric prediction interval of the NCA metrics"
+}
+
 ```
 
 -
@@ -84,7 +89,7 @@ if (length(histobs)>0){
 }
 ```
 
-**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r print(sprtxt)` of the NCA metrics obtained from the study population.
+**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
 
 
 

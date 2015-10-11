@@ -68,7 +68,6 @@ txt      <- fnOut$TXT
 pddf     <- fnOut$pddf
 prnTab   <- fnOut$prnTab
 nsim     <- fnOut$NSIM
-spread   <- fnOut$spread
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
 pop      <- fnOut$pop
@@ -77,9 +76,14 @@ outlier  <- fnOut$outlier
 forest   <- fnOut$forest
 npde     <- fnOut$npde
 histnpde <- fnOut$histnpde
-sprtxt   <- ifelse(spread=="ppi", "95% parametric prediction interval of the NCA metrics obtained from the simulated data", "95% nonparametric prediction interval of the NCA metrics obtained from the simulated data")
 hth      <- fnOut$phth
 wth      <- fnOut$pwth
+
+if(fnOut$spread=="ppi"){
+  sprtxt <- "95\\% parametric prediction interval of the NCA metrics"
+}else if(fnOut$spread=="npi"){
+  sprtxt <- "95\\% nonparametric prediction interval of the NCA metrics"
+}
 @
 
 <<txt, echo=FALSE, tidy=TRUE>>=
@@ -114,7 +118,7 @@ print(arglist)
 \begin{sloppypar}
 
 \subsection{Table 1 (ncaOutput.tsv)}
-Estimated NCA metrics using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data, \textbf{simAUClast} = mean AUC from the time of dose to the time of the last sampled plasma concentration estimated from \Sexpr{round(nsim)} sets of simulated data, \textbf{dAUClast} = deviation of simAUClast from AUClast scaled by the "spread" (\Sexpr{print(sprtxt)}) of the simulated AUClast, \textbf{npdeAUClast} = Normalized prediction distribution error (NPDE) of AUClast. Similar annotation was used for the other NCA metrics.
+Estimated NCA metrics using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data, \textbf{simAUClast} = mean AUC from the time of dose to the time of the last sampled plasma concentration estimated from \Sexpr{round(nsim)} sets of simulated data, \textbf{dAUClast} = deviation of simAUClast from AUClast scaled by the "spread" (\Sexpr{sprtxt}) of the simulated AUClast, \textbf{npdeAUClast} = Normalized prediction distribution error (NPDE) of AUClast. Similar annotation was used for the other NCA metrics.
 
 \paragraph{}
 \begin{center}
@@ -167,7 +171,7 @@ if (length(histobs)>0){
 }
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{print(sprtxt)} of the NCA metrics obtained from the study population.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{sprtxt} obtained from the observed data.
 
 \newpage
 \subsection{Figure 3. [Population level] Histogram of the simulated population means of the NCA metrics}
@@ -180,7 +184,7 @@ if (length(pop)>0){
 }
 @
 
-Histogram of the population mean of the NCA metrics obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined by \Sexpr{print(sprtxt)} of the NCA metrics obtained from the study population.
+Histogram of the population mean of the NCA metrics obtained from the simulated data from the \Sexpr{round(nsim)} simulations. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the \Sexpr{round(nsim)} number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined by \Sexpr{sprtxt} obtained from the simulated data.
 
 \newpage
 \subsection{Figure 4. [Individual level] Deviation of the simulated NCA metrics from the observed value}
@@ -192,7 +196,7 @@ if (length(dev)>0){
 }
 @
 
-Deviation of the mean of the NCA metrics for each individual estimated from the simulated data obtained from \Sexpr{round(nsim)} simulations (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (\Sexpr{print(sprtxt)}) proximal to the observed value (\textbf{Deviation = (Obs - meanSim)/ spread}). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same.
+Deviation of the mean of the NCA metrics for each individual estimated from the simulated data obtained from \Sexpr{round(nsim)} simulations (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (\Sexpr{sprtxt}) proximal to the observed value (\textbf{Deviation = (Obs - meanSim)/ spread}). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same.
 
 \newpage
 \subsection{Figure 5. [Individual level] Distribution of the simulated NCA metrics for the outliers}
@@ -205,7 +209,7 @@ if (length(outlier)>0){
 }
 @
 
-Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labelled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (\Sexpr{print(sprtxt)}) of the simulated distribution.
+Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labelled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (\Sexpr{sprtxt}) of the simulated distribution.
 
 \newpage
 \subsection{Figure 6. [Population level] Forest plot for the NPDE type analysis}
