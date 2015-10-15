@@ -43,7 +43,8 @@
 #' @param simFile NONMEM simulation output with the simulated concentration-time
 #'   data from an internal data frame or an external table (\code{NULL} produces 
 #'   just the traditional NCA output, a filename or data frame prduces the NCA output
-#'   as well as the PopPK diagnosis)
+#'   as well as the PopPK diagnosis). If \code{new_data_method=TRUE} then this can be a 
+#'   compressed file as well.
 #' @param grNm Column name for population stratifier (\strong{NULL})
 #' @param grp Stratification ID (e.g c(1,2)) (\strong{NULL})
 #' @param flNm Column name for popualtion stratifier (\strong{NULL})
@@ -157,7 +158,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    dateFormat=NULL,spread="npi",
                    tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
                    figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,
-                   new_data_method=FALSE,
+                   new_data_method=TRUE,
                    overwrite_SIMDATA=NULL){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- 
