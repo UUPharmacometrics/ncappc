@@ -1,6 +1,6 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
-Version: 0.2.0.9002
+Version: 0.2.0.9003
 Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email =
     "chayan.acharya@farmbio.uu.se"), person("Andrew C.", "Hooker", role =
     "aut"), person("Siv", "Jonsson", role = "aut"), person("Mats O.",
@@ -20,7 +20,10 @@ Imports:
     knitr,
     xtable,
     reshape2,
-    testthat
+    testthat,
+    dplyr,
+    readr,
+    lazyeval
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr

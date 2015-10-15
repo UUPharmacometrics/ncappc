@@ -35,29 +35,32 @@
 #' values of the NCA metrics estimated from the observed and the simulated data,
 #' along with the deviation, NPDE, regression parameters used to estimate the 
 #' elimination rate constant and the related population statistics. The default 
-#' values of the arguments used in \pkg{ncappc} are shown in \strong{bold}.
+#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage} 
+#' section of this document and/or in \strong{bold} in the \strong{Arguments} section.
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
 #'   or an external table with comma, tab or space as separator
 #' @param simFile NONMEM simulation output with the simulated concentration-time
-#'   data from an internal data frame or an external table (\strong{NULL})
+#'   data from an internal data frame or an external table (\code{NULL} produces 
+#'   just the traditional NCA output, a filename or data frame prduces the NCA output
+#'   as well as the PopPK diagnosis)
 #' @param grNm Column name for population stratifier (\strong{NULL})
 #' @param grp Stratification ID (e.g c(1,2)) (\strong{NULL})
 #' @param flNm Column name for popualtion stratifier (\strong{NULL})
 #' @param flag Stratification ID (e.g. c(1,2)) (\strong{NULL})
 #' @param doseNm Column name to specify dose identifiers (\strong{NULL})
 #' @param dose Dose identifiers to be used (c(1,2)) (\strong{NULL})
-#' @param concUnit Unit of concentration ("ng/mL") (\strong{"[M].[L]^-3"})
-#' @param timeUnit Unit of time ("h") (\strong{"[T]})
-#' @param doseUnit Unit of dose amount ("ng") (\strong{"[M]"})
+#' @param concUnit Unit of concentration (e.g. "ng/mL") 
+#' @param timeUnit Unit of time (e.g. "h") 
+#' @param doseUnit Unit of dose amount (e.g. "ng") 
 #' @param doseNormUnit Normalization factor of dose amount if used (kg)
 #'   (\strong{NULL})
 #' @param obsLog Concentration in observed data in logarithmic form (TRUE,
 #'   FALSE) (\strong{FALSE})
 #' @param simLog Concentration in simulated data in logarithmic form (TRUE,
 #'   FALSE) (\strong{FALSE})
-#' @param psnOut observed data is an output from PsN or in NONMEM output format 
-#'   (TRUE, FALSE) (\strong{FALSE})
+#' @param psnOut Is the observed data an output from PsN (\code{TRUE}) or in NONMEM output format 
+#'   (\code{FALSE}) 
 #' @param idNmObs Column name for ID in observed data (\strong{"ID"})
 #' @param timeNmObs Column name for time in observed data (\strong{"TIME"})
 #' @param concNmObs Column name for concentration in observed data
@@ -71,7 +74,12 @@
 #' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE)
 #'   (\strong{FALSE})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
-#'   rate-constant (\strong{NULL})
+#'   rate-constant. This argument
+#'   lets the user to choose a specific window of time to be used to estimate
+#'   the elimination rate constant (Lambda) in the elimination phase. The
+#'   accepted format for the input to this argument is a
+#'   numeric array of two elements; \code{c(14,24)} will estimate the Lambda using the
+#'   data within the time units 14 to 24.  If \code{NULL} then all times are considered.
 #' @param LambdaExclude User-defined excluded observation time points for
 #'   estimation of elimination rate-constant (\strong{NULL})
 #' @param doseAmtNm Column name to specify dose amount (\strong{NULL})
@@ -85,7 +93,7 @@
 #' @param blqNm Name of BLQ column if used (\strong{NULL})
 #' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
 #'   c(1,">3")) (\strong{"1"})
-#' @param evid Use EVID (TRUE, FALSE) (\strong{FALSE})
+#' @param evid Use EVID (TRUE or FALSE) 
 #' @param evidIncl Included EVID (\strong{"0"})
 #' @param mdv Use MDV (TRUE(includes data for MDV==0), FALSE) (\strong{FALSE})
 #' @param filterNm Column name for filter (\strong{NULL})
@@ -99,9 +107,8 @@
 #' @param dateColNm colunm name for date if used (Date, DATE) (\strong{NULL})
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
 #'   D,M,Y) (\strong{NULL})
-#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
-#'   prediction interval) or npi (95\% nonparametric prediction interval))
-#'   (\strong{"npi"})
+#' @param spread Measure of the spread of simulated data (\code{"ppi"} (95\% parametric
+#'   prediction interval) or \code{"npi"} (95\% nonparametric prediction interval))
 #' @param tabCol Output columns to be printed in the report in addition to ID, 
 #'   dose and population strata information (list of NCA metrics in a string 
 #'   array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
@@ -109,11 +116,16 @@
 #' @param figFormat format of the produced figures (bmp, jpeg, tiff, png)
 #'   (\strong{"tiff"})
 #' @param noPlot Perform only NCA calculations without any plot generation
-#'   (TRUE, FALSE) (\strong{FALSE})
+#'   (\code{TRUE} or \code{FALSE}) 
 #' @param printOut Write/print output on the disk. No plot will be saved if
 #'   noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})
 #' @param studyName Name of the study to be added as a description in the report
 #'   (\strong{NULL})
+#' @param new_data_method \code{TRUE} or \code{FALSE}.  
+#' For testing a faster method of reading data.
+#' @param overwrite_SIMDATA Can be \code{TRUE}, to create new information in the SIMDATA directory,
+#' \code{FALSE}, to use the information in the SIMDATA directory or 
+#' \code{NULL} to have a dialog come up to ask the use what to do.
 #'
 #' @import ggplot2
 #' @import gridExtra
@@ -128,24 +140,50 @@
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
+ncappc <- function(obsFile="nca_original.npctab.dta",
+                   simFile="nca_simulation.1.npctab.dta",
+                   grNm=NULL,grp=NULL,
                    flNm=NULL,flag=NULL,doseNm=NULL,dose=NULL,
-                   concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
+                   concUnit="M.L^-3",timeUnit="T",doseUnit="[M]",
                    doseNormUnit=NULL,obsLog=FALSE,simLog=FALSE,
-                   psnOut=FALSE,idNmObs="ID",timeNmObs="TIME",
+                   psnOut=TRUE,idNmObs="ID",timeNmObs="TIME",
                    concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
                    concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
                    LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,
                    adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,
-                   method="mixed",blqNm=NULL,blqExcl=1,evid=FALSE,evidIncl=0,
+                   method="mixed",blqNm=NULL,blqExcl=1,evid=TRUE,evidIncl=0,
                    mdv=FALSE,filterNm=NULL,filterExcl=NULL,negConcExcl=FALSE,
                    param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,
                    dateFormat=NULL,spread="npi",
                    tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
-                   figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL){
+                   figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,
+                   new_data_method=FALSE,
+                   overwrite_SIMDATA=NULL){
   
-  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- NULL
-  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd"))
+  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- 
+    "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- 
+    "ID" <- "GROUP" <- "FLAG" <- "NPDE" <- "mcil" <- "mciu" <- 
+    "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- 
+    "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- 
+    "guide_legend" <- "theme" <- "element_text" <- "unit" <- 
+    "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- 
+    "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- 
+    "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- 
+    "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- 
+    "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- 
+    "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- 
+    "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- NULL
+  
+  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast",
+            "AUCINF_obs","Cmax","Tmax","FCT","ID","GROUP","FLAG",
+            "NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual",
+            "scale_color_manual","xlab","ylab","guides","guide_legend",
+            "theme","element_text","unit","element_rect","geom_histogram",
+            "aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave",
+            "facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html",
+            "knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off",
+            "write.table","head","write.csv","coef","dist","lm","median","na.omit",
+            "percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd"))
   
   options(warning.length=5000)
   options(scipen=999)
@@ -249,13 +287,17 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   }
   
   # Dose unit
-  if (is.null(doseUnit)) doseUnit <- "[M]"
+  #if (is.null(doseUnit)) doseUnit <- "[M]"
   
   # Preliminary description
   # Units for dose, time and conc
   dunit <- ifelse(is.null(doseNormUnit), doseUnit, paste(doseUnit,"/",doseNormUnit))
-  tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
-  cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
+  
+  #tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
+  tunit <- timeUnit
+  
+  #cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
+  cunit <- concUnit
   
   # ignore data with BLQ = 1 or user specified value (optional)
   if (!is.null(blqNm)){
@@ -479,8 +521,16 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         if(nrow(tc)==0) next
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
-        cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste(oidNm,"-",dose[d],sep="")))
-        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseNm=doseNm,dose=dose,doseNumber=DoseNumber,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+        cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),
+                                    FCT=paste(oidNm,"-",dose[d],sep="")))
+        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,
+                          negConcExcl=negConcExcl,doseType=doseType,
+                          adminType=adminType,doseNm=doseNm,dose=dose,
+                          doseNumber=DoseNumber,doseAmt=idzAmt,
+                          method=method,AUCTimeRange=AUCTimeRange,
+                          LambdaTimeRange=LambdaTimeRange,
+                          LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,
+                          simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=idd[i],DoseNumber=DoseNumber,DoseAmount=idzAmt,t(NCAprm)))
       }
       if(noPlot==FALSE){
@@ -1033,10 +1083,18 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
   }else{
     od <- paste(usrdir,"/SIMDATA",sep="")
     if (file.exists(od)){
-      dirTest <- readline("Directory \"SIMDATA\" already exists.\n
-                          Overwrite it? (type 1)\n
-                          Rename the existing folder and create a new one? (type 2)\n
-                          Use data from the existing folder? (type 3)\n")
+      
+      if(is.null(overwrite_SIMDATA)){
+        dirTest <- readline("Directory \"SIMDATA\" already exists.\n
+                            Overwrite it? (type 1)\n
+                            Rename the existing folder and create a new one? (type 2)\n
+                            Use data from the existing folder? (type 3)\n")
+      } else if(overwrite_SIMDATA==T){
+        dirTest <- "1"
+      } else if(overwrite_SIMDATA==F) {
+        dirTest <- "3"
+      }
+      
       if (dirTest == "1"){
         unlink(od, recursive=T)
         dir.create(od)
@@ -1056,6 +1114,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
       # read NONMEM output into individual simulation data file
       IPSIM <- function(table.sim,MDV.rm=T){
 
+        #browser()
         #table.sim <-  "nca_simulation.1.npctab.dta"
         # this is faster but doesn't read correctly with the extra lines between simulations
         #library(readr)
@@ -1077,7 +1136,23 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         return(nmdf)
       }
 
-      nmdf <- IPSIM(simFile,MDV.rm=F); simID <- unique(nmdf$NSUB); nsim <- length(unique(nmdf$NSUB))
+      if(new_data_method){
+        nmdf <- read_nm_sim(simFile, only_obs = F) 
+        nmdf <- as.data.frame(nmdf)
+      } else {
+        nmdf <- IPSIM(simFile,MDV.rm=F)
+      }
+      
+      #       # compare methods
+      #       sim_1 <- read_nm_sim(simFile, only_obs = F) 
+      #       sim_2 <- IPSIM(simFile,MDV.rm=F)
+      #       library(dplyr)
+      #       all(summarise_each(sim_1,funs(mean,sd)) == summarise_each(sim_2,funs(mean,sd))) 
+      #       all(dim(sim_1)==dim(sim_2))
+      
+      simID <- unique(nmdf$NSUB) 
+      nsim <- length(simID)
+      
       if (printOut==TRUE) write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
@@ -1146,6 +1221,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
               }else{
                 if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i]))) == 0) next
                 nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i])),]
+                #if (length(which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i])) == 0) next
+                #nmdf <- nmdf[-which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i]),]
               }
             }
           }
@@ -1205,6 +1282,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
             if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
             if (nrow(ifdf) == 0){next}
             idd        <- unique(ifdf[,idCol])
+            if(is.data.frame(idd)) idd <- idd[[1]]
             DoseNumber <- dose[d]
             for (i in 1:length(idd)){
               if (!is.null(doseAmtNm) & is.null(doseNm)){
