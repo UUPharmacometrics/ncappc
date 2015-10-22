@@ -3,6 +3,59 @@ title: "CommandLineArguments"
 output: rmarkdown::html_vignette
 ---
 
+
+**Name** | **Description** | **Example** | **Default**
+obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
+simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | (\strong{NULL})
+grNm | Column name for population stratifier () | Column name | (\strong{NULL})
+grp | Population stratification ID | c(1,2) | (\strong{NULL})
+flNm | Column name for popualtion stratifier | Column name | (\strong{NULL})
+flag | Population stratification ID | (e.g. c(1,2)) | (\strong{NULL})
+doseNm | Column name to specify dose identifiers | (\strong{NULL})
+dose | Dose identifiers to be used | (c(1,2)) | (\strong{NULL})
+concUnit | Unit of concentration | ("ng/mL") | (\strong{"[M].[L]^-3"})
+timeUnit | Unit of time | ("h") | (\strong{"[T]})
+doseUnit | Unit of dose amount | ("ng") | (\strong{"[M]"})
+doseNormUnit | Normalization factor of dose amount if used | (kg) | (\strong{NULL})
+obsLog | Concentration in observed data in logarithmic form | (TRUE, FALSE) | (\strong{FALSE})
+simLog | Concentration in simulated data in logarithmic form | (TRUE, FALSE) | (\strong{FALSE})
+psnOut | observed data is an output from PsN or in NONMEM output format | (TRUE, FALSE) | (\strong{FALSE})
+idNmObs | Column name for ID in observed data |  |(\strong{"ID"})
+timeNmObs | Column name for time in observed data |  |(\strong{"TIME"})
+concNmObs | Column name for concentration in observed data |  |(\strong{"DV"})
+idNmSim | Column name for ID in simulated data |  |(\strong{"ID"})
+timeNmSim | Column name for time in simulated data |  |(\strong{"TIME"})
+concNmSim | Column name for concentration in simulated data |  |(\strong{"DV"})
+AUCTimeRange | User-defined window of time used to estimate AUC |  |(\strong{NULL})
+backExtrp | If back-extrapolation is needed for AUC | (TRUE or FALSE) | (\strong{FALSE})
+LambdaTimeRange | User-defined window of time to estimate elimination rate-constant |  |(\strong{NULL})
+LambdaExclude | User-defined excluded observation time points for estimation of elimination rate-constant |  |(\strong{NULL})
+doseAmtNm | Column name to specify dose amount |  |(\strong{NULL})
+adminType | Route of administration | (iv-bolus,iv-infusion,extravascular) | (\strong{"extravascular"})
+doseType | Steady-state (ss) or nonsteady-state (ns) dose |  |(\strong{"ns"})
+Tau | Dosing interval for steady-state data |  |(\strong{NULL})
+TI | Infusion duration |  |(\strong{NULL})
+method | linear, loglinear or mixed |  |(\strong{"mixed"})
+blqNm | Name of BLQ column if used |  |(\strong{NULL})
+blqExcl | Excluded BLQ value or logical condition | (e.g. 1 or ">=1" or c(1,">3")) | (\strong{"1"})
+evid | Use EVID (TRUE, FALSE) |  |(\strong{FALSE})
+evidIncl | Included EVID |  |(\strong{"0"})
+mdv | Use MDV (TRUE(includes data for MDV==0), FALSE) | | (\strong{FALSE})
+filterNm | Column name for filter |  |(\strong{NULL})
+filterExcl | Filter identifier or logical condition used for row exclusion | (e.g. c(1, 2, "<20", ">=100", "!=100")) | (\strong{NULL})
+negConcExcl | Exclude -ve conc |  |(\strong{FALSE})
+param | NCA parameters | (AUClast, AUClower_upper, AUCINF_obs, AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) | (c(\strong{"AUClast", "Cmax"}))
+timeFormat | time format | (number, H:M, H:M:S) | (\strong{"number"})
+dateColNm | colunm name for date if used | (Date, DATE) | (\strong{NULL})
+dateFormat | date format | (D-M-Y, D/M/Y or any other combination of D,M,Y) | (\strong{NULL})
+spread | Measure of the spread of simulated data (ppi (95\% parametric prediction interval) or npi (95\% nonparametric prediction interval)) |  |(\strong{"npi"})
+tabCol | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array) |  |(\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")})
+figFormat | format of the produced figures | (bmp, jpeg, tiff, png) | (\strong{"tiff"})
+noPlot | Perform only NCA calculations without any plot generation | (TRUE, FALSE) | (\strong{FALSE})
+printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | (TRUE, FALSE) | (\strong{TRUE})
+studyName | Name of the study to be added as a description in the report |  |(\strong{NULL})
+
+
 **Name** | **Type** | **Default** | **Description**
 :-------:|:--------:|:-----------:|:--------------:
 obsFile | String | NULL | Name of the file with the observed data

@@ -579,7 +579,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         }
         
         if(noPlot==FALSE){
-          plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+          plotData    <- subset(outData, DoseNumber==dose[d] & GROUP==igr, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
           for (p in 1:length(pltPrm)){if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
@@ -684,7 +684,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
         }
         
         if(noPlot==FALSE){
-          plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+          plotData    <- subset(outData, DoseNumber==dose[d] & FLAG==iflag, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<=5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
           for (p in 1:length(pltPrm)){ if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
@@ -783,7 +783,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           }
           
           if(noPlot==FALSE){
-            plotData    <- subset(outData, DoseNumber==dose[d], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+            plotData    <- subset(outData, DoseNumber==dose[d] & GROUP==igr & FLAG==iflag, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
             if (nrow(plotData)<=5) next
             pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
             for (p in 1:length(pltPrm)){ if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
