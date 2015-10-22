@@ -846,29 +846,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     }
   }
   
-  if (printOut==TRUE && is.null(simFile)){
-    # write the output in a file
-    tmpdf <- outData
-    if (case == 1){
-      names(outData)[2]         <- oidNm
-      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
-    }
-    if (case == 2){
-      names(outData)[c(1,3)]    <- c(grNm,oidNm)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
-    }
-    if (case == 3){
-      names(outData)[c(1,3)]    <- c(flNm,oidNm)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
-    }
-    if (case == 4){
-      names(outData)[c(1,2,4)]  <- c(grNm,flNm,oidNm)
-      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
-    }
-    write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-    outData <- tmpdf; rm(tmpdf)
-  }
-  
   # Statistical analysis for each patient group
   stNm <- c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","No_points_Lambda_z","AUC_pBack_Ext","AUClower_upper","Rsq","Rsq_adjusted","Corr_XY","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","AUC_pExtrap_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred","MRTINF_obs","MRTINF_pred","Vss_obs","Vss_pred","Tau","Tmin","Cmin","Cavg","p_Fluctuation","Accumulation_Index","Clss")
   grStat <- data.frame()
@@ -1001,6 +978,27 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     names(grStat)[c(1:3)] <- c(grNm,flNm,oidNm)
   }
   if(printOut==TRUE) write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
+  
+  # write the output in a file
+  if (printOut==TRUE && is.null(simFile)){
+    if (case == 1){
+      names(outData)[names(outData)%in%c("ID","DoseNumber")] <- c(idNmObs,oidNm)
+      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+    }
+    if (case == 2){
+      names(outData)[names(outData)%in%c("ID","GROUP","DoseNumber")] <- c(idNmObs,grNm,oidNm)
+      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+    }
+    if (case == 3){
+      names(outData)[names(outData)%in%c("ID","FLAG","DoseNumber")] <- c(idNmObs,flNm,oidNm)
+      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+    }
+    if (case == 4){
+      names(outData)[names(outData)%in%c("ID","GROUP","FLAG","DoseNumber")] <- c(idNmObs,grNm,flNm,oidNm)
+      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+    }
+    write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+  }
   
   ############################################################################
   # Analyze the simulated data if exists
@@ -1524,11 +1522,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData[r,npdeNm] <- npde[(npde$ID==outData$ID[r] & npde$DoseNumber==outData$DoseNumber[r]),npdeNm]
         }
       }
-      tmpdf <- outData
-      names(outData)[2] <- oidNm
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-      outData <- tmpdf; rm(tmpdf)
       
       if(noPlot==FALSE){
         for (d in 1:ndose){
@@ -1621,11 +1614,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
         }
       }
-      tmpdf <- outData
-      names(outData)[c(1,3)] <- c(grNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-      outData <- tmpdf; rm(tmpdf)
       
       if(noPlot==FALSE){
         for (g in 1:ngrp){  
@@ -1720,11 +1708,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
         }
       }
-      tmpdf <- outData
-      names(outData)[c(1,3)] <- c(flNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-      outData <- tmpdf; rm(tmpdf)
       
       if(noPlot==FALSE){
         for (f in 1:nflag){  
@@ -1822,11 +1805,6 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
           outData[r,paste("npde",alwprm,sep="")] <- npde[(npde$ID==outData$ID[r] & npde$GROUP==outData$GROUP[r] & npde$FLAG==outData$FLAG[r] & npde$DoseNumber==outData$DoseNumber[r]),paste("npde",alwprm,sep="")]
         }
       }
-      tmpdf <- outData
-      names(outData)[c(1,3,4)] <- c(grNm,flNm,oidNm)
-      outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
-      if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-      outData <- tmpdf; rm(tmpdf)
       
       if(noPlot==FALSE){
         for (g in 1:ngrp){
@@ -2012,6 +1990,20 @@ ncappc <- function(obsFile=NULL,simFile=NULL,grNm=NULL,grp=NULL,
     }
     
     if (printOut==TRUE) write.table(simGrStat, file=paste(usrdir,"/SimStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
+    
+    # Write output table
+    if(case==1){
+      names(outData)[names(outData)%in%c("ID","DoseNumber")] <- c(idNmObs,oidNm)
+    }else if(case==2){
+      names(outData)[names(outData)%in%c("ID","GROUP","DoseNumber")] <- c(idNmObs,grNm,oidNm)
+    }else if(case==3){
+      names(outData)[names(outData)%in%c("ID","FLAG","DoseNumber")] <- c(idNmObs,flNm,oidNm)
+    }else if(case==4){
+      names(outData)[names(outData)%in%c("ID","GROUP","FLAG","DoseNumber")] <- c(idNmObs,grNm,flNm,oidNm)
+    }
+    outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
+    if (printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+    
     
     streamsEnv <- parent.frame()
     if(exists("outData"))   assign("ncaOutput",  outData,   envir=streamsEnv)
