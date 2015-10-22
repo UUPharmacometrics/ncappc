@@ -4,223 +4,172 @@ output: rmarkdown::html_vignette
 ---
 
 
-**Name** | **Description** | **Example** | **Default**
+**Name** | **Description** | **Example of possible values** | **Default**
+:-------:|:---------------:|:------------------------------:|:-----------:
 obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
-simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | (\strong{NULL})
-grNm | Column name for population stratifier () | Column name | (\strong{NULL})
-grp | Population stratification ID | c(1,2) | (\strong{NULL})
-flNm | Column name for popualtion stratifier | Column name | (\strong{NULL})
-flag | Population stratification ID | (e.g. c(1,2)) | (\strong{NULL})
-doseNm | Column name to specify dose identifiers | (\strong{NULL})
-dose | Dose identifiers to be used | (c(1,2)) | (\strong{NULL})
-concUnit | Unit of concentration | ("ng/mL") | (\strong{"[M].[L]^-3"})
-timeUnit | Unit of time | ("h") | (\strong{"[T]})
-doseUnit | Unit of dose amount | ("ng") | (\strong{"[M]"})
-doseNormUnit | Normalization factor of dose amount if used | (kg) | (\strong{NULL})
-obsLog | Concentration in observed data in logarithmic form | (TRUE, FALSE) | (\strong{FALSE})
-simLog | Concentration in simulated data in logarithmic form | (TRUE, FALSE) | (\strong{FALSE})
-psnOut | observed data is an output from PsN or in NONMEM output format | (TRUE, FALSE) | (\strong{FALSE})
-idNmObs | Column name for ID in observed data |  |(\strong{"ID"})
-timeNmObs | Column name for time in observed data |  |(\strong{"TIME"})
-concNmObs | Column name for concentration in observed data |  |(\strong{"DV"})
-idNmSim | Column name for ID in simulated data |  |(\strong{"ID"})
-timeNmSim | Column name for time in simulated data |  |(\strong{"TIME"})
-concNmSim | Column name for concentration in simulated data |  |(\strong{"DV"})
-AUCTimeRange | User-defined window of time used to estimate AUC |  |(\strong{NULL})
-backExtrp | If back-extrapolation is needed for AUC | (TRUE or FALSE) | (\strong{FALSE})
-LambdaTimeRange | User-defined window of time to estimate elimination rate-constant |  |(\strong{NULL})
-LambdaExclude | User-defined excluded observation time points for estimation of elimination rate-constant |  |(\strong{NULL})
-doseAmtNm | Column name to specify dose amount |  |(\strong{NULL})
-adminType | Route of administration | (iv-bolus,iv-infusion,extravascular) | (\strong{"extravascular"})
-doseType | Steady-state (ss) or nonsteady-state (ns) dose |  |(\strong{"ns"})
-Tau | Dosing interval for steady-state data |  |(\strong{NULL})
-TI | Infusion duration |  |(\strong{NULL})
-method | linear, loglinear or mixed |  |(\strong{"mixed"})
-blqNm | Name of BLQ column if used |  |(\strong{NULL})
-blqExcl | Excluded BLQ value or logical condition | (e.g. 1 or ">=1" or c(1,">3")) | (\strong{"1"})
-evid | Use EVID (TRUE, FALSE) |  |(\strong{FALSE})
-evidIncl | Included EVID |  |(\strong{"0"})
-mdv | Use MDV (TRUE(includes data for MDV==0), FALSE) | | (\strong{FALSE})
-filterNm | Column name for filter |  |(\strong{NULL})
-filterExcl | Filter identifier or logical condition used for row exclusion | (e.g. c(1, 2, "<20", ">=100", "!=100")) | (\strong{NULL})
-negConcExcl | Exclude -ve conc |  |(\strong{FALSE})
-param | NCA parameters | (AUClast, AUClower_upper, AUCINF_obs, AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) | (c(\strong{"AUClast", "Cmax"}))
-timeFormat | time format | (number, H:M, H:M:S) | (\strong{"number"})
-dateColNm | colunm name for date if used | (Date, DATE) | (\strong{NULL})
-dateFormat | date format | (D-M-Y, D/M/Y or any other combination of D,M,Y) | (\strong{NULL})
-spread | Measure of the spread of simulated data (ppi (95\% parametric prediction interval) or npi (95\% nonparametric prediction interval)) |  |(\strong{"npi"})
-tabCol | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array) |  |(\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")})
-figFormat | format of the produced figures | (bmp, jpeg, tiff, png) | (\strong{"tiff"})
-noPlot | Perform only NCA calculations without any plot generation | (TRUE, FALSE) | (\strong{FALSE})
-printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | (TRUE, FALSE) | (\strong{TRUE})
-studyName | Name of the study to be added as a description in the report |  |(\strong{NULL})
+simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **NULL**
+grNm | Column name for population stratifier (1st level stratifier if used with flNm) | Column name | **NULL**
+grp | Population stratification ID | c(1,2) | **NULL**
+flNm | Column name for popualtion stratifier (2nd level stratifier if used with grNm) | Column name | **NULL**
+flag | Population stratification ID | c(1,2) | **NULL**
+doseNm | Column name to specify dose identifiers | **NULL**
+dose | Dose identifiers to be used | c(1,2) | **NULL**
+concUnit | Unit of concentration | "ng/mL" | **"[M].[L]^-3"**
+timeUnit | Unit of time | "h" | **"[T]"**
+doseUnit | Unit of dose amount | "mg" | **"[M]"**
+doseNormUnit | Normalization factor of dose amount if used | kg | **NULL**
+obsLog | Concentration in observed data in logarithmic form | TRUE or FALSE | **FALSE**
+simLog | Concentration in simulated data in logarithmic form | TRUE or FALSE | **FALSE**
+psnOut | observed data is an output from PsN or in NONMEM output format | TRUE or FALSE | **FALSE**
+idNmObs | Column name for ID in observed data | Column name | **"ID"**
+timeNmObs | Column name for time in observed data | Column name | **"TIME"**
+concNmObs | Column name for concentration in observed data | Column name | **"DV"**
+idNmSim | Column name for ID in simulated data | Column name | **"ID"**
+timeNmSim | Column name for time in simulated data | Column name | **"TIME"**
+concNmSim | Column name for concentration in simulated data | Column name | **"DV"**
+AUCTimeRange | User-defined window of time used to estimate AUC | c(0,24) | **NULL**
+backExtrp | If back-extrapolation is needed for AUC | TRUE or FALSE | **FALSE**
+LambdaTimeRange | User-defined window of time to estimate elimination rate-constant | c(15,24) | **NULL**
+LambdaExclude | User-defined excluded observation time points for estimation of elimination rate-constant | c(20,22) | **NULL**
+doseAmtNm | Column name to specify dose amount | Cokumn name | **NULL**
+adminType | Route of administration | iv-bolus, iv-infusion, extravascular | **"extravascular"**
+doseType | Steady-state (ss) or nonsteady-state (ns) dose | "ss" or "ns" | **"ns"**
+Tau | Dosing interval for steady-state data | Numeric | **NULL**
+TI | Infusion duration | Numeric | **NULL**
+method | Computational method to estimate AUC and AUMC | linear, loglinear or mixed | "mixed" | **"mixed"**
+blqNm | Name of BLQ column if used | Column name | **NULL**
+blqExcl | Excluded BLQ value or logical condition | 1, ">=1", c(1,">3") | **"1"**
+evid | Use EVID data to filter data | TRUE or FALSE | **TRUE**
+evidIncl | EVID values used to filter data | Numeric |**"0"**
+mdv | Use MDV dat to filter data | TRUE or FALSE | **FALSE**
+filterNm | Column name for filter | Column name | **NULL**
+filterExcl | Filter identifier or logical condition used for row exclusion | c(1, 2, "<20", ">=100", "!=100") | **NULL**
+negConcExcl | Exclude negative concentration | TRUE or FALSE | **FALSE**
+param | NCA metrics used for diagnostics | c(AUClast, AUClower_upper, AUCINF_obs, AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) | **c("AUClast", "Cmax")**
+timeFormat | Data format for time | "number", "H:M", "H:M:S") | **"number"**
+dateColNm | Name of the date column | Column name | **NULL**
+dateFormat | Data format for date | "D-M-Y", "D/M/Y" or any other combination of "D,M,Y" | **NULL**
+spread | Measure of the spread of simulated data | "ppi" (95\% parametric prediction interval) or "npi" (95\% nonparametric prediction interval)) | **"npi"**
+tabCol | Output columns to be printed in the report in addition to ID, dose and population strata information | list of NCA metrics in a string array | **c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")**
+figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"tiff"**
+noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
+printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
+studyName | Name of the study to be added as a description in the report | Study name | **NULL**
 
 
-**Name** | **Type** | **Default** | **Description**
-:-------:|:--------:|:-----------:|:--------------:
-obsFile | String | NULL | Name of the file with the observed data
-simFile | String | NULL | Name of the NONMEM output file with the simulated data
-grNm | String | NULL | Column name for population group
-grp | String or numeric array | NULL | group id (e.g c(1,2))
-flNm | String | NULL | Column name for population group
-flag | String or numeric array | NULL | flag id (e.g. c(1,2))
-doseNm | String | NULL | Column name to specify dose identifiers
-dose | String or numeric array | NULL | Dose identifiers to be used (c(1,2))
-concUnit | String | NULL | Unit of concentration
-timeUnit | String | NULL | Unit of time
-doseUnit | String | NULL | Unit of dose amount
-doseNormUnit | String | NULL | Normalization factor of dose amount (e.g. "kg")
-obsLog | String | FALSE | DV in Observed data in logarithmic form (TRUE, FALSE)
-simLog | String | FALSE | DV in NONMEM output in logarithmic form (TRUE, FALSE)
-psnOut | String | FALSE | if the observed data is an output from PsN
-idNmObs | String | "ID" | Column name for ID in observed data
-timeNmObs | String | "TIME" | Column name for time in observed data
-concNmObs | String | "DV" | Column name for conc in observed data
-idNmSim | String | "ID" | Column name for ID in simulated data
-timeNmSim | String | "TIME" | Column name for time in simulated data
-concNmSim | String | "DV" | Column name for conc in simulated data
-AUCTimeRange | Numeric array of two elements | NULL | User-defined window of time used to estimate AUC
-backExtrp | String | FALSE | If back-extrapolation is needed for AUC (TRUE or FALSE)
-LambdaTimeRange | Numeric array of two elements | NULL | User-defined window of time to estimate elimination rate-constant
-LambdaExclude | Numeric array | NULL | User-defined excluded observation time points for estimation of elimination rate-constant
-doseAmtNm | String | NULL | Column name to specify dose amount
-adminType | String | "extravascular" | Route of administration (iv-bolus, iv-infusion, extravascular)
-doseType | String | "ns" | steady-state (ss) or nonsteady-state (ns) dose
-Tau | Numeric | NULL | dosing interval for steady-state data
-TI | Numeric | NULL | Infusion duration
-method | String | "linear" | Method to estimate area under the curve (e.g. "linear", "loglinear" or "mixed")
-blqNm | String | NULL | Name of BLQ column if used
-blqExcl | String or numeric | "1" | Excluded BLQ value or logical condition (e.g. 1, ">=1", c(1,">3"))
-evid | String | FALSE | Use EVID (yes, no)
-evidIncl | Numeric | 0 | Included EVID
-mdv | String | FALSE | Use MDV (TRUE (includes data for MDV==0), FALSE)
-filterNm | String | NULL | Column name for filter
-filterExcl | String or numeric | NULL | Filter identifier or logical condition used for row exclusion (e.g. c(1,2, "<20", ">=100", "!=100") )
-negConcExcl | String | FALSE | Exclude negative values for concentration
-param | String array | c("AUClast", "Cmax") | NCA metrics that can be used to perform diagnostic tests ("AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z") 
-timeFormat | String | "number" | time format ("number", "H:M", "H:M:S")
-dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
-dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combination of D, M and Y)
-spread | String | "npi" | measure of the spread of simulated data ("ppi" (95% parametric prediction interval) or "npi" (95% nonparametric prediction interval))
-tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
-figFormat | String | "tiff" | Format of the produced figures ("bmp", "jpeg", "tiff", "png")
-noPlot | String | FALSE | Perform only NCA calculations without any plot generation (TRUE, FALSE)
-printOut | String | TRUE | Write/print output on the disk (TRUE, FALSE)
-
-
-**obsFile**  
+**obsFile**
 The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is ***NULL***. The columns within the observed data file must be separated by either comma or space or tab.
 
-**simFile**  
+**simFile**
 The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is ***NULL***. In the absence of this argument ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
 
-**grNm and flNm**  
-Column name for the population group or subgroups, indicating any stratification within the entire population if present. These two arguments allows two levels of stratification and ther are interchangable to signify population groups and subgroups. The default value for these arguments are ***NULL***.
+**grNm, flNm and doseNm**
+All three of them individually can be used to define population group when used separately. E.g., if you have only one stratification criteria for the population, any of these 3 arguments can be used. When doseNm is used together with either grNm or flNm, grNm/flNm defines the upper level stratification and doseNm defines the lower level stratification. When all three of them used together, grNm, flNm and doseNm define the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
 
-**grp and flag**  
+**grp, flag and dose**
 Identfiers for the population stratifications (group or subgroups), present in the "grNm" or "flNm" column, respectively. The default value for this argument is ***NULL***. If the "grNm" or "flNm" arguments are non-empty, but the "grp" and "flag" arguments are left as NULL, this function will use the unique values from the "grNm" or "flNm" column as identifiers for the population strata.
 
-**doseNm**  
+**doseNm**
 Column name to specify the dose identifier. This is a mandatory argument for the multiple-dose data. If this argument is unused, this function will assume a single-dose data. The default value for this argument is ***NULL***.
 
-**dose**  
+**dose**
 An array of strings or numerical values specifying the dose identifiers present in the column assigned by "doseNm". If the dose identifiers are 1 and 2, the input to this argument should be c(1,2). If the "doseNm" argument is non-empty, but the "dose" argument is unused, this function will extract the unique values from the dose column and use them as the dose identifiers. The default value for this argument is ***NULL***.
 
-**concUnit**  
+**concUnit**
 The unit of plasma concentration values (e.g. "ng"). The default value for this argument is ***NULL***.
 
-**timeUnit**  
+**timeUnit**
 The unit of time intervals (e.g. "hr"). The default value for this argument is ***NULL***.
 
-**doseUnit**  
+**doseUnit**
 Unit for the dosage amount (e.g. "ng"). The default value for this argument is ***NULL***.
 
-**doseNormUnit**  
+**doseNormUnit**
 Normalization factor for the dosage amount (e.g. body weight in "kg"). The default value for this argument is ***NULL***.
 
-**obsLog and simLog**  
+**obsLog and simLog**
 These arguments decide if the concentration values in the observed and simulated data sets are in logarithmic form. The accepted input to these arguments is either TRUE or FALSE. The default value for these arguments is ***FALSE***.
 
-**psnOut**  
+**psnOut**
 It is possible to generate the input file with the observed data using PsN. This argument lets the function know if the input data is in PsN or NONMEM output format. The possible values to this argument are TRUE and FALSE, ***FALSE*** being the default value.
 
-**idNmObs and idNmSim**  
+**idNmObs and idNmSim**
 Column name for individual ID in observed and simulated data. The default value for this argument is ***"ID"***.
 
-**timeNmObs and timeNmSim**  
+**timeNmObs and timeNmSim**
 Column name for time in observed and simulated data. The default value for this argument is ***"TIME"***.
 
-**concNmObs and concNmSim**  
+**concNmObs and concNmSim**
 Column name for plasma concentration in observed and simulated data. The default value for this argument is ***"DV"***.
 
-**AUCTimeRange**  
+**AUCTimeRange**
 This argument lets the user to choose a specific window of time to be used to estimate AUC. The accepted format for the input to this argument is a numeric array of two elements; c(1,24) will estimate the AUC values within 1st to 24th unit of time interval. The default value for this argument is ***NULL***.
 
-**backExtrp**  
+**backExtrp**
 This argument lets the user to choose if the back extrapolation for the area estimatation is performed from rhe first observed data to dosing time. The default value for this argument is ***FALSE***.
 
-**LambdaTimeRange**  
+**LambdaTimeRange**
 This argument lets the user to choose a specific window of time to be used to estimate the elimination rate constant (Lambda) in the elimination phase after the last observed data. The accepted format for the input to this argument is a numeric array of two elements; c(14,24) will estimate the Lambda using the data within the 14th to 24th unit of time interval. The default value for this argument is ***NULL***.
 
 **LambdaExclude**
 This argument lets the user exclude observation time points for the estimation of elimination rate-constant (Lambda) in the elimination phase. The accepted format for the input to this argument is a numeric array of time points; c(8,10) will exclude time points 8 and 10 while estimating the Lambda. The default value for this argument is ***NULL***.
 
-**doseAmtNm**  
+**doseAmtNm**
 Column name to specify the dose amount. This argument is unused if the value of the dose amount is provided in the "doseAmt" argument. If the "doseAmt" argument is empty, the value of the dose amount is extracted from the column specified in this argument or from the "AMT" column. The default value for this argument is ***"AMT"***.
 
-**adminType**  
+**adminType**
 This argument is used to specify the route of the drug administration. The allowed values for this argument are "iv-bolus", "iv-infusion" and "extravascular". The default route of administration is ***"extravascular"***
 
-**doseType**  
+**doseType**
 This argument is used to specify either the steady-state ("ss") or the nonsteady-state ("ns") dosage types. The default value to this argument is ***"ns"***.
 
-**Tau**  
+**Tau**
 The dosing interval for the steady-state data. This is a mandatory argument if the *doseType* argument is assigned to "ss". The default value to this argument is ***NULL***.
 
-**TI**  
+**TI**
 The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the "RATE" and "AMT" values. This is a mandatory argument if the *doseType* argument is assigned to "ss" and the input data file does not contain "RATE" and "AMT" columns. The default value to this argument is ***NULL***.
 
-**method**  
+**method**
 The user is allowed to choose the method of area estimation (AUC, AUMC). The "linear" option uses linear trapezoidal method of area estimation; while the "loglinear" method uses log-linear trapezoidal method. The "mixed" option uses the linear approximation for the ascending part of the curve and log-linear approximation for the descending part of the curve during the area estimation. The default value for this argument is ***"linear"***.
 
-**blqNm**  
+**blqNm**
 Name of the BLQ data column, if the user decides to filter the input based on BLQ data. The default value for this argument is ***NULL***, which means the BLQ column will not be used to filter.
 
-**blqExcl**  
+**blqExcl**
 The BLQ values that will be used to filter the input data. This argument will be used only if the "blqNm" argument is non-empty. This argument accepts either numeric values and/or logical conditions (e.g. 1, ">=1", c(1,">3")). The default value for this argument is ***1***.
 
-**evid**  
+**evid**
 This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
 
-**evidIncl**  
+**evidIncl**
 This arguments accepts the values of the EVID data that will included for the calculations. This argument is used only if the "evid" argument is non-empty. The default value for this argument is ***0***.
 
-**mdv**  
+**mdv**
 This argument decides if the MDV column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***. If chosen TRUE, all rows with MDV = 0 will be selected for the calculations.
 
-**filterNm**  
+**filterNm**
 The name of the column that will be used to filter the input data. The default value for this argument is ***NULL***.
 
-**filterExcl**  
+**filterExcl**
 This arguments accepts the values from the "filterNm" column that will used to exclude rows form the input data. This argument accepts either string/numeric values and/or logical conditions (e.g. "a", 1, c(1,2), "<20",
 ">=100", "!=100", c(1,">3"), or c("a","3")). This argument is used only if the *"filterNm"* argument is non-empty. The default value for this argument is ***NULL***.
 
-**negConcExcl**  
+**negConcExcl**
 This argument is used to exclude the data with negative concentration values. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
 
-**param**  
+**param**
 This argument lists the NCA metrics that will be used to perform the diagnostic tests. Any combination of the following NCA metrics can be assigned to this argument: "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z". The default value for this argument is ***c("AUClast","Cmax")***.
 
-**timeFormat**  
+**timeFormat**
 The data format for the time column. The accepted formats are numerical values, "H:M" or "H:M:S". The default value for this argument is ***"number"***, which signifies the numerical values.
 
-**dateColNm**  
+**dateColNm**
 This function allows the user to combine the information from the "DATE" column with the "TIME" column to calculate the time difference between the observations. This argument accepts the name of the date column, if used to calculate the time difference. The default value for this argument is ***NULL***.
 
-**dateFormat**  
+**dateFormat**
 The data format for the date column. The accepted formats are "D-M-Y", "D/M/Y" or any otehr combination of D, M and Y. The default value for this argument is ***NULL***.
 
-**spread**  
+**spread**
 This argument determines the metric that will be used to measure the spread of the simulated distribution of the NCA metrics. The spread argument accepts either "ppi" or "npi" as input. The "ppi" uses 95% parametric prediction interval, while "npi" uses the 95% nonparametric prediction interval. The default value for this argument is ***"npi"***.
 
 **tabCol**
