@@ -67,22 +67,16 @@ The name of the file containing the NONMEM output of the concentration vs. time 
 All three of them individually can be used to define population group when used separately. E.g., if you have only one stratification criteria for the population, any of these 3 arguments can be used. When doseNm is used together with either grNm or flNm, grNm/flNm defines the upper level stratification and doseNm defines the lower level stratification. When all three of them used together, grNm, flNm and doseNm define the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
 
 **grp, flag and dose**
-Identfiers for the population stratifications (group or subgroups), present in the "grNm" or "flNm" column, respectively. The default value for this argument is ***NULL***. If the "grNm" or "flNm" arguments are non-empty, but the "grp" and "flag" arguments are left as NULL, this function will use the unique values from the "grNm" or "flNm" column as identifiers for the population strata.
-
-**doseNm**
-Column name to specify the dose identifier. This is a mandatory argument for the multiple-dose data. If this argument is unused, this function will assume a single-dose data. The default value for this argument is ***NULL***.
-
-**dose**
-An array of strings or numerical values specifying the dose identifiers present in the column assigned by "doseNm". If the dose identifiers are 1 and 2, the input to this argument should be c(1,2). If the "doseNm" argument is non-empty, but the "dose" argument is unused, this function will extract the unique values from the dose column and use them as the dose identifiers. The default value for this argument is ***NULL***.
+"grp", "flag" and "dose" are identfiers for the population stratifications, present in the corresponding stratification levels defined by "grNm", "flNm" or "doseNm" columns, respectively. The default value for this argument is ***NULL***. If the "grNm", "flNm" or "doseNm" arguments are non-empty, but the "grp" and "flag" arguments are left as NULL, this function will use the unique values from the "grNm", "flNm" or "doseNm" column as identifiers for the population strata.
 
 **concUnit**
-The unit of plasma concentration values (e.g. "ng"). The default value for this argument is ***NULL***.
+The unit of plasma concentration values (e.g. "ng/mL"). The default value for this argument is the dimension of concentration ***[M].[L]^-3***.
 
 **timeUnit**
-The unit of time intervals (e.g. "hr"). The default value for this argument is ***NULL***.
+The unit of time intervals (e.g. "hr"). The default value for this argument is the dimension of time ***[T]***.
 
 **doseUnit**
-Unit for the dosage amount (e.g. "ng"). The default value for this argument is ***NULL***.
+Unit for the dosage amount (e.g. "ng"). The default value for this argument is the dimension of mass ***[M]***.
 
 **doseNormUnit**
 Normalization factor for the dosage amount (e.g. body weight in "kg"). The default value for this argument is ***NULL***.
@@ -139,7 +133,7 @@ Name of the BLQ data column, if the user decides to filter the input based on BL
 The BLQ values that will be used to filter the input data. This argument will be used only if the "blqNm" argument is non-empty. This argument accepts either numeric values and/or logical conditions (e.g. 1, ">=1", c(1,">3")). The default value for this argument is ***1***.
 
 **evid**
-This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
+This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***TRUE***.
 
 **evidIncl**
 This arguments accepts the values of the EVID data that will included for the calculations. This argument is used only if the "evid" argument is non-empty. The default value for this argument is ***0***.
@@ -184,3 +178,5 @@ This argument can turn on/off plot generation during NCA calculations. Acceptabl
 **printOut**
 This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk. Acceptable value for this argument is either TRUE or FALSE. The default value is ***TRUE***.
 
+**studyName**
+Name of the study to be added as a description in the report. The default value for this argument is ***NULL***.

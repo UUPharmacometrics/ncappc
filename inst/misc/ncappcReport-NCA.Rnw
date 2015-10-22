@@ -109,7 +109,7 @@ print(arglist)
 \begin{sloppypar}
 
 \subsection{Table 1 (ncaOutput.tsv)}
-Estimated NCA metrics using the observed and simulated concentration-time profile. Brief description of the column names: \textbf{ID} = individual ID, \textbf{AUClast} = AUC from the time of dose to the time of the last sampled plasma concentration estimated from the observed data. Similar annotation was used for the other NCA metrics.
+The \textbf{\textit{ncappc}} functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", \textit{i.e.}, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 100 rows.
 
 \begin{center}
 \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
@@ -123,7 +123,7 @@ print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), file=p
 
 \footnotesize
 \subsection{Table 2 (Obs\_Stat.tsv)}
-A set of statistical parameters calculated for the population groups for Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
+A set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
 
 \newpage
 \section{Description of the graphical output}
