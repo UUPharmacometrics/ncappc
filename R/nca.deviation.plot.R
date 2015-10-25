@@ -93,13 +93,17 @@ nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread
     
     
     longdata$type <- factor(longdata$type, levels=fctNm$prmNm, labels=fctNm$prmUnit)
-    if (is.null(figlbl)) figlbl <- ""
-    ttl <- ifelse (spread=="ppi",
-                   paste("Deviation = (obs-meanSim)/(1.96*SD)\n",figlbl,"\n\n",sep=""),
-                   paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep="")
-    )
-    ggplt <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(dist)))) +
-      ggOpt_dev + labs(title = ttl)
+    if (is.null(figlbl)){
+      ttl <- ifelse (spread=="ppi",
+                     "Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n\n",
+                     "Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n\n")
+    }else{
+      ttl <- ifelse (spread=="ppi",
+                     paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""),
+                     paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""))
+    }
+    
+    ggplt <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(dist)))) + ggOpt_dev + labs(title = ttl)
   }
   return(ggplt)
 }

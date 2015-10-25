@@ -121,7 +121,13 @@ histpop.plot <- function(obsdata=outData,simdata=smeanData,figlbl=NULL,param=c("
   lheight  <- sum(mylegend$heights)
   for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
   
-  plot_args <- list(top = textGrob(paste("Histogram of simulated population means (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+  if(is.null(figlbl)){
+    Label <- paste("Histogram of simulated population means\n(spread = ",devtag,")\n\n",sep="")
+  }else{
+    Label <- paste("Histogram of simulated population means (",figlbl,")\n(spread = ",devtag,")\n\n",sep="")
+  }
+  
+  plot_args <- list(top = textGrob(Label,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
                     bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
                     ncol=nc)
   if(packageVersion("gridExtra") < "0.9.2"){

@@ -8,12 +8,12 @@ output: rmarkdown::html_vignette
 :-------:|:---------------:|:------------------------------:|:-----------:
 obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
 simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **NULL**
-grNm | Column name for population stratifier (1st level stratifier if used with flNm) | Column name | **NULL**
-grp | Population stratification ID | c(1,2) | **NULL**
-flNm | Column name for popualtion stratifier (2nd level stratifier if used with grNm) | Column name | **NULL**
-flag | Population stratification ID | c(1,2) | **NULL**
-doseNm | Column name to specify dose identifiers | **NULL**
-dose | Dose identifiers to be used | c(1,2) | **NULL**
+str1Nm | Column name for 1st level population stratifier | Column name | **NULL**
+str1 | Stratification ID within 1st level stratification | c(1,2) | **NULL**
+str2Nm | Column name for 2nd level population stratifier | Column name | **NULL**
+str2 | Stratification ID within 2nd level stratification | c(1,2) | **NULL**
+str3Nm | Column name for 3rd level population stratifier | **NULL**
+str3 | Stratification ID within 3rd level stratification | c(1,2) | **NULL**
 concUnit | Unit of concentration | "ng/mL" | **"[M].[L]^-3"**
 timeUnit | Unit of time | "h" | **"[T]"**
 doseUnit | Unit of dose amount | "mg" | **"[M]"**
@@ -55,6 +55,7 @@ figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"t
 noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
 printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
 studyName | Name of the study to be added as a description in the report | Study name | **NULL**
+outFileNm | Name of the output html and pdf outfile in addition to the standard ncappc report file name | Output file name tag | **NULL**
 
 
 **obsFile**
@@ -180,3 +181,7 @@ This argument lets the user decide if the ncappc generated figures and tables wi
 
 **studyName**
 Name of the study to be added as a description in the report. The default value for this argument is ***NULL***.
+
+**outFileNm**
+Name of the output html and pdf outfile in addition to the standard ncappc report file name. The default value for this argument is ***NULL***.
+

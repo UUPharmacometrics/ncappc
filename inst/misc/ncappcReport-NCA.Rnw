@@ -87,7 +87,7 @@ cat(txt)
 \textbf{Summary table}
 << Summary table, echo=FALSE, results='asis'>>==
 require(xtable)
-mtable <- xtable(pddf, align=c(rep("c",ncol(pddf)-3),"p{3cm}","p{1cm}","p{1cm}","p{2cm}"), rotate.colnames = T)
+mtable <- xtable(pddf, align=c(rep("c",ncol(pddf)-2),"p{3cm}","p{1cm}","p{1cm}"), rotate.colnames = T)
 print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
       tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
 @
