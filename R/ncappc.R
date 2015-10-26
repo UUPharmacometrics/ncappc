@@ -464,6 +464,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
   
   # Estimate NCA metrics for case = 1
   pddf <- data.frame()
+  
   if (case == 1){
     ifdf <- indf
     if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
@@ -492,9 +493,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
       outData <- rbind(outData, data.frame(ID=idd[i],DoseAmount=idzAmt,t(NCAprm)))
     }
-    if(noPlot==FALSE){
+    if(noPlot==FALSE & nrow(outData)>=5){
       plotData    <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-      if (nrow(plotData)<5) next
       pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
       for (p in 1:length(pltPrm)){if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
       if (length(pltPrm) == 0) next
