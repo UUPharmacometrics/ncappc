@@ -1,7 +1,7 @@
 ---
 title: "ncappc"
 author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
-date: "`Sys.Date()`"
+
 
 output: rmarkdown::html_vignette
 vignette: >
@@ -11,19 +11,19 @@ vignette: >
 ---
 
 # Introduction
-**Usage: ncappc (path=, obsFile=, ...)**
+**Usage: ncappc (obsFile=, ...)**
 
-<img src="ncappc_Schema.png" height="500px" width="600px" align="middle" />
+<img src="ncappc-Schema.png" height="450px" width="650px" align="middle" />
 
 **Figure 1.** Schematic work-flow of ***ncappc***.
 
 The ***ncappc*** functionality is a flexible tool in R to,
- * perform a traditional NCA
+ * perform NCA
  * perform simulation-based posterior predictive checks for a population PK model using NCA metrics.
 
-The work-flow of ***ncappc*** is shown in Figure 1. In order to perform traditional NCA, the only mandatory argument is *obsFile*, which is the name of the file with the observed concentration vs. time data. Other arguments may be assigned to the desired values, if required.
+The work-flow of ***ncappc*** is shown in Figure 1. In order to perform NCA, the only mandatory argument is *obsFile*, which is the name of the file with the observed concentration vs. time data. Other arguments may be assigned to the desired values, if required.
 
-In the presence of the non-empty simFile argument (NONMEM output file witht he simulated concentration vs. time data) ***ncappc*** function performs the diagnostic tests for the related PK model besides performing the traditional NCA. This function creates a directory, called "SIMDATA", to store the estimated NCA metrics from the simulated data. If the working directory contains any directory called "SIMDATA", this function offers the following three options to the user:
+In the presence of the non-empty simFile argument (NONMEM output file with the simulated concentration vs. time data) ***ncappc*** function performs the diagnostic tests for the related PK model besides performing the traditional NCA. This function creates a directory, called "SIMDATA", to store the estimated NCA metrics from the simulated data. If the working directory contains any directory called "SIMDATA", this function offers the following three options to the user:
   * Press 1 to overwrite the existing directory
   * Press 2 to rename the existing "SIMDATA" directory. The "SIMDATA" will be renamed to "SIMDATA_PREVIOUS" and a new directory called "SIMDATA" will be created
   * Press 3 to reuse the data from the existing "SIMDATA" directory. The "SIMDATA" directory must contain the files created by ***ncappc*** previously using the NONMEM simulation output.
@@ -32,185 +32,187 @@ In the presence of the non-empty simFile argument (NONMEM output file witht he s
 # Command-line arguments
 
 
-**Name** | **Type** | **Default** | **Description**
-:-------:|:--------:|:-----------:|:--------------:
-obsFile | String | NULL | Name of the file with the observed data
-simFile | String | NULL | Name of the NONMEM output file with the simulated data
-grNm | String | NULL | Column name for population group
-grp | String or numeric array | NULL | group id (e.g c(1,2))
-flNm | String | NULL | Column name for population group
-flag | String or numeric array | NULL | flag id (e.g. c(1,2))
-doseNm | String | NULL | Column name to specify dose identifiers
-dose | String or numeric array | NULL | Dose identifiers to be used (c(1,2))
-concUnit | String | NULL | Unit of concentration
-timeUnit | String | NULL | Unit of time
-doseUnit | String | NULL | Unit of dose amount
-doseNormUnit | String | NULL | Normalization factor of dose amount (e.g. "kg")
-obsLog | String | FALSE | DV in Observed data in logarithmic form (TRUE, FALSE)
-simLog | String | FALSE | DV in NONMEM output in logarithmic form (TRUE, FALSE)
-psnOut | String | FALSE | if the observed data is an output from PsN
-idNmObs | String | "ID" | Column name for ID in observed data
-timeNmObs | String | "TIME" | Column name for time in observed data
-concNmObs | String | "DV" | Column name for conc in observed data
-idNmSim | String | "ID" | Column name for ID in simulated data
-timeNmSim | String | "TIME" | Column name for time in simulated data
-concNmSim | String | "DV" | Column name for conc in simulated data
-AUCTimeRange | Numeric array of two elements | NULL | User-defined window of time used to estimate AUC
-backExtrp | String | FALSE | If back-extrapolation is needed for AUC (TRUE or FALSE)
-LambdaTimeRange | Numeric array of two elements | NULL | User-defined window of time to estimate elimination rate-constant
-LambdaExclude | Numeric array | NULL | User-defined excluded observation time points for estimation of elimination rate-constant
-adminType | String | "extravascular" | Route of administration (iv-bolus, iv-infusion, extravascular)
-doseType | String | "ns" | steady-state (ss) or nonsteady-state (ns) dose
-Tau | Numeric | NULL | dosing interval for steady-state data
-TI | Numeric | NULL | Infusion duration
-doseAmtNm | String | NULL | Column name to specify dose amount
-doseAmt | Numeric array | NULL | Dose amounts
-method | String | "linear" | Method to estimate area under the curve (e.g. "linear", "loglinear" or "mixed")
-blqNm | String | NULL | Name of BLQ column if used
-blqExcl | String or numeric | "1" | Excluded BLQ value or logical condition (e.g. 1, ">=1", c(1,">3"))
-evid | String | FALSE | Use EVID (yes, no)
-evidIncl | Numeric | "0" | Included EVID
-mdv | String | FALSE | Use MDV (TRUE (includes data for MDV==0), FALSE)
-filterNm | String | NULL | Column name for filter
-filterExcl | String or numeric | NULL | Filter identifier or logical condition used for row exclusion (e.g. c(1,2, "<20", ">=100", "!=100") )
-negConcExcl | String | FALSE | Exclude negative values for concentration
-param | String array | c("AUClast", "Cmax") | NCA metrics that can be used to perform diagnostic tests ("AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z") 
-timeFormat | String | "number" | time format ("number", "H:M", "H:M:S")
-dateColNm | String | NULL | colunm name for date if used ("Date", "DATE")
-dateFormat | String | NULL | date format ("D-M-Y", "D/M/Y" or any other combination of D, M and Y)
-spread | String | "npi" | measure of the spread of simulated data ("ppi" (95% parametric prediction interval) or "npi" (95% nonparametric prediction interval))
-tabCol | String array | c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z") | Output columns to be printed in the report in addition to ID, dose and population strata information (list of NCA metrics in a string array)
-printOut | String | TRUE | Write/print output on the disk (TRUE, FALSE)
-figFormat | String | "tiff" | Format of the produced figures ("bmp", "jpeg", "tiff", "png")
+
+**Name** | **Description** | **Example of possible values** | **Default**
+:-------:|:---------------:|:------------------------------:|:-----------:
+obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
+simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **NULL**
+str1Nm | Column name for 1st level population stratifier | Column name | **NULL**
+str1 | Stratification ID within 1st level stratification | c(1,2) | **NULL**
+str2Nm | Column name for 2nd level population stratifier | Column name | **NULL**
+str2 | Stratification ID within 2nd level stratification | c(1,2) | **NULL**
+str3Nm | Column name for 3rd level population stratifier | **NULL**
+str3 | Stratification ID within 3rd level stratification | c(1,2) | **NULL**
+concUnit | Unit of concentration | "ng/mL" | **"[M].[L]^-3"**
+timeUnit | Unit of time | "h" | **"[T]"**
+doseUnit | Unit of dose amount | "mg" | **"[M]"**
+doseNormUnit | Normalization factor of dose amount if used | kg | **NULL**
+obsLog | Concentration in observed data in logarithmic form | TRUE or FALSE | **FALSE**
+simLog | Concentration in simulated data in logarithmic form | TRUE or FALSE | **FALSE**
+psnOut | observed data is an output from PsN or in NONMEM output format | TRUE or FALSE | **FALSE**
+idNmObs | Column name for ID in observed data | Column name | **"ID"**
+timeNmObs | Column name for time in observed data | Column name | **"TIME"**
+concNmObs | Column name for concentration in observed data | Column name | **"DV"**
+idNmSim | Column name for ID in simulated data | Column name | **"ID"**
+timeNmSim | Column name for time in simulated data | Column name | **"TIME"**
+concNmSim | Column name for concentration in simulated data | Column name | **"DV"**
+AUCTimeRange | User-defined window of time used to estimate AUC | c(0,24) | **NULL**
+backExtrp | If back-extrapolation is needed for AUC | TRUE or FALSE | **FALSE**
+LambdaTimeRange | User-defined window of time to estimate elimination rate-constant | c(15,24) | **NULL**
+LambdaExclude | User-defined excluded observation time points for estimation of elimination rate-constant | c(20,22) | **NULL**
+doseAmtNm | Column name to specify dose amount | Cokumn name | **NULL**
+adminType | Route of administration | iv-bolus, iv-infusion, extravascular | **"extravascular"**
+doseType | Steady-state (ss) or nonsteady-state (ns) dose | "ss" or "ns" | **"ns"**
+Tau | Dosing interval for steady-state data | Numeric | **NULL**
+TI | Infusion duration | Numeric | **NULL**
+method | Computational method to estimate AUC and AUMC | linear, loglinear or mixed | "mixed" | **"mixed"**
+blqNm | Name of BLQ column if used | Column name | **NULL**
+blqExcl | Excluded BLQ value or logical condition | 1, ">=1", c(1,">3") | **"1"**
+evid | Use EVID data to filter data | TRUE or FALSE | **TRUE**
+evidIncl | EVID values used to filter data | Numeric |**"0"**
+mdv | Use MDV dat to filter data | TRUE or FALSE | **FALSE**
+filterNm | Column name for filter | Column name | **NULL**
+filterExcl | Filter identifier or logical condition used for row exclusion | c(1, 2, "<20", ">=100", "!=100") | **NULL**
+negConcExcl | Exclude negative concentration | TRUE or FALSE | **FALSE**
+param | NCA metrics used for diagnostics | c(AUClast, AUClower_upper, AUCINF_obs, AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) | **c("AUClast", "Cmax")**
+timeFormat | Data format for time | "number", "H:M", "H:M:S") | **"number"**
+dateColNm | Name of the date column | Column name | **NULL**
+dateFormat | Data format for date | "D-M-Y", "D/M/Y" or any other combination of "D,M,Y" | **NULL**
+spread | Measure of the spread of simulated data | "ppi" (95\% parametric prediction interval) or "npi" (95\% nonparametric prediction interval)) | **"npi"**
+tabCol | Output columns to be printed in the report in addition to ID, dose and population strata information | list of NCA metrics in a string array | **c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")**
+figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"tiff"**
+noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
+printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
+studyName | Name of the study to be added as a description in the report | Study name | **NULL**
+outFileNm | Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name | Output file name tag | **Name of the observed data file**
 
 
-**obsFile**  
+**obsFile**
 The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is ***NULL***. The columns within the observed data file must be separated by either comma or space or tab.
 
-**simFile**  
+**simFile**
 The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is ***NULL***. In the absence of this argument ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
 
-**grNm and flNm**  
-Column name for the population group or subgroups, indicating any stratification within the entire population if present. These two arguments allows two levels of stratification and ther are interchangable to signify population groups and subgroups. The default value for these arguments are ***NULL***.
+**str1Nm, str2Nm and str3Nm**
+All three of them individually can be used to specify the column name within the data set defining the population group when used separately. E.g., if there is only one stratification criteria for the population, any of these 3 arguments can be used to identify the stratification column name. When str1Nm is used together with either str2Nm or str3Nm, str1Nm defines the column name for the upper level stratification and str2Nm/str3Nm defines the column name for the lower level stratification. When all three of them are used together, str1Nm, str2Nm and str3Nm define the column names of the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
 
-**grp and flag**  
-Identfiers for the population stratifications (group or subgroups), present in the "grNm" or "flNm" column, respectively. The default value for this argument is ***NULL***. If the "grNm" or "flNm" arguments are non-empty, but the "grp" and "flag" arguments are left as NULL, this function will use the unique values from the "grNm" or "flNm" column as identifiers for the population strata.
+**str1, str2 and str3**
+str1, str2 and str3 are identfiers for the population stratifications, present in the corresponding stratification levels defined by str1Nm, str2Nm and str3Nm columns, respectively. The default value for this argument is ***NULL***. If the str1Nm, str2Nm or str3Nm arguments are non-empty, but the corresponding str1, str2 or str3 arguments are left as NULL, this function will use the unique values from the str1Nm, str2Nm or str3Nm column as identifiers for the members of the corresponding population strata.
 
-**doseNm**  
-Column name to specify the dose identifier. This is a mandatory argument for the multiple-dose data. If this argument is unused, this function will assume a single-dose data. The default value for this argument is ***NULL***.
+**concUnit**
+The unit of plasma concentration values (e.g. "ng/mL"). The default value for this argument is the dimension of concentration ***[M].[L]^-3***.
 
-**dose**  
-An array of strings or numerical values specifying the dose identifiers present in the column assigned by "doseNm". If the dose identifiers are 1 and 2, the input to this argument should be c(1,2). If the "doseNm" argument is non-empty, but the "dose" argument is unused, this function will extract the unique values from the dose column and use them as the dose identifiers. The default value for this argument is ***NULL***.
+**timeUnit**
+The unit of time intervals (e.g. "hr"). The default value for this argument is the dimension of time ***[T]***.
 
-**concUnit**  
-The unit of plasma concentration values (e.g. "ng"). The default value for this argument is ***NULL***.
+**doseUnit**
+Unit for the dosage amount (e.g. "ng"). The default value for this argument is the dimension of mass ***[M]***.
 
-**timeUnit**  
-The unit of time intervals (e.g. "hr"). The default value for this argument is ***NULL***.
-
-**doseUnit**  
-Unit for the dosage amount (e.g. "ng"). The default value for this argument is ***NULL***.
-
-**doseNormUnit**  
+**doseNormUnit**
 Normalization factor for the dosage amount (e.g. body weight in "kg"). The default value for this argument is ***NULL***.
 
-**obsLog and simLog**  
+**obsLog and simLog**
 These arguments decide if the concentration values in the observed and simulated data sets are in logarithmic form. The accepted input to these arguments is either TRUE or FALSE. The default value for these arguments is ***FALSE***.
 
-**psnOut**  
+**psnOut**
 It is possible to generate the input file with the observed data using PsN. This argument lets the function know if the input data is in PsN or NONMEM output format. The possible values to this argument are TRUE and FALSE, ***FALSE*** being the default value.
 
-**idNmObs and idNmSim**  
+**idNmObs and idNmSim**
 Column name for individual ID in observed and simulated data. The default value for this argument is ***"ID"***.
 
-**timeNmObs and timeNmSim**  
+**timeNmObs and timeNmSim**
 Column name for time in observed and simulated data. The default value for this argument is ***"TIME"***.
 
-**concNmObs and concNmSim**  
+**concNmObs and concNmSim**
 Column name for plasma concentration in observed and simulated data. The default value for this argument is ***"DV"***.
 
-**AUCTimeRange**  
+**AUCTimeRange**
 This argument lets the user to choose a specific window of time to be used to estimate AUC. The accepted format for the input to this argument is a numeric array of two elements; c(1,24) will estimate the AUC values within 1st to 24th unit of time interval. The default value for this argument is ***NULL***.
 
-**backExtrp**  
+**backExtrp**
 This argument lets the user to choose if the back extrapolation for the area estimatation is performed from rhe first observed data to dosing time. The default value for this argument is ***FALSE***.
 
-**LambdaTimeRange**  
+**LambdaTimeRange**
 This argument lets the user to choose a specific window of time to be used to estimate the elimination rate constant (Lambda) in the elimination phase after the last observed data. The accepted format for the input to this argument is a numeric array of two elements; c(14,24) will estimate the Lambda using the data within the 14th to 24th unit of time interval. The default value for this argument is ***NULL***.
 
 **LambdaExclude**
 This argument lets the user exclude observation time points for the estimation of elimination rate-constant (Lambda) in the elimination phase. The accepted format for the input to this argument is a numeric array of time points; c(8,10) will exclude time points 8 and 10 while estimating the Lambda. The default value for this argument is ***NULL***.
 
-**adminType**  
-This argument is used to specify the route of the drug administration. The allowed values for this argument are "iv-bolus", "iv-infusion" and "extravascular". The default route of administration is ***"extravascular"***
-
-**doseType**  
-This argument is used to specify either the steady-state ("ss") or the nonsteady-state ("ns") dosage types. The default value to this argument is ***"ns"***.
-
-**Tau**  
-The dosing interval for the steady-state data. This is a mandatory argument if the *doseType* argument is assigned to "ss". The default value to this argument is ***NULL***.
-
-**TI**  
-The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the "RATE" and "AMT" values. This is a mandatory argument if the *doseType* argument is assigned to "ss" and the input data file does not contain "RATE" and "AMT" columns. The default value to this argument is ***NULL***.
-
-**doseAmtNm**  
+**doseAmtNm**
 Column name to specify the dose amount. This argument is unused if the value of the dose amount is provided in the "doseAmt" argument. If the "doseAmt" argument is empty, the value of the dose amount is extracted from the column specified in this argument or from the "AMT" column. The default value for this argument is ***"AMT"***.
 
-**doseAmt**  
-Dose amount. A numeric array with the number of elements equal to that of the dose identifier is expected for this argument. For single dose data, if this argument is empty, either the "doseAmtNm" argument must be non-empty or the input data must contain a column named "AMT" to retrieve the dosage amount. The default value for this argument is ***NULL***.
+**adminType**
+This argument is used to specify the route of the drug administration. The allowed values for this argument are "iv-bolus", "iv-infusion" and "extravascular". The default route of administration is ***"extravascular"***
 
-**method**  
+**doseType**
+This argument is used to specify either the steady-state ("ss") or the nonsteady-state ("ns") dosage types. The default value to this argument is ***"ns"***.
+
+**Tau**
+The dosing interval for the steady-state data. This is a mandatory argument if the *doseType* argument is assigned to "ss". The default value to this argument is ***NULL***.
+
+**TI**
+The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the "RATE" and "AMT" values. This is a mandatory argument if the *doseType* argument is assigned to "ss" and the input data file does not contain "RATE" and "AMT" columns. The default value to this argument is ***NULL***.
+
+**method**
 The user is allowed to choose the method of area estimation (AUC, AUMC). The "linear" option uses linear trapezoidal method of area estimation; while the "loglinear" method uses log-linear trapezoidal method. The "mixed" option uses the linear approximation for the ascending part of the curve and log-linear approximation for the descending part of the curve during the area estimation. The default value for this argument is ***"linear"***.
 
-**blqNm**  
+**blqNm**
 Name of the BLQ data column, if the user decides to filter the input based on BLQ data. The default value for this argument is ***NULL***, which means the BLQ column will not be used to filter.
 
-**blqExcl**  
+**blqExcl**
 The BLQ values that will be used to filter the input data. This argument will be used only if the "blqNm" argument is non-empty. This argument accepts either numeric values and/or logical conditions (e.g. 1, ">=1", c(1,">3")). The default value for this argument is ***1***.
 
-**evid**  
-This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
+**evid**
+This argument decides if the EVID column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***TRUE***.
 
-**evidIncl**  
+**evidIncl**
 This arguments accepts the values of the EVID data that will included for the calculations. This argument is used only if the "evid" argument is non-empty. The default value for this argument is ***0***.
 
-**mdv**  
+**mdv**
 This argument decides if the MDV column will be used to filter the input data. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***. If chosen TRUE, all rows with MDV = 0 will be selected for the calculations.
 
-**filterNm**  
+**filterNm**
 The name of the column that will be used to filter the input data. The default value for this argument is ***NULL***.
 
-**filterExcl**  
+**filterExcl**
 This arguments accepts the values from the "filterNm" column that will used to exclude rows form the input data. This argument accepts either string/numeric values and/or logical conditions (e.g. "a", 1, c(1,2), "<20",
 ">=100", "!=100", c(1,">3"), or c("a","3")). This argument is used only if the *"filterNm"* argument is non-empty. The default value for this argument is ***NULL***.
 
-**negConcExcl**  
+**negConcExcl**
 This argument is used to exclude the data with negative concentration values. The accepted input to this argument is either TRUE or FALSE. The default value for this argument is ***FALSE***.
 
-**param**  
+**param**
 This argument lists the NCA metrics that will be used to perform the diagnostic tests. Any combination of the following NCA metrics can be assigned to this argument: "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax", "HL_Lambda_z". The default value for this argument is ***c("AUClast","Cmax")***.
 
-**timeFormat**  
+**timeFormat**
 The data format for the time column. The accepted formats are numerical values, "H:M" or "H:M:S". The default value for this argument is ***"number"***, which signifies the numerical values.
 
-**dateColNm**  
+**dateColNm**
 This function allows the user to combine the information from the "DATE" column with the "TIME" column to calculate the time difference between the observations. This argument accepts the name of the date column, if used to calculate the time difference. The default value for this argument is ***NULL***.
 
-**dateFormat**  
+**dateFormat**
 The data format for the date column. The accepted formats are "D-M-Y", "D/M/Y" or any otehr combination of D, M and Y. The default value for this argument is ***NULL***.
 
-**spread**  
+**spread**
 This argument determines the metric that will be used to measure the spread of the simulated distribution of the NCA metrics. The spread argument accepts either "ppi" or "npi" as input. The "ppi" uses 95% parametric prediction interval, while "npi" uses the 95% nonparametric prediction interval. The default value for this argument is ***"npi"***.
 
 **tabCol**
 This argument selects the table columns, in addition to ID, dose and population strata, to print in the produced report. This argument accepts a list of NCA metrics in a string array. The default value of this argument is ***c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")***.
 
-**printOut**
-This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk, Acceptable value for this argument is either TRUE or FALSE. The default value is ***TRUE***.
-
 **figFormat**
 This argument selects the format of the produced figures. Acceptable value for this argument is either bmp, jpeg, tiff or png. The default value is ***"tiff"***.
 
+**noPlot**
+This argument can turn on/off plot generation during NCA calculations. Acceptable value for this argument is either TRUE (turns off plot generation) or FALSE (turns on plot generation). The default value is ***FALSE***.
+
+**printOut**
+This argument lets the user decide if the ncappc generated figures and tables will be saved on the disk. Acceptable value for this argument is either TRUE or FALSE. The default value is ***TRUE***.
+
+**studyName**
+Name of the study to be added as a description in the report. The default value for this argument is ***NULL***.
+
+**outFileNm**
+Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name. The default value for this argument is the ***name of the observed data file***.
 
 
 # Estimated NCA metrics
@@ -412,7 +414,7 @@ The ***ncappc*** functionality produces this table to report the estimated value
 
 If simulated data is provided, this table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the mean of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the mean of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics.
 
-### Obs\_Stat\_[population and/or occasion stratifier].tsv  
+### Obs\_Stat.tsv  
 This table reports a set of statistical parameters calculated for the entire population or the stratified population for the following NCA metrics estimated from the observed data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
   * Ntot = Total number of data points, Nunique = number of unique data points
   * Min = minimum value
@@ -426,7 +428,7 @@ This table reports a set of statistical parameters calculated for the entire pop
   * gMean = geometric mean
   * gCVp = geometric coefficient of variation %.
 
-### Sim\_Stat\_[population and/or occasion stratifier].tsv  
+### Sim\_Stat.tsv  
 This table reports a set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
   * Ntot = Total number of data points, Nunique = number of unique data points
   * Min = minimum value
@@ -441,57 +443,56 @@ This table reports a set of statistical parameters calculated for the entire pop
   * gCVp = geometric coefficient of variation %.
 
 ### ncaSimData.tsv  
-This table reports the simulated concentration-time profiles for each individual obtained from a number of simulations. Currently the ***ncappc*** function accepts only NONMEM output format for the simulated data. All columns from the NONMEM output file are kept unaltered in this file and an additional column, namely "NSIM", is printed to denote the corresponding simulation number for the concentration-time profile.
+This table reports the simulated concentration-time profiles for each individual obtained from a number of simulations. Currently the ***ncappc*** function accepts only NONMEM output format for the simulated data. All columns from the NONMEM output file are kept unaltered in this file and an additional column, namely "NSUB", is printed to denote the corresponding simulation number for the concentration-time profile.
 
 ### ncaSimEst.tsv  
-This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSIM" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
+This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSUB" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
+
 
 ## Graphical output
 ### [Individual level] Concentration *vs.* time profile  
 <img src="conc.jpeg" height="350px" width="500px" align="middle" />  
 
-Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
-
-The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. Each of the lines represents individual data. The above figure shows a typical example of the concentration-time profile. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
 
 
 ### [Population level] Histogram of the selected NCA metrics estimated from the observed data  
 <img src="histobs.png" height="600px" width="550px" align="middle" />  
 
-The second set of figures represent the histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. The solid and dotted blue vertical lines represent the population mean and the "spread" of the data, respectively. The "spread" is either defined by the 95% parametric prediction interval or by the 95% nonparametric prediction interval of the PK measures obtained from the simulated data. The above figure shows a typical example of this set of plots.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{sprtxt} obtained from the observed data.
 
 
 ### [Population level] Histogram of the simulated population means of the NCA metrics  
 <img src="popmean.png" height="350px" width="500px" align="middle" />  
 
-The third set of figures represent the histograms of the population means of the NCA metrics obtained from the sets of simulated data. The red and blue solid vertical lines represent the population mean of the corresponding NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the simulated data set, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval for the population mean of the NCA metrics obtained from the simulated data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Histogram of the population mean of the NCA metrics obtained from the simulated data. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the simulated data, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as either defined by the standard deviation or by the 95% nonparametric prediction interval for the population mean of the NCA metrics obtained from the simulated data.
 
 
 ### [Individual level] Deviation of the simulated NCA metrics from the observed value  
 <img src="deviation.png" height="350px" width="500px" align="middle" />  
 
-The fourth set of plots represent the deviation of the mean of the NCA metrics for each individual estimated from the sets of simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the "spread" of the simulated data as defined either by the distance between the meanSim and the 95% parametric prediction interval or by the distance between the meanSim and the 95% nonparametric prediction interval boundary of the simulated NCA metric distribution nearer to the observed value (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% parametric prediction interval boundary) or (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% nonparametric prediction interval boundary nearer to the Obs). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Deviation of the mean of the NCA metrics for each individual estimated from the simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data proximal to the observed value (** Deviation = (Obs - meanSim)/ spread **). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same.
 
 
 ### [Individual level] Distribution of the simulated NCA metrics for the outliers}  
 <img src="outlier.png" height="350px" width="500px" align="middle" />  
 
-The fifth set of plots represent the distribution of the NCA metrics obtained from the simulated data for the individuals that are labelled as outliers by the ***ncappc***. These individuals are marked as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in the diagnosis is greater than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values obtained from the observed and the simulated data for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution.
 
 
 ### [Population level] Forest plot for the NPDE type analysis  
 <img src="forest.png" height="350px" width="500px" align="middle" />  
 
-The is sixth set of figures represent the Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics in various population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals. The Y-axis of this plot represent different population or occasion strata, if present. The above figure shows a typical example of the forest plot.
+Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals.
 
 
 ### [Individual level] NPDE values of the NCA metrics for each individual  
 <img src="npde.png" height="350px" width="500px" align="middle" />  
 
-The seventh set of plots represent NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding NCA metrics estimated from the observed and the simulated data. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same.
 
 
 ### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
 <img src="histnpde.png" height="350px" width="500px" align="middle" />  
 
-The eighth set of plots represent the histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.

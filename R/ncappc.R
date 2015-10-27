@@ -42,11 +42,11 @@
 #' @param simFile NONMEM simulation output with the simulated concentration-time
 #'   data from an internal data frame or an external table (\strong{NULL})
 #' @param str1Nm Column name for 1st level population stratifier (\strong{NULL})
-#' @param str1 Stratification ID within 1st level stratification (e.g c(1,2)) (\strong{NULL})
+#' @param str1 Stratification ID of the members within 1st level stratification (e.g c(1,2)) (\strong{NULL})
 #' @param str2Nm Column name for 2nd level population stratifier (\strong{NULL})
-#' @param str2 Stratification ID within 2nd level stratification (e.g c(1,2)) (\strong{NULL})
+#' @param str2 Stratification ID of the members within 2nd level stratification (e.g c(1,2)) (\strong{NULL})
 #' @param str3Nm Column name for 3rd level population stratifier (\strong{NULL})
-#' @param str3 Stratification ID within 3rd level stratification (e.g c(1,2)) (\strong{NULL})
+#' @param str3 Stratification ID of the members within 3rd level stratification (e.g c(1,2)) (\strong{NULL})
 #' @param concUnit Unit of concentration ("ng/mL") (\strong{"[M].[L]^-3"})
 #' @param timeUnit Unit of time ("h") (\strong{"[T]})
 #' @param doseUnit Unit of dose amount ("ng") (\strong{"[M]"})
@@ -625,7 +625,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
         if (printOut==TRUE){
           #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)     
           
-          #figlbl      <- paste(grNm,"-",as.character(grp[g]),"_",oidNm,"-",dose[d],sep="")
+          #figlbl      <- paste(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",popStr2[s2],sep="")
           #histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
           #gdr         <- histobsgrob$gdr
           #mylegend    <- histobsgrob$legend

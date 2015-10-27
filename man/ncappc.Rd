@@ -4,21 +4,21 @@
 \alias{ncappc}
 \title{Performs NCA calculations and population PK model diagnosis.}
 \usage{
-ncappc(obsFile = NULL, simFile = NULL, grNm = NULL, grp = NULL,
-  flNm = NULL, flag = NULL, doseNm = NULL, dose = NULL,
+ncappc(obsFile = NULL, simFile = NULL, str1Nm = NULL, str1 = NULL,
+  str2Nm = NULL, str2 = NULL, str3Nm = NULL, str3 = NULL,
   concUnit = NULL, timeUnit = NULL, doseUnit = NULL,
-  doseNormUnit = NULL, obsLog = FALSE, simLog = TRUE, psnOut = FALSE,
+  doseNormUnit = NULL, obsLog = FALSE, simLog = FALSE, psnOut = TRUE,
   idNmObs = "ID", timeNmObs = "TIME", concNmObs = "DV", idNmSim = "ID",
   timeNmSim = "TIME", concNmSim = "DV", AUCTimeRange = NULL,
   backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
   doseAmtNm = NULL, adminType = "extravascular", doseType = "ns",
   Tau = NULL, TI = NULL, method = "mixed", blqNm = NULL, blqExcl = 1,
-  evid = FALSE, evidIncl = 0, mdv = FALSE, filterNm = NULL,
+  evid = TRUE, evidIncl = 0, mdv = FALSE, filterNm = NULL,
   filterExcl = NULL, negConcExcl = FALSE, param = c("AUClast", "Cmax"),
   timeFormat = "number", dateColNm = NULL, dateFormat = NULL,
   spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
   "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff", noPlot = FALSE,
-  printOut = TRUE, studyName = NULL)
+  printOut = TRUE, studyName = NULL, outFileNm = NULL)
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -27,17 +27,17 @@ or an external table with comma, tab or space as separator}
 \item{simFile}{NONMEM simulation output with the simulated concentration-time
 data from an internal data frame or an external table (\strong{NULL})}
 
-\item{grNm}{Column name for population stratifier (\strong{NULL})}
+\item{str1Nm}{Column name for 1st level population stratifier (\strong{NULL})}
 
-\item{grp}{Stratification ID (e.g c(1,2)) (\strong{NULL})}
+\item{str1}{Stratification ID of the members within 1st level stratification (e.g c(1,2)) (\strong{NULL})}
 
-\item{flNm}{Column name for popualtion stratifier (\strong{NULL})}
+\item{str2Nm}{Column name for 2nd level population stratifier (\strong{NULL})}
 
-\item{flag}{Stratification ID (e.g. c(1,2)) (\strong{NULL})}
+\item{str2}{Stratification ID of the members within 2nd level stratification (e.g c(1,2)) (\strong{NULL})}
 
-\item{doseNm}{Column name to specify dose identifiers (\strong{NULL})}
+\item{str3Nm}{Column name for 3rd level population stratifier (\strong{NULL})}
 
-\item{dose}{Dose identifiers to be used (c(1,2)) (\strong{NULL})}
+\item{str3}{Stratification ID of the members within 3rd level stratification (e.g c(1,2)) (\strong{NULL})}
 
 \item{concUnit}{Unit of concentration ("ng/mL") (\strong{"[M].[L]^-3"})}
 
@@ -55,7 +55,7 @@ FALSE) (\strong{FALSE})}
 FALSE) (\strong{FALSE})}
 
 \item{psnOut}{observed data is an output from PsN or in NONMEM output format
-(TRUE, FALSE) (\strong{FALSE})}
+(TRUE, FALSE) (\strong{TRUE})}
 
 \item{idNmObs}{Column name for ID in observed data (\strong{"ID"})}
 
@@ -102,7 +102,7 @@ estimation of elimination rate-constant (\strong{NULL})}
 \item{blqExcl}{Excluded BLQ value or logical condition (e.g. 1 or ">=1" or
 c(1,">3")) (\strong{"1"})}
 
-\item{evid}{Use EVID (TRUE, FALSE) (\strong{FALSE})}
+\item{evid}{Use EVID (TRUE, FALSE) (\strong{TRUE})}
 
 \item{evidIncl}{Included EVID (\strong{"0"})}
 
@@ -145,7 +145,11 @@ array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
 noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})}
 
 \item{studyName}{Name of the study to be added as a description in the report
-  (\strong{NULL})}
+(\strong{NULL})}
+
+\item{outFileNm}{Additional tag to the name of the output html and pdf output
+  file hyphenated to the standard ncappc report file name standard ncappc
+  report file name (\strong{Name of the observed data file})}
 }
 \value{
 NCA results and diagnostic test results

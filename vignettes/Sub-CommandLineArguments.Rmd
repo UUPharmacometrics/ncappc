@@ -64,11 +64,11 @@ The name of the file containing the observed concentration vs. time data. This i
 **simFile**
 The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is ***NULL***. In the absence of this argument ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
 
-**grNm, flNm and doseNm**
-All three of them individually can be used to define population group when used separately. E.g., if you have only one stratification criteria for the population, any of these 3 arguments can be used. When doseNm is used together with either grNm or flNm, grNm/flNm defines the upper level stratification and doseNm defines the lower level stratification. When all three of them used together, grNm, flNm and doseNm define the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
+**str1Nm, str2Nm and str3Nm**
+All three of them individually can be used to specify the column name within the data set defining the population group when used separately. E.g., if there is only one stratification criteria for the population, any of these 3 arguments can be used to identify the stratification column name. When str1Nm is used together with either str2Nm or str3Nm, str1Nm defines the column name for the upper level stratification and str2Nm/str3Nm defines the column name for the lower level stratification. When all three of them are used together, str1Nm, str2Nm and str3Nm define the column names of the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
 
-**grp, flag and dose**
-"grp", "flag" and "dose" are identfiers for the population stratifications, present in the corresponding stratification levels defined by "grNm", "flNm" or "doseNm" columns, respectively. The default value for this argument is ***NULL***. If the "grNm", "flNm" or "doseNm" arguments are non-empty, but the "grp" and "flag" arguments are left as NULL, this function will use the unique values from the "grNm", "flNm" or "doseNm" column as identifiers for the population strata.
+**str1, str2 and str3**
+str1, str2 and str3 are identfiers for the population stratifications, present in the corresponding stratification levels defined by str1Nm, str2Nm and str3Nm columns, respectively. The default value for this argument is ***NULL***. If the str1Nm, str2Nm or str3Nm arguments are non-empty, but the corresponding str1, str2 or str3 arguments are left as NULL, this function will use the unique values from the str1Nm, str2Nm or str3Nm column as identifiers for the members of the corresponding population strata.
 
 **concUnit**
 The unit of plasma concentration values (e.g. "ng/mL"). The default value for this argument is the dimension of concentration ***[M].[L]^-3***.
@@ -183,5 +183,5 @@ This argument lets the user decide if the ncappc generated figures and tables wi
 Name of the study to be added as a description in the report. The default value for this argument is ***NULL***.
 
 **outFileNm**
-Name of the output html and pdf outfile in addition to the standard ncappc report file name. The default value for this argument is ***NULL***.
+Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name. The default value for this argument is the ***name of the observed data file***.
 

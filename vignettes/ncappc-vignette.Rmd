@@ -11,9 +11,9 @@ vignette: >
 ---
 
 # Introduction
-**Usage: ncappc (path=, obsFile=, ...)**
+**Usage: ncappc (obsFile=, ...)**
 
-<img src="ncappc_Schema.png" height="500px" width="600px" align="middle" />
+<img src="ncappc-Schema.png" height="450px" width="650px" align="middle" />
 
 **Figure 1.** Schematic work-flow of ***ncappc***.
 
