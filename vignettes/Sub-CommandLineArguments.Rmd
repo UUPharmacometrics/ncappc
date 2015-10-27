@@ -55,7 +55,7 @@ figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"t
 noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
 printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
 studyName | Name of the study to be added as a description in the report | Study name | **NULL**
-outFileNm | Name of the output html and pdf outfile in addition to the standard ncappc report file name | Output file name tag | **NULL**
+outFileNm | Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name | Output file name tag | **Name of the observed data file**
 
 
 **obsFile**

@@ -114,8 +114,9 @@
 #'   noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})
 #' @param studyName Name of the study to be added as a description in the report
 #'   (\strong{NULL})
-#' @param outFileNm Name of the output html and pdf outfile in addition to the
-#'   standard ncappc report file name (\strong{NULL})
+#' @param outFileNm Additional tag to the name of the output html and pdf output
+#'   file hyphenated to the standard ncappc report file name standard ncappc
+#'   report file name (\strong{Name of the observed data file})
 #'
 #' @import ggplot2
 #' @import gridExtra
@@ -190,6 +191,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       filterCol <- which(colnames(indf) == filterNm)
       for (i in 1:length(filterExcl)){
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i])){
+          indf <- indf[indf[,filterCol] != filterExcl[i],]
+        }else if(!grepl("[<>!=]", filterExcl[i])){
           indf <- indf[indf[,filterCol] != filterExcl[i],]
         }else{
           indf <- eval(parse(text=paste0("subset(indf, !",filterNm,"%in% indf[indf[,",filterCol,"]",filterExcl[i],",filterCol])")))
@@ -457,7 +460,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     tc <- data.frame(time,conc)
     if(nrow(tc)>0){
       tc <- tc[order(tc$time),]
-      tc$time <- tc$time + abs(min(tc$time))
+      if (tc$time[1]<0) tc$time <- tc$time + abs(min(tc$time))
     }
     return(tc)
   }
@@ -850,7 +853,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       counter <- counter + 1
     }
     if (nrow(pm) == 0) next
-    pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+    pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
     tmpStat <- t(cbind(nm, pm))
     rownames(tmpStat)[1] <- "Name"
     tmpStat <- cbind(Stat=rownames(tmpStat),tmpStat)
@@ -878,7 +881,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
         counter <- counter + 1
       }
       if (nrow(pm) == 0) next
-      pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+      pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       tmpStat <- t(cbind(nm, pm))
       rownames(tmpStat)[1] <- "Name"
       tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),Stat=rownames(tmpStat),tmpStat)
@@ -909,7 +912,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
           counter <- counter + 1
         }
         if (nrow(pm) == 0) next
-        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
         tmpStat <- t(cbind(nm, pm))
         rownames(tmpStat)[1] <- "Name"
         tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),STRAT2=as.character(popStr2[s2]),Stat=rownames(tmpStat),tmpStat)
@@ -942,7 +945,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
             counter <- counter + 1
           }
           if (nrow(pm) == 0) next
-          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
           tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),STRAT2=as.character(popStr2[s2]),STRAT3=as.character(popStr3[s3]),Stat=rownames(tmpStat),tmpStat)
@@ -961,19 +964,19 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
   if (printOut==TRUE && is.null(simFile)){
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,2:ncol(outData)] <- data.frame(lapply(outData[,2:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+      outData[,2:ncol(outData)] <- data.frame(lapply(outData[,2:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
     }
     if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
     }
     if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
     }
     if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) round(as.numeric(x),digits=4)))
+      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
     }
     write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
   }
@@ -988,18 +991,18 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     if(printOut==TRUE){
       if (case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)), 100)
-        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }
-      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       fnOut <- list(arglist=match.call(), TXT=txt, pddf=pddf, prnTab=prnTab, spread=spread, conc=concplot, histobs=histobsplot)
     }
   }else{
@@ -1064,31 +1067,31 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       
       # 1st level population stratification
       if (!is.null(str1Nm)){
-        if (str1Nm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column in simulation output\n")}
-        if (is.null(str1)){str1 <- unique(sort(nmdf[,str1Nm]))}
+        if (str1Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column in simulation output\n")}
+        if (is.null(str1)){str1 <- unique(sort(srdf[,str1Nm]))}
         nstr1 <- length(str1)
         for (i in 1:nstr1){
-          if (nrow(nmdf[nmdf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column in simulation output\n")}
+          if (nrow(srdf[srdf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column in simulation output\n")}
         }
       }
       
       # 2nd level population stratification
       if (!is.null(str2Nm)){
-        if (str2Nm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
-        if (is.null(str2)){str2 <- unique(sort(nmdf[,str2Nm]))}
+        if (str2Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
+        if (is.null(str2)){str2 <- unique(sort(srdf[,str2Nm]))}
         nstr2 <- length(str2)
         for (i in 1:nstr2){
-          if (nrow(nmdf[nmdf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("2nd level stratification ID does not match the values within 2nd level stratification column in simulation output\n")}
+          if (nrow(srdf[srdf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("2nd level stratification ID does not match the values within 2nd level stratification column in simulation output\n")}
         }
       }
       
       # 3rd level population stratification
       if (!is.null(str3Nm)){
-        if (str3Nm%in%colnames(nmdf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
-        if (is.null(str3)){str3 <- unique(sort(nmdf[,str3Nm]))}
+        if (str3Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
+        if (is.null(str3)){str3 <- unique(sort(srdf[,str3Nm]))}
         nstr3 <- length(str3)
         for (i in 1:nstr3){
-          if (nrow(nmdf[nmdf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("3rd level stratification ID does not match the values within 3rd level stratification column in simulation output\n")}
+          if (nrow(srdf[srdf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("3rd level stratification ID does not match the values within 3rd level stratification column in simulation output\n")}
         }
       }
       
@@ -1422,6 +1425,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     OTL   <- data.frame(No_of_outliers=numeric(0),ID_metric=character(0))
     npde  <- data.frame()
     fpval <- data.frame(type=character(0),mean=numeric(0),mcil=numeric(0),mciu=numeric(0),sdu=numeric(0),sducil=numeric(0),sduciu=numeric(0),str=character(0))
+    
     if (case == 1){
       tdasdf <- dasdf
       id     <- unique(tdasdf$ID)
@@ -1522,7 +1526,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
           simdata <- subset(tdasdf, ID==id[i])
           pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit)
           pde     <- rbind(pde, cbind(data.frame(ID=id[i],STRAT1=as.character(popStr1[s1])), pdeout$pde))
-          outData[(outData$ID==id[i] & outData$STRAT1=as.character(popStr1[s1])),] <- pdeout$obsdata
+          outData[(outData$ID==id[i] & outData$STRAT1==as.character(popStr1[s1])),] <- pdeout$obsdata
           if (pdeout$metric != ""){
             nout     <- nout + 1
             metric   <- paste(metric,pdeout$metric,sep=", ")
@@ -1815,7 +1819,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
         counter <- counter + 1
       }
       if (nrow(pm) == 0) next
-      pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+      pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       tmpStat <- t(cbind(nm, pm))
       rownames(tmpStat)[1] <- "Name"
       tmpStat <- cbind(Stat=rownames(tmpStat),tmpStat)
@@ -1844,7 +1848,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
           counter <- counter + 1
         }
         if (nrow(pm) == 0) next
-        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+        pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
         tmpStat <- t(cbind(nm, pm))
         rownames(tmpStat)[1] <- "Name"
         tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),Stat=rownames(tmpStat),tmpStat)
@@ -1876,7 +1880,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
             counter <- counter + 1
           }
           if (nrow(pm) == 0) next
-          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+          pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
           tmpStat <- t(cbind(nm, pm))
           rownames(tmpStat)[1] <- "Name"
           tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),STRAT2=as.character(popStr2[s2]),Stat=rownames(tmpStat),tmpStat)
@@ -1910,7 +1914,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
               counter <- counter + 1
             }
             if (nrow(pm) == 0) next
-            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+            pm <- data.frame(lapply(pm, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
             tmpStat <- t(cbind(nm, pm))
             rownames(tmpStat)[1] <- "Name"
             tmpStat <- cbind(STRAT1=as.character(popStr1[s1]),STRAT2=as.character(popStr2[s2]),STRAT3=as.character(popStr3[s3]),Stat=rownames(tmpStat),tmpStat)
@@ -1935,7 +1939,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     }else if(case==4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
     }
-    outData <- as.data.frame(lapply(outData, FUN=function(x) round(as.numeric(x), digits=4)))
+    outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     if (printOut==TRUE) write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
     
     
@@ -1963,18 +1967,18 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       
       if (case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
-        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if (case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) round(as.numeric(x),digits=4)))
+        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }
-      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){round(x,digits=4)}else{x}}))
+      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       fnOut <- list(arglist=match.call(),TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
     }
   }

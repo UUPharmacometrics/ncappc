@@ -70,7 +70,7 @@ Description of the tabular output
 
 ```{r Final table, echo=FALSE, results='asis'}
 require(xtable)
-print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html')
+print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T, digits = 3), include.rownames=FALSE, type = 'html')
 ```
 
 
