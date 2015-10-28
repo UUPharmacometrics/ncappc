@@ -1510,13 +1510,20 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
       
       if(noPlot==FALSE){
         # Forest plot for NPDE
+        fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
           geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
-          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.6, color="red",height=0.3) +
-          geom_point(aes(sdu,str,color="SD"), size=2) +
-          geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
+          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+          geom_point(aes(sd,str,color="SD"), size=2) +
+          geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=3,show_guide=F)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1600,13 +1607,20 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
       
       if(noPlot==FALSE){
         # Forest plot for NPDE
+        fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
           geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
-          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.6, color="red",height=0.3) +
-          geom_point(aes(sdu,str,color="SD"), size=2) +
-          geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
+          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+          geom_point(aes(sd,str,color="SD"), size=2) +
+          geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=3,show_guide=F)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1800,13 +1814,20 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
       
       if(noPlot==FALSE){
         # Forest plot for NPDE
+        fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
           geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
-          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.6, color="red",height=0.3) +
-          geom_point(aes(sdu,str,color="SD"), size=2) +
-          geom_errorbarh(aes(x=sdu,y=str,xmin=sducil,xmax=sduciu), size=0.6, color="darkgreen", height=0.4)
+          geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+          geom_point(aes(sd,str,color="SD"), size=2) +
+          geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=3,show_guide=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=3,show_guide=F)
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
