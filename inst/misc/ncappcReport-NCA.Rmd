@@ -57,7 +57,7 @@ Description of the tabular output
 # Table 1. ncaOutput.tsv (selected columns of top 100 rows)
 
 ```{r Final table, echo=FALSE, results='asis'}
-require(xtable)
+suppressPackageStartupMessages(require(xtable))
 print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T, digits = 3), include.rownames=FALSE, type = 'html')
 ```
 

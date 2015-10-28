@@ -86,7 +86,7 @@ cat(txt)
 \begin{center}
 \textbf{Summary table}
 << Summary table, echo=FALSE, results='asis'>>==
-require(xtable)
+suppressPackageStartupMessages(require(xtable))
 mtable <- xtable(pddf, align=c(rep("c",ncol(pddf)-2),"p{3cm}","p{1cm}","p{1cm}"), rotate.colnames = T, digits = 3)
 print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
       tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
@@ -114,7 +114,7 @@ The \textbf{\textit{ncappc}} functionality produces this table to report the est
 \begin{center}
 \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
 << Final table, echo=FALSE, results='asis'>>==
-require(xtable)
+suppressPackageStartupMessages(require(xtable))
 print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), file=paste(usrdir,"/tab.tex",sep=""), include.rownames=FALSE,
       tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
 @
