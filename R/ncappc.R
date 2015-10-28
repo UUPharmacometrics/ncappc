@@ -334,7 +334,7 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
   # popStr1   = 1st level stratification ID names
   # npopStr1  = Number of 1st level stratification ID names
   
-  if(is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-1} # No stratification
+  if(is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-0} # No stratification
   if(!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
   if(is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
   if(is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
