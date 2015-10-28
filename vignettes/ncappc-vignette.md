@@ -35,8 +35,8 @@ In the presence of the non-empty simFile argument (NONMEM output file with the s
 
 **Name** | **Description** | **Example of possible values** | **Default**
 :-------:|:---------------:|:------------------------------:|:-----------:
-obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
-simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **NULL**
+obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | **"nca_original.npctab.dta"**
+simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **"nca_simulation.1.npctab.dta"**
 str1Nm | Column name for 1st level population stratifier | Column name | **NULL**
 str1 | Stratification ID within 1st level stratification | c(1,2) | **NULL**
 str2Nm | Column name for 2nd level population stratifier | Column name | **NULL**
@@ -88,10 +88,10 @@ outFileNm | Additional tag to the name of the output html and pdf output file hy
 
 
 **obsFile**
-The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is ***NULL***. The columns within the observed data file must be separated by either comma or space or tab.
+The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is the generic output from PsN, ***"nca_original.npctab.dta"***. The columns within the observed data file must be separated by either comma or space or tab.
 
 **simFile**
-The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is ***NULL***. In the absence of this argument ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
+The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is the generic output from PsN, ***"nca_simulation.1.npctab.dta"***. When this argument is set NULL, ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
 
 **str1Nm, str2Nm and str3Nm**
 All three of them individually can be used to specify the column name within the data set defining the population group when used separately. E.g., if there is only one stratification criteria for the population, any of these 3 arguments can be used to identify the stratification column name. When str1Nm is used together with either str2Nm or str3Nm, str1Nm defines the column name for the upper level stratification and str2Nm/str3Nm defines the column name for the lower level stratification. When all three of them are used together, str1Nm, str2Nm and str3Nm define the column names of the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
@@ -480,6 +480,12 @@ Deviation of the mean of the NCA metrics for each individual estimated from the 
 Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution.
 
 
+### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
+<img src="histnpde.png" height="350px" width="500px" align="middle" />  
+
+Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+
+
 ### [Population level] Forest plot for the NPDE type analysis  
 <img src="forest.png" height="350px" width="500px" align="middle" />  
 
@@ -491,8 +497,3 @@ Forest plot of the NPDE type analysis displaying the mean and standard deviation
 
 NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same.
 
-
-### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
-<img src="histnpde.png" height="350px" width="500px" align="middle" />  
-
-Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.

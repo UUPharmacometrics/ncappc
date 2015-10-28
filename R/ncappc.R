@@ -39,8 +39,10 @@
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
 #'   or an external table with comma, tab or space as separator
+#'   (\strong{"nca_original.npctab.dta"})
 #' @param simFile NONMEM simulation output with the simulated concentration-time
-#'   data from an internal data frame or an external table (\strong{NULL})
+#'   data from an internal data frame or an external table
+#'   (\strong{"nca_simulation.1.npctab.dta"})
 #' @param str1Nm Column name for 1st level population stratifier (\strong{NULL})
 #' @param str1 Stratification ID of the members within 1st level stratification (e.g c(1,2)) (\strong{NULL})
 #' @param str2Nm Column name for 2nd level population stratifier (\strong{NULL})
@@ -131,7 +133,7 @@
 #' @export
 #'
 
-ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
+ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.npctab.dta",str1Nm=NULL,str1=NULL,
                    str2Nm=NULL,str2=NULL,str3Nm=NULL,str3=NULL,
                    concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
                    doseNormUnit=NULL,obsLog=FALSE,simLog=FALSE,
@@ -147,8 +149,8 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
                    tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
                    figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,outFileNm=NULL){
   
-  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- NULL
-  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd"))
+  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- NULL
+  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd","STRAT1","STRAT2","STRAT3"))
   
   options(warning.length=5000)
   options(scipen=999)
@@ -962,22 +964,12 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
   
   # write the output in a file
   if (printOut==TRUE && is.null(simFile)){
-    if (case == 1){
-      names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,2:ncol(outData)] <- data.frame(lapply(outData[,2:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
-    }
-    if (case == 2){
-      names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,3:ncol(outData)] <- data.frame(lapply(outData[,3:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
-    }
-    if (case == 3){
-      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,4:ncol(outData)] <- data.frame(lapply(outData[,4:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
-    }
-    if (case == 4){
-      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,5:ncol(outData)] <- data.frame(lapply(outData[,5:ncol(outData)], function(x) signif(as.numeric(x),digits=4)))
-    }
+    if(case == 1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
+    if(case == 2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
+    if(case == 3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
+    if(case == 4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
+    
+    outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
   }
   
@@ -989,16 +981,16 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut==TRUE){
-      if (case == 1){
+      if(case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)), 100)
         prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 2){
+      }else if(case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
         prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 3){
+      }else if(case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
         prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 4){
+      }else if(case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
         prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }
@@ -1267,6 +1259,15 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
             }
           }
         }
+        
+        if (printOut==TRUE){
+          if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
+          if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
+          if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
+          if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
+          write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        }
+        
         if (printOut==TRUE) write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
       }
     }
@@ -1276,9 +1277,15 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     
     # read all simulated NCA parameters to a list
     lasdf <- lapply(list.files(pattern="sim_[0-9]*.csv",full.names=T),function(i){read.csv(i, header=T)})
-    file_list <- list.files(path=".", pattern="sim_[0-9]*.csv", full.names=T)
-    nsim <- length(file_list)
-    dasdf <- do.call(rbind, lapply(file_list, read.csv))
+    nsim <- length(lasdf)
+    
+    # Rename the ID and stratification column names to ID, STRAT1, STRAT2 and/STRAT3
+    if(case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim)] <- c("ID"); return(x)})
+    if(case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1)] <- c("ID","STRAT1"); return(x)})
+    if(case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1,popStrNm2)] <- c("ID","STRAT1","STRAT2"); return(x)})
+    if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1,popStrNm2,popStrNm3)] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
+    
+    dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
     if (printOut==TRUE) write.table(dasdf, file=paste(usrdir,"/ncaSimEst.tsv",sep=""), row.names=F, quote=F, sep="\t")
     
     # Population histogram
@@ -1930,15 +1937,11 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
     if (printOut==TRUE) write.table(simGrStat, file=paste0(usrdir,"/SimStat.tsv"), sep="\t", col.names=T, row.names=F, quote=F)
     
     # Write output table
-    if(case==1){
-      names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-    }else if(case==2){
-      names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-    }else if(case==3){
-      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-    }else if(case==4){
-      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-    }
+    if(case==1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
+    if(case==2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
+    if(case==3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
+    if(case==4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
+    
     outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     if (printOut==TRUE) write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
     
@@ -1965,16 +1968,16 @@ ncappc <- function(obsFile=NULL,simFile=NULL,str1Nm=NULL,str1=NULL,
       #for (i in 1:length(npdeplot)){print(npdeplot[i])}
       #for (i in 1:length(histnpdeplot)){print(histnpdeplot[i])}
       
-      if (case == 1){
+      if(case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
         prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 2){
+      }else if(case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
         prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 3){
+      }else if(case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
         prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if (case == 4){
+      }else if(case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
         prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }

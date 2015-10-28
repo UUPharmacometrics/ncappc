@@ -149,6 +149,18 @@ if (length(outlier)>0){
 
 -
 
+```{r histnpdeplot, echo=FALSE, fig.align='center', dpi=100}
+if (length(histnpde)>0){
+  for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[i]]))); Sys.sleep(0.5)}
+}else{
+  print("No plot is available.")
+}
+```
+
+**Figure 6.** [Population level] Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+
+
+
 ```{r forestplot, echo=FALSE, fig.align='center', dpi=100}
 if (length(forest)>0){
   for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
@@ -157,7 +169,7 @@ if (length(forest)>0){
 }
 ```
 
-**Figure 6.** [Population level] Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals.
+**Figure 7.** [Population level] Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals.
 
 -
 
@@ -169,18 +181,7 @@ if (length(npde)>0){
 }
 ```
 
-**Figure 7.** [Individual level] NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA matric, while a positive value of the NPDE signifies under-prediction of the same.
-
-```{r histnpdeplot, echo=FALSE, fig.align='center', dpi=100}
-if (length(histnpde)>0){
-  for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[i]]))); Sys.sleep(0.5)}
-}else{
-  print("No plot is available.")
-}
-```
-
-**Figure 8.** [Population level] Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
-
+**Figure 8.** [Individual level] NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA matric, while a positive value of the NPDE signifies under-prediction of the same.
 
 
 

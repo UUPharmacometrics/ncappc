@@ -75,6 +75,12 @@ Deviation of the mean of the NCA metrics for each individual estimated from the 
 Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution.
 
 
+### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
+<img src="histnpde.png" height="350px" width="500px" align="middle" />  
+
+Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+
+
 ### [Population level] Forest plot for the NPDE type analysis  
 <img src="forest.png" height="350px" width="500px" align="middle" />  
 
@@ -86,8 +92,3 @@ Forest plot of the NPDE type analysis displaying the mean and standard deviation
 
 NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same.
 
-
-### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
-<img src="histnpde.png" height="350px" width="500px" align="middle" />  
-
-Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.

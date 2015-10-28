@@ -6,8 +6,8 @@ output: rmarkdown::html_vignette
 
 **Name** | **Description** | **Example of possible values** | **Default**
 :-------:|:---------------:|:------------------------------:|:-----------:
-obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | *NULL*
-simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **NULL**
+obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | **"nca_original.npctab.dta"**
+simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **"nca_simulation.1.npctab.dta"**
 str1Nm | Column name for 1st level population stratifier | Column name | **NULL**
 str1 | Stratification ID within 1st level stratification | c(1,2) | **NULL**
 str2Nm | Column name for 2nd level population stratifier | Column name | **NULL**
@@ -59,10 +59,10 @@ outFileNm | Additional tag to the name of the output html and pdf output file hy
 
 
 **obsFile**
-The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is ***NULL***. The columns within the observed data file must be separated by either comma or space or tab.
+The name of the file containing the observed concentration vs. time data. This is a mandatory argument and the default value to this argument is the generic output from PsN, ***"nca_original.npctab.dta"***. The columns within the observed data file must be separated by either comma or space or tab.
 
 **simFile**
-The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is ***NULL***. In the absence of this argument ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
+The name of the file containing the NONMEM output of the concentration vs. time data simulated using the PK model to be diagnosed. The default value to this argument is the generic output from PsN, ***"nca_simulation.1.npctab.dta"***. When this argument is set NULL, ***ncappc*** function performs only the traditional NCA; otherwise, ***ncappc*** function performs the traditional NCA as well as the diagnostic tests for the related PK model
 
 **str1Nm, str2Nm and str3Nm**
 All three of them individually can be used to specify the column name within the data set defining the population group when used separately. E.g., if there is only one stratification criteria for the population, any of these 3 arguments can be used to identify the stratification column name. When str1Nm is used together with either str2Nm or str3Nm, str1Nm defines the column name for the upper level stratification and str2Nm/str3Nm defines the column name for the lower level stratification. When all three of them are used together, str1Nm, str2Nm and str3Nm define the column names of the upper, middle and lower stratification levels, respectively. The default value for these arguments are ***NULL***.
