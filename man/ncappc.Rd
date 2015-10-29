@@ -19,7 +19,8 @@ ncappc(obsFile = "nca_original.npctab.dta",
   timeFormat = "number", dateColNm = NULL, dateFormat = NULL,
   spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
   "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff", noPlot = FALSE,
-  printOut = TRUE, studyName = NULL, new_data_method = FALSE)
+  printOut = TRUE, studyName = NULL, new_data_method = TRUE,
+  overwrite_SIMDATA = NULL)
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -28,7 +29,8 @@ or an external table with comma, tab or space as separator}
 \item{simFile}{NONMEM simulation output with the simulated concentration-time
 data from an internal data frame or an external table (\code{NULL} produces
 just the traditional NCA output, a filename or data frame prduces the NCA output
-as well as the PopPK diagnosis)}
+as well as the PopPK diagnosis). If \code{new_data_method=TRUE} then this can be a
+compressed file as well.}
 
 \item{grNm}{Column name for population stratifier (\strong{NULL})}
 
@@ -156,6 +158,10 @@ noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})}
 
 \item{new_data_method}{\code{TRUE} or \code{FALSE}.
 For testing a faster method of reading data.}
+
+\item{overwrite_SIMDATA}{Can be \code{TRUE}, to create new information in the SIMDATA directory,
+\code{FALSE}, to use the information in the SIMDATA directory or
+\code{NULL} to have a dialog come up to ask the use what to do.}
 }
 \value{
 NCA results and diagnostic test results

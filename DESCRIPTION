@@ -22,8 +22,9 @@ Imports:
     reshape2,
     testthat,
     dplyr,
-    readr,
+    readr (>= 0.2.2),
     lazyeval
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr
+

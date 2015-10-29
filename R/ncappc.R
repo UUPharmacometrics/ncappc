@@ -1138,8 +1138,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }
 
       if(new_data_method){
-        nmdf <- read_nm_sim(simFile, only_obs = F) 
-        nmdf <- as.data.frame(nmdf)
+        nmdf <- read_nm_table(simFile,sim_num = T,sim_name="NSUB")
+        nmdf <- data.frame(nmdf)
       } else {
         nmdf <- IPSIM(simFile,MDV.rm=F)
       }
