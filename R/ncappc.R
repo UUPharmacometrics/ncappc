@@ -273,7 +273,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   
   # Dose unit
-  #if (is.null(doseUnit)) doseUnit <- "[M]"
+  if (is.null(doseUnit)) doseUnit <- "[M]"
   
   # Preliminary description
   # Units for dose, time and conc

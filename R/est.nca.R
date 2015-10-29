@@ -140,15 +140,9 @@
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # function to estimate NCA parameters
-<<<<<<< HEAD
-est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",
-                    adminType="extravascular",doseNm=NULL,dose=NULL,doseNumber=NULL,
-                    doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,
-                    LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
-=======
+
 est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",adminType="extravascular",doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
->>>>>>> upstream/master
-  
+
   "tail" <- "head" <- "lm" <- "coef" <- NULL
   rm(list=c("tail","head","lm","coef"))
   

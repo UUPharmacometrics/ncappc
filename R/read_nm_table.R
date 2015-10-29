@@ -35,10 +35,13 @@
 #'   
 #'   
 
-read_nm_table <- function (nm_table, only_obs=FALSE, method="default",quiet=TRUE,sim_num=FALSE,sim_name="NSIM") {
+read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
+                           quiet=TRUE,sim_num=FALSE,sim_name="NSIM"){
   
   if(method=="default"){
-    if (requireNamespace("readr", quietly = TRUE) && packageVersion("readr") >= "0.2.2" && requireNamespace("dplyr", quietly = TRUE)) {
+    if (requireNamespace("readr", quietly = TRUE) && 
+        (packageVersion("readr") >= "0.2.2") && 
+        requireNamespace("dplyr", quietly = TRUE)) {
       method <- "readr_1" 
     } else {
       method <- "slow" 
