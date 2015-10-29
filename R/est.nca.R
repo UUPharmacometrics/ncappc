@@ -118,11 +118,6 @@
 #'   (\strong{"ns"})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
-#' @param doseNm Column name to specify dose identifiers (\strong{"NULL"})
-#' @param dose Dose identifiers used in the entire data (c(1,2))
-#'   (\strong{"NULL"})
-#' @param doseNumber Dose identifier used in this estimation (1)
-#'   (\strong{"NULL"})
 #' @param doseAmt Dose amounts (\strong{"NULL"})
 #' @param method linear, loglinear or mixed (\strong{"linear"})
 #' @param AUCTimeRange User-defined window of time used to estimate AUC 
@@ -145,10 +140,14 @@
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # function to estimate NCA parameters
+<<<<<<< HEAD
 est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",
                     adminType="extravascular",doseNm=NULL,dose=NULL,doseNumber=NULL,
                     doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,
                     LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
+=======
+est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",adminType="extravascular",doseAmt=NULL,method="linear",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
+>>>>>>> upstream/master
   
   "tail" <- "head" <- "lm" <- "coef" <- NULL
   rm(list=c("tail","head","lm","coef"))
@@ -172,32 +171,30 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",
   }
   
   if (length(nconc) >= 2){
+    
     # Calculation of C0
     if (backExtrp == TRUE){
-      ndose <- ifelse(!is.null(dose), length(dose), 0)
-      if (ndose == 1 | (!is.null(doseNm) & doseNumber == dose[1])){
-        if (ntime[1] == 0){
-          C0 <- as.numeric(nconc[1])
-        }else{
-          if (adminType == "extravascular" | adminType == "iv-infusion"){
-            C0 <- 0
-            nconc <- c(C0, nconc)
-            if (doseType == "ss"){
-              if (ssnPt != 0){C0 <- as.numeric(min(nconc)); nconc <- c(C0, nconc)}
-            }
-          }else if (adminType == "iv-bolus"){
-            slope <- (nconc[2]-nconc[1])/(ntime[2]-ntime[1])
-            if (nconc[1]==0 | nconc[2]==0){
-              C0 <- as.numeric(nconc[nconc>0][1]); nconc <- c(C0, nconc)
-            }else if (slope >= 0){
-              C0 <- as.numeric(nconc[1]); nconc <- c(C0, nconc)
-            }else{
-              C0 <- as.numeric(exp((ntime[1]*log(nconc[2])-ntime[2]*log(nconc[1]))/(ntime[1]-ntime[2])))
-              nconc <- c(C0, nconc) # extrapolation via log-linear regression
-            }
+      if (ntime[1] == 0){
+        C0 <- as.numeric(nconc[1])
+      }else{
+        if (adminType == "extravascular" | adminType == "iv-infusion"){
+          C0 <- 0
+          nconc <- c(C0, nconc)
+          if (doseType == "ss"){
+            if (ssnPt != 0){C0 <- as.numeric(min(nconc)); nconc <- c(C0, nconc)}
           }
-          ntime <- c(0, ntime)
+        }else if (adminType == "iv-bolus"){
+          slope <- (nconc[2]-nconc[1])/(ntime[2]-ntime[1])
+          if (nconc[1]==0 | nconc[2]==0){
+            C0 <- as.numeric(nconc[nconc>0][1]); nconc <- c(C0, nconc)
+          }else if (slope >= 0){
+            C0 <- as.numeric(nconc[1]); nconc <- c(C0, nconc)
+          }else{
+            C0 <- as.numeric(exp((ntime[1]*log(nconc[2])-ntime[2]*log(nconc[1]))/(ntime[1]-ntime[2])))
+            nconc <- c(C0, nconc) # extrapolation via log-linear regression
+          }
         }
+        ntime <- c(0, ntime)
       }
     }
     

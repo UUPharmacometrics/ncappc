@@ -11,6 +11,6 @@ install.packages("devtools")
 
 library(devtools)
 
-devtools::install_github("cacha0227/ncappc")
+devtools::install_github("cacha0227/ncappc",build_vignettes=TRUE)
 
 library(ncappc)

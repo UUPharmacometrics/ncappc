@@ -6,10 +6,10 @@
 data.}
 \usage{
 est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
-  doseType = "ns", adminType = "extravascular", doseNm = NULL,
-  dose = NULL, doseNumber = NULL, doseAmt = NULL, method = "linear",
-  AUCTimeRange = NULL, LambdaTimeRange = NULL, LambdaExclude = NULL,
-  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs")
+  doseType = "ns", adminType = "extravascular", doseAmt = NULL,
+  method = "linear", AUCTimeRange = NULL, LambdaTimeRange = NULL,
+  LambdaExclude = NULL, Tau = NULL, TI = NULL, simFile = NULL,
+  dset = "obs")
 }
 \arguments{
 \item{time}{Numeric array for time}
@@ -26,14 +26,6 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
 
 \item{adminType}{Route of administration
 (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})}
-
-\item{doseNm}{Column name to specify dose identifiers (\strong{"NULL"})}
-
-\item{dose}{Dose identifiers used in the entire data (c(1,2))
-(\strong{"NULL"})}
-
-\item{doseNumber}{Dose identifier used in this estimation (1)
-(\strong{"NULL"})}
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 

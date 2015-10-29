@@ -179,9 +179,13 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
                               strip.text.x = element_text(size=8, face="bold")))
       devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
       gplt   <- list()
-      figttl <- ifelse(is.null(figlbl),
-                       paste("Outlier_ID-",id,"\n(spread = ",devtag,")\n\n",sep=""),
-                       paste("Outlier_ID-",id,"_",figlbl,"\n(spread = ",devtag,")\n\n",sep=""))
+      
+      if(is.null(figlbl)){
+        figttl <- paste0("Outlier_ID-",id,"\n(spread = ",devtag,")\n\n")
+      }else{
+        figttl <- paste0("Outlier_ID-",id,"_",figlbl,"\n(spread = ",devtag,")\n\n")
+      }
+      
       for (p in 1:npr){
         df <- subset(pdata, type==diagparam[p])
         df$type <- factor(df$type, levels=diagparam[p], labels=fctNm[fctNm$prmNm==diagparam[p],"prmUnit"])
@@ -202,7 +206,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         arg_names <- sub("top","main",arg_names)
         arg_names <- sub("bottom","sub",arg_names)
         names(plot_args) <- arg_names
-      }  
+      }
       gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,c(gplt,plot_args))))
       #grid.arrange(gdr)
     }

@@ -38,58 +38,57 @@ This table reports a set of statistical parameters calculated for the entire pop
   * gCVp = geometric coefficient of variation %.
 
 ### ncaSimData.tsv  
-This table reports the simulated concentration-time profiles for each individual obtained from a number of simulations. Currently the ***ncappc*** function accepts only NONMEM output format for the simulated data. All columns from the NONMEM output file are kept unaltered in this file and an additional column, namely "NSIM", is printed to denote the corresponding simulation number for the concentration-time profile.
+This table reports the simulated concentration-time profiles for each individual obtained from a number of simulations. Currently the ***ncappc*** function accepts only NONMEM output format for the simulated data. All columns from the NONMEM output file are kept unaltered in this file and an additional column, namely "NSUB", is printed to denote the corresponding simulation number for the concentration-time profile.
 
 ### ncaSimEst.tsv  
-This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSIM" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
+This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSUB" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
 
 
 ## Graphical output
 ### [Individual level] Concentration *vs.* time profile  
 <img src="conc.jpeg" height="350px" width="500px" align="middle" />  
 
-Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the thin lines represents individual data and the thicker brown line represents the smooth.
-
-The first set of figures represent the concentration *vs.* time profile for each individual as obtained from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. Each of the lines represents individual data. The above figure shows a typical example of the concentration-time profile. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
 
 
 ### [Population level] Histogram of the selected NCA metrics estimated from the observed data  
 <img src="histobs.png" height="600px" width="550px" align="middle" />  
 
-The second set of figures represent the histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated. The solid and dotted blue vertical lines represent the population mean and the "spread" of the data, respectively. The "spread" is either defined by the 95% parametric prediction interval or by the 95% nonparametric prediction interval of the PK measures obtained from the simulated data. The above figure shows a typical example of this set of plots.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{sprtxt} obtained from the observed data.
 
 
 ### [Population level] Histogram of the simulated population means of the NCA metrics  
 <img src="popmean.png" height="350px" width="500px" align="middle" />  
 
-The third set of figures represent the histograms of the population means of the NCA metrics obtained from the sets of simulated data. The red and blue solid vertical lines represent the population mean of the corresponding NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the simulated data set, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is either defined by the standard deviation or by the 95% nonparametric prediction interval for the population mean of the NCA metrics obtained from the simulated data. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Histogram of the population mean of the NCA metrics obtained from the simulated data. The red and blue solid vertical lines represent the population mean of the NCA metric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the simulated data, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as either defined by the standard deviation or by the 95% nonparametric prediction interval for the population mean of the NCA metrics obtained from the simulated data.
 
 
 ### [Individual level] Deviation of the simulated NCA metrics from the observed value  
 <img src="deviation.png" height="350px" width="500px" align="middle" />  
 
-The fourth set of plots represent the deviation of the mean of the NCA metrics for each individual estimated from the sets of simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the "spread" of the simulated data as defined either by the distance between the meanSim and the 95% parametric prediction interval or by the distance between the meanSim and the 95% nonparametric prediction interval boundary of the simulated NCA metric distribution nearer to the observed value (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% parametric prediction interval boundary) or (Deviation = (Obs - meanSim)/ distance between meanSim and the 95% nonparametric prediction interval boundary nearer to the Obs). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Deviation of the mean of the NCA metrics for each individual estimated from the simulated data (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data proximal to the observed value (** Deviation = (Obs - meanSim)/ spread **). The negative value of the deviation signifies over-prediction of the corresponding NCA metric, while a positive value of the deviation signifies under-prediction of the same.
 
 
 ### [Individual level] Distribution of the simulated NCA metrics for the outliers}  
 <img src="outlier.png" height="350px" width="500px" align="middle" />  
 
-The fifth set of plots represent the distribution of the NCA metrics obtained from the simulated data for the individuals that are labelled as outliers by the ***ncappc***. These individuals are marked as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in the diagnosis is greater than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values obtained from the observed and the simulated data for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
-
-
-### [Population level] Forest plot for the NPDE type analysis  
-<img src="forest.png" height="350px" width="500px" align="middle" />  
-
-The is sixth set of figures represent the Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics in various population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals. The Y-axis of this plot represent different population or occasion strata, if present. The above figure shows a typical example of the forest plot.
-
-
-### [Individual level] NPDE values of the NCA metrics for each individual  
-<img src="npde.png" height="350px" width="500px" align="middle" />  
-
-The seventh set of plots represent NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding NCA metrics estimated from the observed and the simulated data. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA metric value and the mean of the simulated NCA metric values for that individual, respectively. The dashed blue vertical lines represent the "spread" of the simulated distribution.
 
 
 ### [Population level] Histogram of the NPDE values of the NCA metrics within a given population group
 <img src="histnpde.png" height="350px" width="500px" align="middle" />  
 
-The eighth set of plots represent the histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group. If the data indicate the presence of stratified population or multiple occasions, separate figures with appropriate subnumber will be generated for every strata. The above figure shows a typical example of this set of plots.
+Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
+
+
+### [Population level] Forest plot for the NPDE type analysis  
+<img src="forest.png" height="350px" width="500px" align="middle" />  
+
+Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals.
+
+
+### [Individual level] NPDE values of the NCA metrics for each individual  
+<img src="npde.png" height="350px" width="500px" align="middle" />  
+
+NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA metric, while a positive value of the NPDE signifies under-prediction of the same.
+

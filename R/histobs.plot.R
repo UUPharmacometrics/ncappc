@@ -115,7 +115,13 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
   lheight  <- sum(mylegend$heights)
   for (p in 1:length(param)){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
   
-  plot_args <- list(top = textGrob(paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep=""),vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
+  if(is.null(figlbl)){
+    Label <- paste("Histogram of NCA metrics estimated from the observed data\n(spread = ",devtag,")\n\n",sep="")
+  }else{
+    Label <- paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep="")
+  }
+  
+  plot_args <- list(top = textGrob(Label,vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
                     bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.7)),
                     ncol=nc)
   if(packageVersion("gridExtra") < "0.9.2"){
