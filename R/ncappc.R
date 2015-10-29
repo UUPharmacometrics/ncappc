@@ -464,7 +464,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
     tc <- data.frame(time,conc)
     if(nrow(tc)>0){
       tc <- tc[order(tc$time),]
-      if (tc$time[1]<0) tc$time <- tc$time + abs(min(tc$time))
+      #if (tc$time[1]<0) tc$time <- tc$time + abs(min(tc$time))
     }
     return(tc)
   }
