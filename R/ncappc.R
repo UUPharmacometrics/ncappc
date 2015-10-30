@@ -1529,7 +1529,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       if(noPlot==FALSE){
         plotdata <- outData
         if (nrow(plotdata) == 0) next
-        figlbl <- NULL
+        figlbl <- "All data"
         # Deviation plot
         ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
         if (!is.null(ggdev)){
