@@ -35,14 +35,18 @@
 #' values of the NCA metrics estimated from the observed and the simulated data,
 #' along with the deviation, NPDE, regression parameters used to estimate the 
 #' elimination rate constant and the related population statistics. The default 
-#' values of the arguments used in \pkg{ncappc} are shown in \strong{bold}.
+#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage} 
+#' section of this document and/or in \strong{bold} in the \strong{Arguments} section.
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
 #'   or an external table with comma, tab or space as separator
 #'   (\strong{"nca_original.npctab.dta"})
 #' @param simFile NONMEM simulation output with the simulated concentration-time
 #'   data from an internal data frame or an external table
-#'   (\strong{"nca_simulation.1.npctab.dta"})
+#'   (\strong{"nca_simulation.1.npctab.dta"}). \code{NULL} produces 
+#'   just the traditional NCA output, a filename or data frame prduces the NCA output
+#'   as well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can be a 
+#'   compressed file as well.
 #' @param str1Nm Column name for 1st level population stratifier (\strong{NULL})
 #' @param str1 Stratification ID of the members within 1st level stratification (e.g c(1,2)) (\strong{NULL})
 #' @param str2Nm Column name for 2nd level population stratifier (\strong{NULL})
@@ -73,7 +77,12 @@
 #' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE)
 #'   (\strong{FALSE})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
-#'   rate-constant (\strong{NULL})
+#'   rate-constant. This argument
+#'   lets the user to choose a specific window of time to be used to estimate
+#'   the elimination rate constant (Lambda) in the elimination phase. The
+#'   accepted format for the input to this argument is a
+#'   numeric array of two elements; \code{c(14,24)} will estimate the Lambda using the
+#'   data within the time units 14 to 24.  If \code{NULL} then all times are considered.
 #' @param LambdaExclude User-defined excluded observation time points for
 #'   estimation of elimination rate-constant (\strong{NULL})
 #' @param doseAmtNm Column name to specify dose amount (\strong{NULL})
@@ -101,9 +110,8 @@
 #' @param dateColNm colunm name for date if used (Date, DATE) (\strong{NULL})
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
 #'   D,M,Y) (\strong{NULL})
-#' @param spread Measure of the spread of simulated data (ppi (95\% parametric
-#'   prediction interval) or npi (95\% nonparametric prediction interval))
-#'   (\strong{"npi"})
+#' @param spread Measure of the spread of simulated data (\code{"ppi"} (95\% parametric
+#'   prediction interval) or \code{"npi"} (95\% nonparametric prediction interval))
 #' @param tabCol Output columns to be printed in the report in addition to ID, 
 #'   dose and population strata information (list of NCA metrics in a string 
 #'   array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
@@ -111,11 +119,16 @@
 #' @param figFormat format of the produced figures (bmp, jpeg, tiff, png)
 #'   (\strong{"tiff"})
 #' @param noPlot Perform only NCA calculations without any plot generation
-#'   (TRUE, FALSE) (\strong{FALSE})
+#'   (\code{TRUE} or \code{FALSE}) 
 #' @param printOut Write/print output on the disk. No plot will be saved if
 #'   noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})
 #' @param studyName Name of the study to be added as a description in the report
 #'   (\strong{NULL})
+#' @param new_data_method \code{TRUE} or \code{FALSE}.  
+#' For testing a faster method of reading data.
+#' @param overwrite_SIMDATA Can be \code{TRUE}, to create new information in the SIMDATA directory,
+#' \code{FALSE}, to use the information in the SIMDATA directory or 
+#' \code{NULL} to have a dialog come up to ask the user what to do.
 #' @param outFileNm Additional tag to the name of the output html and pdf output
 #'   file hyphenated to the standard ncappc report file name standard ncappc
 #'   report file name (\strong{Name of the observed data file})
@@ -133,7 +146,9 @@
 #' @export
 #'
 
-ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.npctab.dta",str1Nm=NULL,str1=NULL,
+ncappc <- function(obsFile="nca_original.npctab.dta",
+                   simFile="nca_simulation.1.npctab.dta",
+                   str1Nm=NULL,str1=NULL,
                    str2Nm=NULL,str2=NULL,str3Nm=NULL,str3=NULL,
                    concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
                    doseNormUnit=NULL,obsLog=FALSE,simLog=FALSE,
@@ -147,11 +162,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
                    param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,
                    dateFormat=NULL,spread="npi",
                    tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
-                   figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,outFileNm=NULL){
+                   figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,new_data_method=TRUE,
+                   overwrite_SIMDATA=NULL,outFileNm=NULL){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- NULL
   rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd","STRAT1","STRAT2","STRAT3"))
-  
+
   options(warning.length=5000)
   options(scipen=999)
   usrdir <- getwd()
@@ -264,7 +280,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
   dunit <- ifelse(is.null(doseNormUnit), doseUnit, paste0(doseUnit,"/",doseNormUnit))
   tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
   cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
-  
+
   # ignore data with BLQ = 1 or user specified value (optional)
   if (!is.null(blqNm)){
     if (blqNm%in%colnames(indf) == T){
@@ -570,6 +586,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
         if(nrow(tc)==0) next
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
+
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]))))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],DoseAmount=idzAmt,t(NCAprm)))
@@ -1002,10 +1019,18 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
   }else{
     od <- paste(usrdir,"/SIMDATA",sep="")
     if (file.exists(od)){
-      dirTest <- readline("Directory \"SIMDATA\" already exists.\n
-                          Overwrite it? (type 1)\n
-                          Rename the existing folder and create a new one? (type 2)\n
-                          Use data from the existing folder? (type 3)\n")
+      
+      if(is.null(overwrite_SIMDATA)){
+        dirTest <- readline("Directory \"SIMDATA\" already exists.\n
+                            Overwrite it? (type 1)\n
+                            Rename the existing folder and create a new one? (type 2)\n
+                            Use data from the existing folder? (type 3)\n")
+      } else if(overwrite_SIMDATA==T){
+        dirTest <- "1"
+      } else if(overwrite_SIMDATA==F) {
+        dirTest <- "3"
+      }
+      
       if (dirTest == "1"){
         unlink(od, recursive=T)
         dir.create(od)
@@ -1025,6 +1050,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
       # read NONMEM output into individual simulation data file
       IPSIM <- function(table.sim,MDV.rm=T){
 
+        #browser()
         #table.sim <-  "nca_simulation.1.npctab.dta"
         # this is faster but doesn't read correctly with the extra lines between simulations
         #library(readr)
@@ -1046,7 +1072,23 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
         return(nmdf)
       }
 
-      nmdf <- IPSIM(simFile,MDV.rm=F); simID <- unique(nmdf$NSUB); nsim <- length(unique(nmdf$NSUB))
+      if(new_data_method){
+        nmdf <- read_nm_table(simFile,sim_num = T,sim_name="NSUB")
+        nmdf <- data.frame(nmdf)
+      } else {
+        nmdf <- IPSIM(simFile,MDV.rm=F)
+      }
+      
+      #       # compare methods
+      #       sim_1 <- read_nm_sim(simFile, only_obs = F) 
+      #       sim_2 <- IPSIM(simFile,MDV.rm=F)
+      #       library(dplyr)
+      #       all(summarise_each(sim_1,funs(mean,sd)) == summarise_each(sim_2,funs(mean,sd))) 
+      #       all(dim(sim_1)==dim(sim_2))
+      
+      simID <- unique(nmdf$NSUB) 
+      nsim <- length(simID)
+      
       if (printOut==TRUE) write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
@@ -1120,6 +1162,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
               }else{
                 if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i]))) == 0) next
                 nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i])),]
+                #if (length(which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i])) == 0) next
+                #nmdf <- nmdf[-which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i]),]
               }
             }
           }
@@ -1198,6 +1242,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",simFile="nca_simulation.1.n
             if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
             if (nrow(ifdf) == 0){next}
             idd <- unique(ifdf[,idCol])
+            if(is.data.frame(idd)) idd <- idd[[1]]
             for (i in 1:length(idd)){
               if (!is.null(doseAmtNm)){
                 idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,idNmSim]==idd[i] & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])

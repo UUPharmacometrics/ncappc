@@ -20,7 +20,11 @@ Imports:
     knitr,
     xtable,
     reshape2,
-    testthat
+    testthat,
+    dplyr,
+    readr (>= 0.2.2),
+    lazyeval
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr
+
