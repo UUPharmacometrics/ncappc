@@ -32,7 +32,7 @@
 #' @return Returns a data frame of the simulated table with an added column for 
 #'   the simulation number. The data frame is given class \code{c("tbl_df", 
 #'   "tbl", "data.frame")} for easy use with \code{\link[dplyr]{dplyr}}.
-#'   
+#' @export
 #'   
 
 read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
@@ -40,8 +40,8 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   
   if(method=="default"){
     if (requireNamespace("readr", quietly = TRUE) && 
-        (packageVersion("readr") >= "0.2.2") && 
-        requireNamespace("dplyr", quietly = TRUE)) {
+          (packageVersion("readr") >= "0.2.2") && 
+          requireNamespace("dplyr", quietly = TRUE)) {
       method <- "readr_1" 
     } else {
       method <- "slow" 
@@ -183,7 +183,7 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
     fields.in.first.line <- fields.per.line[1]
     fields.in.rest <- fields.per.line[-1]
     if((length(unique(fields.in.rest))!=1) ||
-       (all(fields.in.first.line==fields.in.rest))){ 
+         (all(fields.in.first.line==fields.in.rest))){ 
       if(!quiet) {
         cat(paste("Found different number of fields in ",filename,".\n",sep=""))
         cat("This may be due to multiple TABLE and header rows \n")
@@ -200,6 +200,7 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
                     row.names=FALSE,quote=FALSE)
         #assign(paste("n.",filename,sep=""),read.table(tempfile,skip=2,header=T,sep=sep.char))
         tab_dat <- read.table(tempfile,skip=2,header=T,sep=sep.char)
+        tab_dat$NSUB <- rep(1:(nrow(tab_dat)/(inds[1]-3)), each=(inds[1]-3))
         unlink(tempfile)
       } else {
         #assign(paste("n.",filename,sep=""),read.table(filename,skip=1,header=T,sep=sep.char))
@@ -217,7 +218,7 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
                     readr_2 = read_nm_tab_readr_2(nm_table),
                     readr_3 = read_nm_tab_readr_3(nm_table,sim_num=sim_num),
                     slow = read_nm_tab_slow(nm_table,quiet=quiet)
-                    )
+  )
   
   ## remove non-observation rows
   if(only_obs){

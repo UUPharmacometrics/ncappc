@@ -209,7 +209,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # exclude data based on specific values on filter column (optional)
   if (!is.null(filterNm)){
-    if (filterNm%in%colnames(indf)==T & !is.null(filterExcl)){
+    if(filterNm%in%colnames(indf)==T & !is.null(filterExcl)){
       # filterExcl  == values to be excluded
       filterCol <- which(colnames(indf) == filterNm)
       for (i in 1:length(filterExcl)){
@@ -221,7 +221,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           indf <- eval(parse(text=paste0("subset(indf, !",filterNm,"%in% indf[indf[,",filterCol,"]",filterExcl[i],",filterCol])")))
         }
       }
-    }else{setwd(usrdir);stop("Incorrect filterNm or filterExcl specification\n")}
+    }else{
+      print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the observed data.\n")
+    }
   }
   
   # copy the input data before processing
@@ -231,35 +233,36 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (!is.null(str1Nm)){
     if (str1Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
     if (is.null(str1)){str1 <- unique(sort(indf[,str1Nm]))}
-    for (i in 1:length(str1)){
-      if (nrow(indf[indf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
-    }
+    #for (i in 1:length(str1)){
+    #  if (nrow(indf[indf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
+    #}
   }
   
   # 2nd level population stratification
   if (!is.null(str2Nm)){
     if (str2Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
     if (is.null(str2)){str2 <- unique(sort(indf[,str2Nm]))}
-    for (i in 1:length(str2)){
-      if (nrow(indf[indf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
-    }
+    #for (i in 1:length(str2)){
+    #  if (nrow(indf[indf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
+    #}
   }
   
   # 3rd level population stratification
   if (!is.null(str3Nm)){
     if (str3Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
     if (is.null(str3)){str3 <- unique(sort(indf[,str3Nm]))}
-    for (i in 1:length(str3)){
-      if (nrow(indf[indf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
-    }
+    #for (i in 1:length(str3)){
+    #  if (nrow(indf[indf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
+    #}
   }
   
   # check time range, if any
   if ((!is.null(AUCTimeRange)) && (length(AUCTimeRange) != 2 | class(AUCTimeRange) != "numeric")){
-    setwd(usrdir);stop("Incorrect time range for AUC calculation\n")
+    print("Note: Incorrect time range for AUC calculation. AUCTimeRange will not be used.\n")
   }
+  
   if ((!is.null(LambdaTimeRange)) && (length(LambdaTimeRange) != 2 | class(LambdaTimeRange) != "numeric")){
-    setwd(usrdir);stop("Incorrect time range for Lambda calculation\n")
+    print("Note: Incorrect time range for Lambda calculation. LambdaTimeRange will not be used.\n")
   }
   
   # check requirements for infusion data
@@ -268,45 +271,68 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # Set backExtrp to FALSE in the presence of simulated data
   if (!is.null(simFile)){backExtrp <- FALSE}
   
+  
   # Dose amount is extracted from doseAmtNm column
   if (!is.null(doseAmtNm)){
-    if (doseAmtNm%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column name provided in doseAmtNm does not exist in the input data file.\n")}    
+    if (doseAmtNm%in%colnames(indf)==T){
+      doseAmtNm <- doseAmtNm
+    }else if ("AMT"%in%colnames(indf)){
+      doseAmtNm <- "AMT"
+    }else{
+      doseAmtNm <- NULL
+      print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the observed data file. Dose related NCA metrics will not be estimated for the observed data.\n")
+    }
   }else{
     if ("AMT"%in%colnames(indf)) doseAmtNm <- "AMT"
   }
   
   # Dose unit
-  if (is.null(doseUnit)) doseUnit <- "[M]"
+  if (is.null(doseUnit)) doseUnit <- "M"
   
   # Preliminary description
   # Units for dose, time and conc
-  dunit <- ifelse(is.null(doseNormUnit), doseUnit, paste0(doseUnit,"/",doseNormUnit))
-  tunit <- ifelse(is.null(timeUnit), "T", timeUnit)
-  cunit <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
+  dunit    <- ifelse(is.null(doseNormUnit), doseUnit, paste0(doseUnit,"/",doseNormUnit))
+  tunit    <- ifelse(is.null(timeUnit), "T", timeUnit)
+  cunit    <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
+  aucunit  <- paste0(tunit,"*",cunit)
+  aumcunit <- paste0("(",tunit,"^2)*",cunit)
+  clunit   <- paste0(dunit,"/(",aucunit,")")
+  vlunit   <- paste0(tunit,clunit)
+  
 
   # ignore data with BLQ = 1 or user specified value (optional)
   if (!is.null(blqNm)){
-    if (blqNm%in%colnames(indf) == T){
+    if(blqNm%in%colnames(indf) == T){
       blqCol <- which(colnames(indf) == blqNm)
       for (i in 1:length(blqExcl)){
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", blqExcl[i]) == T) {indf <- indf[indf[,blqNm] != blqExcl[i],]}
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", blqExcl[i]) == F) {indf <- eval(parse(text=paste0("subset(indf, !",blqNm,"%in% indf[as.numeric(as.character(indf[,",blqCol,"]))",blqExcl[i],",blqCol])")))}
       }
-    }else{setwd(usrdir);stop("Incorrect BLQ column name\n")}
+    }else{
+      print("Note: Incorrect BLQ column name. BLQ will not be used to process the observed data.\n")
+    }
   }
   
   # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
-  if ((evid == TRUE) & ("EVID"%in%colnames(indf) == T)){
-    # uevid == unique values in EVID column
-    # evidIncl == EVID values to be included
-    # ievid == EVID values to be ignored
-    uevid <- unique(as.numeric(as.character(indf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
-    if (length(ievid) != 0){for (i in 1:length(ievid)){indf <- indf[indf$EVID != ievid[i],]}}
+  if ((evid == TRUE)){
+    if("EVID"%in%colnames(indf) == T){
+      # uevid == unique values in EVID column
+      # evidIncl == EVID values to be included
+      # ievid == EVID values to be ignored
+      uevid <- unique(as.numeric(as.character(indf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
+      if (length(ievid) != 0){for (i in 1:length(ievid)){indf <- indf[indf$EVID != ievid[i],]}}
+    }else{
+      print("Note: EVID column is not present. EVID will not be used to process the observed data.\n")
+    }
   }
   
   # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
   if (mdv == TRUE){
-    if ("MDV"%in%colnames(indf) == T){indf <- indf[indf$MDV == 0,]}
+    if("MDV"%in%colnames(indf) == T){
+      indf <- indf[indf$MDV == 0,]
+    }else{
+      print("Note: MDV column is not present. MDV will not be used to process the observed data.\n")
+    }
   }
   
   # Appropriate date format
@@ -985,14 +1011,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if(printOut==TRUE) write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
   
   # write the output in a file
-  if (printOut==TRUE && is.null(simFile)){
+  if (is.null(simFile)){
     if(case == 1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
     if(case == 2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
     if(case == 3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
     if(case == 4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
     
     outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
-    write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
+    
+    names(outData)[names(outData)%in%c("DoseAmount","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    
+    if(printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
   }
   
   ############################################################################
@@ -1003,20 +1032,25 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut==TRUE){
+      tabUnit <- data.frame(NAME=c("DoseAmount","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred"),
+                            UNIT=c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+      
+      tabCol <- unlist(lapply(tabCol, FUN=function(x) x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT"])))
+      
       if(case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)), 100)
-        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }
-      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
+      #prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       fnOut <- list(arglist=match.call(), TXT=txt, pddf=pddf, prnTab=prnTab, spread=spread, conc=concplot, histobs=histobsplot)
     }
   }else{
@@ -1052,7 +1086,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if (dirTest != 3){
       # read NONMEM output into individual simulation data file
       IPSIM <- function(table.sim,MDV.rm=T){
-
+        
         #browser()
         #table.sim <-  "nca_simulation.1.npctab.dta"
         # this is faster but doesn't read correctly with the extra lines between simulations
@@ -1074,7 +1108,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         assign("nmdf", sim)
         return(nmdf)
       }
-
+      
+      #if(new_data_method && (requireNamespace("readr", quietly = TRUE) && (packageVersion("readr") >= "0.2.2") && (requireNamespace("dplyr", quietly = TRUE)))){
       if(new_data_method){
         nmdf <- read_nm_table(simFile,sim_num = T,sim_name="NSUB")
         nmdf <- data.frame(nmdf)
@@ -1089,13 +1124,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       #       all(summarise_each(sim_1,funs(mean,sd)) == summarise_each(sim_2,funs(mean,sd))) 
       #       all(dim(sim_1)==dim(sim_2))
       
-      simID <- unique(nmdf$NSUB) 
+      simID <- unique(nmdf$NSUB)
       nsim <- length(simID)
       
       if (printOut==TRUE) write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
       
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
-
+      
       if (idNmSim%in%colnames(nmdf)==F | timeNmSim%in%colnames(nmdf)==F | concNmSim%in%colnames(nmdf)==F){
         setwd(usrdir);stop("Incorrect column names of ID, TIME and/or DV in simulation output\n")
       }else{
@@ -1109,9 +1144,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (str1Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column in simulation output\n")}
         if (is.null(str1)){str1 <- unique(sort(srdf[,str1Nm]))}
         nstr1 <- length(str1)
-        for (i in 1:nstr1){
-          if (nrow(srdf[srdf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column in simulation output\n")}
-        }
+        #for (i in 1:nstr1){
+        #  if (nrow(srdf[srdf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column in simulation output\n")}
+        #}
       }
       
       # 2nd level population stratification
@@ -1119,9 +1154,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (str2Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
         if (is.null(str2)){str2 <- unique(sort(srdf[,str2Nm]))}
         nstr2 <- length(str2)
-        for (i in 1:nstr2){
-          if (nrow(srdf[srdf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("2nd level stratification ID does not match the values within 2nd level stratification column in simulation output\n")}
-        }
+        #for (i in 1:nstr2){
+        #  if (nrow(srdf[srdf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("2nd level stratification ID does not match the values within 2nd level stratification column in simulation output\n")}
+        #}
       }
       
       # 3rd level population stratification
@@ -1129,15 +1164,21 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (str3Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
         if (is.null(str3)){str3 <- unique(sort(srdf[,str3Nm]))}
         nstr3 <- length(str3)
-        for (i in 1:nstr3){
-          if (nrow(srdf[srdf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("3rd level stratification ID does not match the values within 3rd level stratification column in simulation output\n")}
-        }
+        #for (i in 1:nstr3){
+        #  if (nrow(srdf[srdf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("3rd level stratification ID does not match the values within 3rd level stratification column in simulation output\n")}
+        #}
       }
-      
       
       # Dose amount is extracted from doseAmtNm column
       if (!is.null(doseAmtNm)){
-        if (doseAmtNm%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column name provided in doseAmtNm does not exist in the simulated data file.\n")}
+        if (doseAmtNm%in%colnames(nmdf)==T){
+          doseAmtNm <- doseAmtNm
+        }else if ("AMT"%in%colnames(nmdf)){
+          doseAmtNm <- "AMT"
+        }else{
+          doseAmtNm <- NULL
+          print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the simulated data file. Dose related NCA metrics will not be estimated for the simulated data.\n")
+        }
       }else{
         if ("AMT"%in%colnames(nmdf)) doseAmtNm <- "AMT"
       }
@@ -1145,15 +1186,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # ignore data with BLQ = 1 or user specified value (optional)
       if (!is.null(blqNm)){
-        if (blqNm%in%colnames(nmdf) == T){
+        if(blqNm%in%colnames(nmdf)==T){
           blqCol <- which(colnames(nmdf) == blqNm)
           for (i in 1:length(blqExcl)) {nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]}
-        }else{setwd(usrdir);stop("Incorrect BLQ column name in simulation output\n")}
+        }else{
+          print("Note: Incorrect BLQ column name in simulation output. BLQ will not be used to process the data.\n")
+        }
       }
       
       # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
       if (evid == TRUE){
-        if ("EVID"%in%colnames(nmdf) == T){
+        if("EVID"%in%colnames(nmdf)==T){
           # uevid == unique values in EVID column
           # evidIncl == EVID values to be included
           # ievid == EVID values to be ignored
@@ -1170,27 +1213,33 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               }
             }
           }
-        }else{setwd(usrdir);stop("Incorrect EVID column name in simulation output\n")}
+        }else{
+          print("Note: Incorrect EVID column name in simulation output. EVID will not be used to process the simulated data.\n")
+        }
       }
       
       # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
       if (mdv == TRUE){
-        if ("MDV"%in%colnames(nmdf) == T){
+        if("MDV"%in%colnames(nmdf) == T){
           if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1)) == 0) next
           nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1),]
-        }else{setwd(usrdir);stop("Incorrect MDV column name in simulation output\n")}
+        }else{
+          print("Note: Incorrect MDV column name in simulation output. MDV will not be used to process the simulated data.\n")
+        }
       }
       
       # exclude data based on specific values on filter column (optional)
       if (!is.null(filterNm)){
-        if (filterNm%in%colnames(nmdf)==T & !is.null(filterExcl)){
+        if(filterNm%in%colnames(nmdf)==T & !is.null(filterExcl)){
           # filterExcl  == values to be excluded
           filterCol <- which(colnames(nmdf) == filterNm)
           for (i in 1:length(filterExcl)){
             if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == T) {nmdf <- nmdf[nmdf[,filterCol] != as.numeric(filterExcl[i]),]}
             if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == F) {nmdf <- eval(parse(text=paste("subset(nmdf, !",filterNm,"%in% nmdf[nmdf[,",filterCol,"]",filterExcl[i],",filterCol])",sep="")))}
           }
-        }else{setwd(usrdir);stop("Incorrect filterNm or filterExcl specification in simulation output\n")}
+        }else{
+          print("Note: Incorrect filterNm or filterExcl specification in simulation output. filterNm will not be used to process the simulated data.\n")
+        }
       }
       
       # Calculate AUC parameters for the simulation output
@@ -1310,15 +1359,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }
         }
         
-        if (printOut==TRUE){
-          if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
-          if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
-          if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
-          if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
-          write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
-        }
-        
-        if (printOut==TRUE) write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
+        if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
+        if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
+        if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
+        write.csv(simData, file=paste(od,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
       }
     }
     
@@ -1330,10 +1375,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     nsim <- length(lasdf)
     
     # Rename the ID and stratification column names to ID, STRAT1, STRAT2 and/STRAT3
-    if(case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim)] <- c("ID"); return(x)})
-    if(case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1)] <- c("ID","STRAT1"); return(x)})
-    if(case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1,popStrNm2)] <- c("ID","STRAT1","STRAT2"); return(x)})
-    if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[names(x)%in%c(idNmSim,popStrNm1,popStrNm2,popStrNm3)] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
+    if(case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim),names(x))] <- c("ID"); return(x)})
+    if(case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1),names(x))] <- c("ID","STRAT1"); return(x)})
+    if(case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2),names(x))] <- c("ID","STRAT1","STRAT2"); return(x)})
+    if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
     
     dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
     if (printOut==TRUE) write.table(dasdf, file=paste(usrdir,"/ncaSimEst.tsv",sep=""), row.names=F, quote=F, sep="\t")
@@ -2021,6 +2066,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(case==4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
     
     outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
+    
+    names(outData)[names(outData)%in%c("DoseAmount","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    
     if (printOut==TRUE) write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
     
     
@@ -2046,20 +2094,24 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       #for (i in 1:length(npdeplot)){print(npdeplot[i])}
       #for (i in 1:length(histnpdeplot)){print(histnpdeplot[i])}
       
+      tabUnit <- data.frame(NAME=c(c("DoseAmount","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")),
+                            UNIT=c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+      tabCol <- unlist(lapply(tabCol, FUN=function(x) x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT"])))
+      
       if(case == 1){
         prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
-        prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 2){
         prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 3){
         prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }else if(case == 4){
         prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
+        #prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
       }
-      prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
+      #prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
       fnOut <- list(arglist=match.call(),TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
     }
   }
@@ -2067,7 +2119,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   if (printOut==TRUE){
     misc <- system.file("misc", package = "ncappc")
-    #misc <- "../../ncappc_0.2.0.9004/inst/misc"
     
     if(is.null(outFileNm)) outFileNm <- obsFileNm
     if (is.null(simFile)){
