@@ -1137,9 +1137,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # Dose amount is extracted from doseAmtNm column
       if (!is.null(doseAmtNm)){
-        if (doseAmtNm%in%colnames(indf) == F){setwd(usrdir);stop("Dose amount column name provided in doseAmtNm does not exist in the input data file.\n")}
+        if (doseAmtNm%in%colnames(nmdf) == F){setwd(usrdir);stop("Dose amount column name provided in doseAmtNm does not exist in the simulated data file.\n")}
       }else{
-        if ("AMT"%in%colnames(indf)) doseAmtNm <- "AMT"
+        if ("AMT"%in%colnames(nmdf)) doseAmtNm <- "AMT"
       }
       
       
