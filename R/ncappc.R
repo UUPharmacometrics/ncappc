@@ -297,7 +297,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   aucunit  <- paste0(tunit,"*",cunit)
   aumcunit <- paste0("(",tunit,"^2)*",cunit)
   clunit   <- paste0(dunit,"/(",aucunit,")")
-  vlunit   <- paste0(tunit,clunit)
+  vlunit   <- paste0(dunit,"/",cunit)
   
 
   # ignore data with BLQ = 1 or user specified value (optional)
@@ -543,7 +543,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       conc <- as.numeric(tc$conc)
       cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT="All data"))
       NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-      outData <- rbind(outData, data.frame(ID=idd[i],DoseAmount=idzAmt,t(NCAprm)))
+      outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
     }
     if(noPlot==FALSE & nrow(outData)>=5){
       plotData    <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
@@ -618,7 +618,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
 
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]))))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-        outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],DoseAmount=idzAmt,t(NCAprm)))
+        outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
       if(noPlot==FALSE){
@@ -719,7 +719,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],DoseAmount=idzAmt,t(NCAprm)))
+          outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
         if(noPlot==FALSE){
@@ -814,7 +814,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             conc   <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))))
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],DoseAmount=idzAmt,t(NCAprm)))
+            outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
           if(noPlot==FALSE){
@@ -1010,50 +1010,49 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   if(printOut==TRUE) write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
   
-  # write the output in a file
+  
+  # Print output files if simulated data does not exist
   if (is.null(simFile)){
+    # Raname ID and stratifier columns
     if(case == 1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
     if(case == 2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
     if(case == 3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
     if(case == 4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
     
+    # Format output table sigfig
     outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     
-    names(outData)[names(outData)%in%c("DoseAmount","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    # Subset table to print in the report
+    if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
+    if(case == 2) prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
+    if(case == 3) prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
+    if(case == 4) prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
     
-    if(printOut==TRUE) write.table(outData, file=paste(usrdir,"/ncaOutput.tsv",sep=""), sep="\t", row.names=F, col.names=T, quote=F)
-  }
-  
-  ############################################################################
-  # Analyze the simulated data if exists
-  if (is.null(simFile)){
+    # Add unit to output table header
+    names(outData)[names(outData)%in%c("Dose","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("Dose (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    
+    
+    # Add unit to report table header
+    tabUnit <- data.frame(NAME=c("Dose","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred"),
+                          UNIT1=c(paste0("Dose\n(",dunit,")"),paste0("C0\n(",cunit,")"),paste0("Tmax\n(",tunit,")"),paste0("Cmax\n(",cunit,")"),paste0("Cmax_D\n(",cunit,"/",dunit,")"),paste0("Tlast\n(",tunit,")"),paste0("Clast\n(",cunit,")"),paste0("AUClast\n(",aucunit,")"),paste0("AUMClast\n(",aumcunit,")"),paste0("MRTlast\n(",tunit,")"),paste0("AUClower_upper\n(",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower\n(",tunit,")"),paste0("Lambda_z_upper\n(",tunit,")"),paste0("HL_Lambda_z\n(",tunit,")"),paste0("AUCINF_obs\n(",aucunit,")"),paste0("AUCINF_D_obs\n(",aucunit,"/",dunit,")"),paste0("Vz_obs\n(",vlunit,")"),paste0("Cl_obs\n(",clunit,")"),paste0("AUCINF_pred\n(",aucunit,")"),paste0("AUCINF_D_pred\n(",aucunit,"/",dunit,")"),paste0("Vz_pred\n(",vlunit,")"),paste0("Cl_pred\n(",clunit,")"),paste0("AUMCINF_obs\n(",aumcunit,")"),paste0("AUMCINF_pred\n(",aumcunit,")"),paste0("MRTINF_obs\n(",tunit,")"),paste0("MRTINF_pred\n(",tunit,")"),paste0("Tau\n(",tunit,")"),paste0("Tmin\n(",tunit,")"),paste0("Cmin\n(",cunit,")"),paste0("Cavg\n(",cunit,")"),paste0("AUCtau\n(",aucunit,")"),paste0("AUMCtau\n(",aumcunit,")"),paste0("Clss\n(",clunit,")"),paste0("Vss_obs\n(",vlunit,")"),paste0("Vss_pred\n(",vlunit,")")),
+                          UNIT2=c(paste0("Dose (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+    
+    prnTab2 <- prnTab1
+    names(prnTab1) <- unlist(lapply(names(prnTab1), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT1"])}else{x}}))
+    names(prnTab2) <- unlist(lapply(names(prnTab2), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT2"])}else{x}}))
+    
     streamsEnv <- parent.frame()
     if(exists("outData")) assign("ncaOutput",  outData,   envir=streamsEnv)
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut==TRUE){
-      tabUnit <- data.frame(NAME=c("DoseAmount","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred"),
-                            UNIT=c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
-      
-      tabCol <- unlist(lapply(tabCol, FUN=function(x) x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT"])))
-      
-      if(case == 1){
-        prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)), 100)
-        #prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 2){
-        prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        #prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 3){
-        prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        #prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 4){
-        prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        #prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }
-      #prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
-      fnOut <- list(arglist=match.call(), TXT=txt, pddf=pddf, prnTab=prnTab, spread=spread, conc=concplot, histobs=histobsplot)
+      write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)                          # write the output in a file
+      fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, spread=spread, conc=concplot, histobs=histobsplot)        # Function output list
     }
   }else{
+    ########################################################################
+    ############## Analyze the simulated data if exists ####################
+    ########################################################################
     od <- paste(usrdir,"/SIMDATA",sep="")
     if (file.exists(od)){
       
@@ -1285,7 +1284,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             time <- as.numeric(stc$time)
             conc <- as.numeric(stc$conc)
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            simData <- rbind(simData, data.frame(ID=idd[i],DoseAmount=idzAmt,t(NCAprm),NSIM=s))
+            simData <- rbind(simData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),NSIM=s))
           }
         }
         if (case == 2){
@@ -1306,7 +1305,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               time <- as.numeric(stc$time)
               conc <- as.numeric(stc$conc)
               NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],DoseAmount=idzAmt,t(NCAprm),NSIM=s))
+              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
             }
           }
         }
@@ -1328,7 +1327,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 time <- as.numeric(stc$time)
                 conc <- as.numeric(stc$conc)
                 NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],DoseAmount=idzAmt,t(NCAprm),NSIM=s))
+                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
               }
             }
           }
@@ -1352,7 +1351,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   time <- as.numeric(stc$time)
                   conc <- as.numeric(stc$conc)
                   NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],DoseAmount=idzAmt,t(NCAprm),NSIM=s))
+                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
                 }
               }
             }
@@ -2065,12 +2064,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(case==3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
     if(case==4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
     
+    # Format output table sigfig
     outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     
-    names(outData)[names(outData)%in%c("DoseAmount","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    # Subset table to print in the report
+    if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
+    if(case == 2) prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
+    if(case == 3) prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
+    if(case == 4) prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
     
-    if (printOut==TRUE) write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
+    # Add unit to output table header
+    names(outData)[names(outData)%in%c("Dose","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("Dose (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
     
+    # Add unit to report table header
+    tabUnit <- data.frame(NAME=c(c("Dose","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")),
+                          UNIT1=c(paste0("Dose\n(",dunit,")"),paste0("C0\n(",cunit,")"),paste0("Tmax\n(",tunit,")"),paste0("simTmax\n(",tunit,")"),paste0("dTmax\n(",tunit,")"),paste0("Cmax\n(",cunit,")"),paste0("simCmax\n(",cunit,")"),paste0("dCmax\n(",cunit,")"),paste0("Cmax_D\n(",cunit,"/",dunit,")"),paste0("Tlast\n(",tunit,")"),paste0("Clast\n(",cunit,")"),paste0("AUClast\n(",aucunit,")"),paste0("simAUClast\n(",aucunit,")"),paste0("dAUClast\n(",aucunit,")"),paste0("AUMClast\n(",aumcunit,")"),paste0("simAUMClast\n(",aumcunit,")"),paste0("dAUMClast\n(",aumcunit,")"),paste0("MRTlast\n(",tunit,")"),paste0("AUClower_upper\n(",aucunit,")"),paste0("simAUClower_upper\n(",aucunit,")"),paste0("dAUClower_upper\n(",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower\n(",tunit,")"),paste0("Lambda_z_upper\n(",tunit,")"),paste0("HL_Lambda_z\n(",tunit,")"),paste0("simHL_Lambda_z\n(",tunit,")"),paste0("dHL_Lambda_z\n(",tunit,")"),paste0("AUCINF_obs\n(",aucunit,")"),paste0("simAUCINF_obs\n(",aucunit,")"),paste0("dAUCINF_obs\n(",aucunit,")"),paste0("AUCINF_D_obs\n(",aucunit,"/",dunit,")"),paste0("Vz_obs\n(",vlunit,")"),paste0("Cl_obs\n(",clunit,")"),paste0("AUCINF_pred\n(",aucunit,")"),paste0("simAUCINF_pred\n(",aucunit,")"),paste0("dAUCINF_pred\n(",aucunit,")"),paste0("AUCINF_D_pred\n(",aucunit,"/",dunit,")"),paste0("Vz_pred\n(",vlunit,")"),paste0("Cl_pred\n(",clunit,")"),paste0("AUMCINF_obs\n(",aumcunit,")"),paste0("AUMCINF_pred\n(",aumcunit,")"),paste0("MRTINF_obs\n(",tunit,")"),paste0("MRTINF_pred\n(",tunit,")"),paste0("Tau\n(",tunit,")"),paste0("Tmin\n(",tunit,")"),paste0("Cmin\n(",cunit,")"),paste0("Cavg\n(",cunit,")"),paste0("AUCtau\n(",aucunit,")"),paste0("AUMCtau\n(",aumcunit,")"),paste0("Clss\n(",clunit,")"),paste0("Vss_obs\n(",vlunit,")"),paste0("Vss_pred\n(",vlunit,")")),
+                          UNIT2=c(paste0("Dose (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+    
+    prnTab2 <- prnTab1
+    names(prnTab1) <- unlist(lapply(names(prnTab1), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT1"])}else{x}}))
+    names(prnTab2) <- unlist(lapply(names(prnTab2), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT2"])}else{x}}))
     
     streamsEnv <- parent.frame()
     if(exists("outData"))   assign("ncaOutput",  outData,   envir=streamsEnv)
@@ -2085,34 +2098,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       txt <- paste(txt,paste0("Name of the NONMEM simulation output file: \"",simFileNm,"\""),sep="\n")
       txt <- paste(txt,paste0("Number of simulations performed: ",nsim),sep="\n")
       pddf <- cbind(pddf,OTL); names(pddf)[c((ncol(pddf)-1),ncol(pddf))] <- c("No. of outlier","Selected outliers ID and NCA metrics")
-      #for (i in 1:length(concplot)){print(concplot[i])}
-      #for (i in 1:length(histobsplot)){print(histobsplot[i])}
-      #for (i in 1:length(popplot)){print(popplot[i])}
-      #for (i in 1:length(devplot)){print(devplot[i])}
-      #for (i in 1:length(outlierplot)){print(outlierplot[i])}
-      #for (i in 1:length(forestplot)){print(forestplot[i])}
-      #for (i in 1:length(npdeplot)){print(npdeplot[i])}
-      #for (i in 1:length(histnpdeplot)){print(histnpdeplot[i])}
       
-      tabUnit <- data.frame(NAME=c(c("DoseAmount","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")),
-                            UNIT=c(paste0("DoseAmount (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
-      tabCol <- unlist(lapply(tabCol, FUN=function(x) x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT"])))
-      
-      if(case == 1){
-        prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
-        #prnTab[,2:ncol(prnTab)] <- data.frame(lapply(prnTab[,2:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 2){
-        prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-        #prnTab[,3:ncol(prnTab)] <- data.frame(lapply(prnTab[,3:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 3){
-        prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-        #prnTab[,4:ncol(prnTab)] <- data.frame(lapply(prnTab[,4:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }else if(case == 4){
-        prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-        #prnTab[,5:ncol(prnTab)] <- data.frame(lapply(prnTab[,5:ncol(prnTab)], function(x) signif(as.numeric(x),digits=4)))
-      }
-      #prnTab <- data.frame(lapply(prnTab, function(x){if(is.numeric(x)){signif(x,digits=4)}else{x}}))
-      fnOut <- list(arglist=match.call(),TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
+      write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)   # write output table
+      fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
     }
   }
   setwd(usrdir)

@@ -7,9 +7,11 @@
 
 ```{r main, echo=FALSE}
 arglist  <- fnOut$arglist
+case     <- fnOut$case
 txt      <- fnOut$TXT
 pddf     <- fnOut$pddf
-prnTab   <- fnOut$prnTab
+prnTab1  <- fnOut$prnTab1
+prnTab2  <- fnOut$prnTab2
 nsim     <- fnOut$NSIM
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
@@ -70,7 +72,7 @@ Description of the tabular output
 
 ```{r Final table, echo=FALSE, results='asis'}
 suppressPackageStartupMessages(require(xtable))
-print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T, digits = 3), include.rownames=FALSE, type = 'html')
+print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html')
 ```
 
 

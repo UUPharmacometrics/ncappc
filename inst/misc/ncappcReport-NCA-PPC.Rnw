@@ -64,9 +64,11 @@ knit_hooks$set(source=listing, output=listing)
 
 <<main, echo=FALSE>>=
 arglist  <- fnOut$arglist
+case     <- fnOut$case
 txt      <- fnOut$TXT
 pddf     <- fnOut$pddf
-prnTab   <- fnOut$prnTab
+prnTab1  <- fnOut$prnTab1
+prnTab2  <- fnOut$prnTab2
 nsim     <- fnOut$NSIM
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
@@ -125,7 +127,12 @@ The \textbf{\textit{ncappc}} functionality produces this table to report the est
 \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
 << Final table, echo=FALSE, results='asis'>>==
 suppressPackageStartupMessages(require(xtable))
-print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), file=paste(usrdir,"/tab.tex",sep=""), include.rownames=FALSE, tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
+if(case==1) colform <- c(rep("p{0.5cm}",2),rep("p{1.5cm}",ncol(prnTab2)-1))
+if(case==2) colform <- c(rep("p{0.5cm}",3),rep("p{1.5cm}",ncol(prnTab2)-2))
+if(case==3) colform <- c(rep("p{0.5cm}",4),rep("p{1.5cm}",ncol(prnTab2)-3))
+if(case==4) colform <- c(rep("p{0.5cm}",5),rep("p{1.5cm}",ncol(prnTab2)-4))
+print(xtable(prnTab2, align=colform, rotate.colnames = T, auto=TRUE), file=paste(usrdir,"/tab.tex",sep=""), include.rownames=FALSE,
+      tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
 @
 \input{tab}
 \end{center}
