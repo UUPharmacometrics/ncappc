@@ -98,7 +98,11 @@ cat(txt)
 \textbf{Summary table}
 << Summary table, echo=FALSE, results='asis'>>==
 suppressPackageStartupMessages(require(xtable))
-mtable <- xtable(pddf, align=c(rep("c",ncol(pddf)-2),"p{3cm}","p{1cm}","p{1cm}"), rotate.colnames = T, digits = 3)
+if(case==1) colform <- c(rep("p{1cm}",1),rep("p{2cm}",ncol(pddf)-1),"p{3cm}")
+if(case==2) colform <- c(rep("p{1cm}",2),rep("p{2cm}",ncol(pddf)-2),"p{3cm}")
+if(case==3) colform <- c(rep("p{1cm}",3),rep("p{2cm}",ncol(pddf)-3),"p{3cm}")
+if(case==4) colform <- c(rep("p{1cm}",4),rep("p{2cm}",ncol(pddf)-4),"p{3cm}")
+mtable <- xtable(pddf, align=colform, rotate.colnames = T, digits = 3)
 print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
       tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
 @
