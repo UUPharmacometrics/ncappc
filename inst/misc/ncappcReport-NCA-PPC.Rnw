@@ -160,7 +160,7 @@ Estimated NCA metrics for each individual using the simulated concentration-time
 \section{Description of the graphical output}
 
 \subsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
-<<concplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align="center">>=
+<<concplot, echo=FALSE, fig.pos="H", fig.height=4, fig.width=6, out.width='0.7\\textwidth', fig.align="center">>=
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{

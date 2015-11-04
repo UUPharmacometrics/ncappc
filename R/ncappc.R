@@ -521,7 +521,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     ifdf <- indf
     if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
     if (nrow(ifdf) == 0){next}
-    idd        <- unique(ifdf[,idCol])
+    idd        <- unique(as.character(ifdf[,idCol]))
     if(is.null(doseAmtNm)){
       doseAmount <- NA
     }else{
@@ -530,74 +530,71 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     # Description
     pddf  <- rbind(pddf, data.frame(a=doseAmount, b=length(idd)))
-    cdata <- data.frame(Time=numeric(0),Conc=numeric(0),ID=character(0))
+    cdata <- data.frame()
     for (i in 1:length(idd)){
       if (!is.null(doseAmtNm)){
-        idzAmt <- as.numeric(refdf[refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
+        idzAmt <- as.numeric(refdf[refdf[,idNmObs]==as.character(idd[i]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
       }else{
         idzAmt <- NA
       }
-      tc   <- ncaId(ifdf,idd[i])
+      tc   <- ncaId(ifdf,as.character(idd[i]))
       if(nrow(tc)==0) next
       time <- as.numeric(tc$time)
       conc <- as.numeric(tc$conc)
-      cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT="All data"))
+      cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
       NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-      outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
+      outData <- rbind(outData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm)))
     }
-    if(noPlot==FALSE & nrow(outData)>=5){
-      plotData    <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-      pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
-      for (p in 1:length(pltPrm)){if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
-      if (length(pltPrm) == 0) next
-      figlbl      <- NULL
-      histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=pltPrm,cunit=cunit,tunit=tunit,spread=spread)
-      gdr         <- histobsgrob$gdr
-      mylegend    <- histobsgrob$legend
-      lheight     <- histobsgrob$lheight
-      if (printOut==TRUE){
-        fl <- paste0(usrdir,"/HistObs")
-        eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
-        suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-        dev.off()
-      }
-      suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
-      ggr <- grid.grab()
-      histobsplot[[length(histobsplot)+1]] <- ggr
-    }
-    
-    cnm         <- c(paste0("Dose (",dunit,")"),"No. of individuals")
-    names(pddf) <- cnm
     
     if(noPlot==FALSE){
-      fct <- unique(cdata$FCT)
-      # ggplot for conc vs. time
-      dht   <- 7
-      dwd   <- 11
-      str   <- fct
-      pdata <- cdata
-      gdr   <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
+      # DV plot
+      figlbl    <- "All-data"
+      cdata$FCT <- figlbl
+      gdr       <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
       if (printOut==TRUE){
-        #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200) 
-        fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
-        eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
+        fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
+        eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         dev.off()
       }
+      
+      # Obs hist plot
+      if(nrow(outData)>=5){
+        plotData    <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
+        pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
+        for (p in 1:length(pltPrm)){if (nrow(plotData[plotData[,p] != "NaN",])<5) pltPrm <- pltPrm[-p]}
+        if (length(pltPrm) == 0) next
+        figlbl      <- NULL
+        histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=pltPrm,cunit=cunit,tunit=tunit,spread=spread)
+        gdr         <- histobsgrob$gdr
+        mylegend    <- histobsgrob$legend
+        lheight     <- histobsgrob$lheight
+        if (printOut==TRUE){
+          fl <- paste0(usrdir,"/HistObs")
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+          dev.off()
+        }
+        suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
+        ggr <- grid.grab()
+        histobsplot[[length(histobsplot)+1]] <- ggr
+      }
     }
+    cnm         <- c(paste0("Dose (",dunit,")"),"No. of individuals")
+    names(pddf) <- cnm
   }
   
   # Estimate NCA metrics for case = 2
   if (case == 2){
-    cdata <- data.frame(Time=numeric(0),Conc=numeric(0),ID=character(0),FCT=character(0))
     for (s1 in 1:npopStr1){
+      cdata <- data.frame()
       ifdf <- indf[indf[,popStrNm1]==as.character(popStr1[s1]),]
       if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
       if (nrow(ifdf) == 0){next}
-      idd <- unique(ifdf[,idCol])
+      idd <- unique(as.character(ifdf[,idCol]))
       if (!is.null(doseAmtNm)){
         doseAmount <- paste(as.numeric(unique(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
       }else{
@@ -607,21 +604,36 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       pddf <- rbind(pddf, data.frame(a=as.character(popStr1[s1]), b=doseAmount, c=length(idd)))
       for (i in 1:length(idd)){
         if (!is.null(doseAmtNm)){
-          idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
+          idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,idNmObs]==as.character(idd[i]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
         }else{
           idzAmt <- NA
         }
-        tc   <- ncaId(ifdf,idd[i])
+        tc   <- ncaId(ifdf,as.character(idd[i]))
         if(nrow(tc)==0) next
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
 
-        cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]))))
+        cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-        outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
+        outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
       if(noPlot==FALSE){
+        # DV plot
+        figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
+        cdata$FCT <- figlbl
+        gdr       <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+        suppressMessages(suppressWarnings(grid.arrange(gdr)))
+        ggr <- grid.grab()
+        concplot[[length(concplot)+1]] <- ggr
+        if (printOut==TRUE){
+          fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
+          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          dev.off()
+        }
+        
+        # Obs hist plot
         plotData    <- subset(outData, STRAT1==popStr1[s1], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<5) next
         pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -645,61 +657,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     cnm         <- c(popStrNm1,paste0("Dose (",dunit,")"),"No. of individuals")
     names(pddf) <- cnm
-    
-    if(noPlot==FALSE){
-      # ggplot for conc vs. time
-      fct <- unique(cdata$FCT); nfct <- length(fct)
-      # ggplot for conc vs. time
-      for (p in seq(1,nfct,3)){
-        str <- ""
-        if ((nfct-p)>=2) {
-          dht   <- 16
-          dwd   <- 15
-          str   <- gsub("^_", "", paste(str,fct[p:(p+2)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1] | FCT == fct[p+2])
-        }else if ((nfct-p)==1){
-          dht   <- 11
-          dwd   <- 13
-          str   <- gsub("^_", "", paste(str,fct[p:(p+1)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1])
-        }else if ((nfct-p)==0){
-          dht   <- 7
-          dwd   <- 11
-          str   <- gsub("^_", "", paste(str,fct[p],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p])
-        }
-        gdr <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
-        suppressMessages(suppressWarnings(grid.arrange(gdr)))
-        ggr <- grid.grab()
-        concplot[[length(concplot)+1]] <- ggr
-        if (printOut==TRUE){
-          #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)     
-          
-          #figlbl      <- paste(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",popStr2[s2],sep="")
-          #histobsgrob <- histobs.plot(plotData=plotData,figlbl=figlbl,param=c("AUClast","AUCINF_obs","Cmax","Tmax"),cunit=cunit,tunit=tunit,spread=spread)
-          #gdr         <- histobsgrob$gdr
-          #mylegend    <- histobsgrob$legend
-          #lheight     <- histobsgrob$lheight
-          #if (printOut==TRUE){
-          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
-          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
-          suppressMessages(suppressWarnings(grid.arrange(gdr)))
-          dev.off()
-          #}
-        }
-      } 
-    }
   }
   
   # Estimate NCA metrics for case = 3
   if (case == 3){
-    cdata <- data.frame(Time=numeric(0),Conc=numeric(0),ID=character(0),FCT=character(0))
     for (s1 in 1:npopStr1){
       for (s2 in 1:npopStr2){
+        cdata <- data.frame()
         ifdf <- indf[indf[,popStrNm1]==as.character(popStr1[s1]) & indf[,popStrNm2]==as.character(popStr2[s2]),]
         if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
         if (nrow(ifdf) == 0){next}
-        idd <- unique(ifdf[,idCol])
+        idd <- unique(as.character(ifdf[,idCol]))
         if (!is.null(doseAmtNm)){
           doseAmount <- paste(as.numeric(unique(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
         }else{
@@ -709,20 +677,35 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         pddf   <- rbind(pddf, data.frame(a=as.character(popStr1[s1]), b=as.character(popStr2[s2]), c=doseAmount, d=length(idd)))
         for (i in 1:length(idd)){
           if (!is.null(doseAmtNm)){
-            idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
+            idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,idNmObs]==as.character(idd[i]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
           }else{
             idzAmt <- NA
           }
-          tc   <- ncaId(ifdf,idd[i])
+          tc   <- ncaId(ifdf,as.character(idd[i]))
           if(nrow(tc)==0) next
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
-          cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))))
+          cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
         if(noPlot==FALSE){
+          # DV plot
+          figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
+          cdata$FCT <- figlbl
+          gdr <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+          suppressMessages(suppressWarnings(grid.arrange(gdr)))
+          ggr <- grid.grab()
+          concplot[[length(concplot)+1]] <- ggr
+          if (printOut==TRUE){
+            fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
+            eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
+            suppressMessages(suppressWarnings(grid.arrange(gdr)))
+            dev.off()
+          }
+          
+          # Obs hist plot
           plotData    <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<5) next
           pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -747,54 +730,18 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     cnm         <- c(popStrNm1,popStrNm2,paste0("Dose (",dunit,")"),"No. of individuals")
     names(pddf) <- cnm
-    
-    if(noPlot==FALSE){
-      # ggplot for conc vs. time
-      fct <- unique(cdata$FCT); nfct <- length(fct)
-      # ggplot for conc vs. time
-      for (p in seq(1,nfct,3)){
-        str <- ""
-        if ((nfct-p)>=2) {
-          dht   <- 16
-          dwd   <- 15
-          str   <- gsub("^_", "", paste(str,fct[p:(p+2)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1] | FCT == fct[p+2])
-        }else if ((nfct-p)==1){
-          dht   <- 11
-          dwd   <- 13
-          str   <- gsub("^_", "", paste(str,fct[p:(p+1)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1])
-        }else if ((nfct-p)==0){
-          dht   <- 7
-          dwd   <- 11
-          str   <- gsub("^_", "", paste(str,fct[p],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p])
-        }
-        gdr <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
-        suppressMessages(suppressWarnings(grid.arrange(gdr)))
-        ggr <- grid.grab()
-        concplot[[length(concplot)+1]] <- ggr
-        if (printOut==TRUE){
-          #ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
-          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
-          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
-          suppressMessages(suppressWarnings(grid.arrange(gdr)))
-          dev.off()
-        }
-      }
-    }
   }
   
   # Estimate NCA metrics for case = 4
   if (case == 4){
-    cdata <- data.frame(Time=numeric(0),Conc=numeric(0),ID=character(0),FCT=character(0))
     for (s1 in 1:npopStr1){
       for (s2 in 1:npopStr2){
         for (s3 in 1:npopStr3){
+          cdata <- data.frame()
           ifdf <- indf[(indf[,popStrNm1]==as.character(popStr1[s1]) & indf[,popStrNm2]==as.character(popStr2[s2]) & indf[,popStrNm3]==as.character(popStr3[s3])),]
           if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
           if (nrow(ifdf) == 0){next}
-          idd        <- unique(ifdf[,idCol])
+          idd        <- unique(as.character(ifdf[,idCol]))
           if (!is.null(doseAmtNm)){
             doseAmount <- paste(as.numeric(unique(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,popStrNm3]==as.character(popStr3[s3]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm])), collapse=", ")
           }else{
@@ -804,20 +751,35 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           pddf  <- rbind(pddf, data.frame(a=as.character(popStr1[s1]), b=as.character(popStr2[s2]), c=as.character(popStr3[s3]), d=doseAmount, e=length(idd)))
           for (i in 1:length(idd)){
             if (!is.null(doseAmtNm)){
-              idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,popStrNm3]==as.character(popStr3[s3]) & refdf[,idNmObs]==idd[i] & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
+              idzAmt <- as.numeric(refdf[refdf[,popStrNm1]==as.character(popStr1[s1]) & refdf[,popStrNm2]==as.character(popStr2[s2]) & refdf[,popStrNm3]==as.character(popStr3[s3]) & refdf[,idNmObs]==as.character(idd[i]) & refdf[,doseAmtNm]!="." & as.numeric(as.character(refdf[,doseAmtNm])) > 0, doseAmtNm][1])
             }else{
               idzAmt <- NA
             }
-            tc     <- ncaId(ifdf,idd[i])
+            tc     <- ncaId(ifdf,as.character(idd[i]))
             if(nrow(tc)==0) next
             time   <- as.numeric(tc$time)
             conc   <- as.numeric(tc$conc)
-            cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))))
+            cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
+            outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
           if(noPlot==FALSE){
+            # DV plot
+            figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
+            cdata$FCT <- figlbl
+            gdr <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
+            suppressMessages(suppressWarnings(grid.arrange(gdr)))
+            ggr <- grid.grab()
+            concplot[[length(concplot)+1]] <- ggr
+            if (printOut==TRUE){
+              fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
+              eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
+              suppressMessages(suppressWarnings(grid.arrange(gdr)))
+              dev.off()
+            }
+            
+            # Obs hist plot
             plotData    <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
             if (nrow(plotData)<5) next
             pltPrm      <- c("AUClast","AUCINF_obs","Cmax","Tmax")
@@ -843,42 +805,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     cnm         <- c(popStrNm1,popStrNm2,popStrNm3,paste0("Dose (",dunit,")"),"No. of individuals")
     names(pddf) <- cnm
-    
-    if(noPlot==FALSE){
-      # ggplot for conc vs. time
-      fct <- unique(cdata$FCT); nfct <- length(fct)
-      # ggplot for conc vs. time
-      for (p in seq(1,nfct,3)){
-        str <- ""
-        if ((nfct-p)>=2) {
-          dht   <- 16
-          dwd   <- 15
-          str   <- gsub("^_", "", paste(str,fct[p:(p+2)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1] | FCT == fct[p+2])
-        }else if ((nfct-p)==1){
-          dht   <- 11
-          dwd   <- 13
-          str   <- gsub("^_", "", paste(str,fct[p:(p+1)],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p] | FCT == fct[p+1])
-        }else if ((nfct-p)==0){
-          dht   <- 7
-          dwd   <- 11
-          str   <- gsub("^_", "", paste(str,fct[p],sep="_",collapse=""))
-          pdata <- subset(cdata, FCT == fct[p])
-        }
-        gdr <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
-        suppressMessages(suppressWarnings(grid.arrange(gdr)))
-        ggr <- grid.grab()
-        concplot[[length(concplot)+1]] <- ggr
-        #if (printOut==TRUE) ggsave(filename=paste(usrdir,"/TimeConc_",str,".",figFormat,sep=""),plot=gdr,height=dht,width=dwd,units="cm",dpi=200)
-        if (printOut==TRUE){
-          fl <- paste0(usrdir,"/TimeConc_",str,".",figFormat)
-          eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=dht,width=dwd,units=\"cm\",res=200)")))
-          suppressMessages(suppressWarnings(grid.arrange(gdr)))
-          dev.off()
-        }
-      }
-    }
   }
   
   # Statistical analysis for each patient group
@@ -939,7 +865,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       tmpStat <- tmpStat[-1,]
       grStat <- rbind(grStat,tmpStat)
     }
-    names(grStat)[1] <- popStrNm1
+    names(grStat)[names(grStat)%in%"STRAT1"] <- popStrNm1
   }
   if (case == 3){
     for (s1 in 1:npopStr1){
@@ -971,7 +897,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         grStat <- rbind(grStat,tmpStat)
       }
     }
-    names(grStat)[c(1,2)] <- c(popStrNm1,popStrNm2)
+    names(grStat)[names(grStat)%in%c("STRAT1","STRAT2")] <- c(popStrNm1,popStrNm2)
   }
   if (case == 4){
     for (s1 in 1:npopStr1){
@@ -1005,7 +931,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
     }
-    names(grStat)[c(1:3)] <- c(popStrNm1,popStrNm2,popStrNm3)
+    names(grStat)[names(grStat)%in%c("STRAT1","STRAT2","STRAT3")] <- c(popStrNm1,popStrNm2,popStrNm3)
   }
   
   if(printOut==TRUE) write.table(grStat, file=paste0(usrdir,"/ObsStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
@@ -1281,19 +1207,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           ifdf <- smdf
           if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
           if (nrow(ifdf) == 0){next}
-          idd <- unique(ifdf[,idCol])
+          idd <- unique(as.character(ifdf[,idCol]))
           for (i in 1:length(idd)){
             if (!is.null(doseAmtNm)){
-              idzAmt <- as.numeric(srdf[srdf[,idNmSim]==idd[i] & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
+              idzAmt <- as.numeric(srdf[srdf[,idNmSim]==as.character(idd[i]) & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
             }else{
               idzAmt <- NA
             }
-            stc  <- simNcaId(ifdf,idd[i])
+            stc  <- simNcaId(ifdf,as.character(idd[i]))
             if(nrow(stc)==0) next
             time <- as.numeric(stc$time)
             conc <- as.numeric(stc$conc)
             NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-            simData <- rbind(simData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),NSIM=s))
+            simData <- rbind(simData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm),NSIM=s))
           }
         }
         if (case == 2){
@@ -1301,20 +1227,20 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             ifdf <- smdf[smdf[,popStrNm1]==as.character(popStr1[s1]),]
             if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
             if (nrow(ifdf) == 0){next}
-            idd <- unique(ifdf[,idCol])
+            idd <- unique(as.character(ifdf[,idCol]))
             if(is.data.frame(idd)) idd <- idd[[1]]
             for (i in 1:length(idd)){
               if (!is.null(doseAmtNm)){
-                idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,idNmSim]==idd[i] & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
+                idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,idNmSim]==as.character(idd[i]) & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
               }else{
                 idzAmt <- NA
               }
-              stc  <- simNcaId(ifdf,idd[i])
+              stc  <- simNcaId(ifdf,as.character(idd[i]))
               if(nrow(stc)==0) next
               time <- as.numeric(stc$time)
               conc <- as.numeric(stc$conc)
               NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
+              simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
             }
           }
         }
@@ -1324,19 +1250,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               ifdf <- smdf[smdf[,popStrNm1]==as.character(popStr1[s1]) & smdf[,popStrNm2]==as.character(popStr2[s2]),]
               if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
               if (nrow(ifdf) == 0){next}
-              idd <- unique(ifdf[,idCol])
+              idd <- unique(as.character(ifdf[,idCol]))
               for (i in 1:length(idd)){
                 if (!is.null(doseAmtNm)){
-                  idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,popStrNm2]==as.character(popStr2[s2]) & srdf[,idNmSim]==idd[i] & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
+                  idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,popStrNm2]==as.character(popStr2[s2]) & srdf[,idNmSim]==as.character(idd[i]) & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
                 }else{
                   idzAmt <- NA
                 }
-                stc  <- simNcaId(ifdf,idd[i])
+                stc  <- simNcaId(ifdf,as.character(idd[i]))
                 if(nrow(stc)==0) next
                 time <- as.numeric(stc$time)
                 conc <- as.numeric(stc$conc)
                 NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
+                simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
               }
             }
           }
@@ -1348,19 +1274,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 ifdf <- smdf[smdf[,popStrNm1]==as.character(popStr1[s1]) & smdf[,popStrNm2]==as.character(popStr2[s2]) & smdf[,popStrNm3]==as.character(popStr3[s3]),]
                 if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
                 if (nrow(ifdf) == 0){next}
-                idd <- unique(ifdf[,idCol])
+                idd <- unique(as.character(ifdf[,idCol]))
                 for (i in 1:length(idd)){
                   if (!is.null(doseAmtNm)){
-                    idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,popStrNm2]==as.character(popStr2[s2]) & srdf[,popStrNm3]==as.character(popStr3[s3]) & srdf[,idNmSim]==idd[i] & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
+                    idzAmt <- as.numeric(srdf[srdf[,popStrNm1]==as.character(popStr1[s1]) & srdf[,popStrNm2]==as.character(popStr2[s2]) & srdf[,popStrNm3]==as.character(popStr3[s3]) & srdf[,idNmSim]==as.character(idd[i]) & srdf[,doseAmtNm]!="." & as.numeric(as.character(srdf[,doseAmtNm])) > 0, doseAmtNm][1])
                   }else{
                     idzAmt <- NA
                   }
-                  stc  <- simNcaId(ifdf,idd[i])
+                  stc  <- simNcaId(ifdf,as.character(idd[i]))
                   if(nrow(stc)==0) next
                   time <- as.numeric(stc$time)
                   conc <- as.numeric(stc$conc)
                   NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
+                  simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
                 }
               }
             }

@@ -89,7 +89,7 @@ print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), incl
 Description of the graphical output
 ------------------------------
 
-```{r concplot, echo=FALSE, fig.align='center', dpi=80}
+```{r concplot, echo=FALSE, fig.height=4, fig.width=7, fig.align='center', dpi=80}
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
