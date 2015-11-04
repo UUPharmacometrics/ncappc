@@ -719,7 +719,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i]),FCT=paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))))
           NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
-          outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
+          outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
         if(noPlot==FALSE){
@@ -1008,19 +1008,28 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     names(grStat)[c(1:3)] <- c(popStrNm1,popStrNm2,popStrNm3)
   }
   
-  if(printOut==TRUE) write.table(grStat, file=paste(usrdir,"/ObsStat.tsv",sep=""), sep="\t", col.names=T, row.names=F, quote=F)
+  if(printOut==TRUE) write.table(grStat, file=paste0(usrdir,"/ObsStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
   
   
   # Print output files if simulated data does not exist
   if (is.null(simFile)){
-    # Raname ID and stratifier columns
-    if(case == 1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-    if(case == 2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-    if(case == 3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-    if(case == 4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-    
-    # Format output table sigfig
-    outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
+    # Raname ID and stratifier columns and format output table sigfig
+    if(case == 1){
+      names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
+      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 2){
+      names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
+      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 3){
+      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
+      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 4){
+      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
+      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
     
     # Subset table to print in the report
     if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
@@ -1046,7 +1055,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut==TRUE){
-      write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)                          # write the output in a file
+      write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)                          # write the output in a file
       fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, spread=spread, conc=concplot, histobs=histobsplot)        # Function output list
     }
   }else{
@@ -1126,7 +1135,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       simID <- unique(nmdf$NSUB)
       nsim <- length(simID)
       
-      if (printOut==TRUE) write.table(nmdf, file=paste(usrdir,"/ncaSimData.tsv",sep=""), row.names=F, quote=F, sep="\t")
+      if (printOut==TRUE) write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
       
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
       
@@ -1380,7 +1389,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
     
     dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
-    if (printOut==TRUE) write.table(dasdf, file=paste(usrdir,"/ncaSimEst.tsv",sep=""), row.names=F, quote=F, sep="\t")
+    if (printOut==TRUE) write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
     
     # Population histogram
     if (case == 1){
@@ -2056,16 +2065,27 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       names(simGrStat)[c(1:3)] <- c(popStrNm1,popStrNm2,popStrNm3)
     }
     
-    if (printOut==TRUE) write.table(simGrStat, file=paste0(usrdir,"/SimStat.tsv"), sep="\t", col.names=T, row.names=F, quote=F)
+    if (printOut==TRUE) write.table(simGrStat, file=paste0(usrdir,"/SimStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
     
-    # Write output table
-    if(case==1) names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-    if(case==2) names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-    if(case==3) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-    if(case==4) names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
+    # Print output table
+    # Raname ID and stratifier columns and format output table sigfig
+    if(case == 1){
+      names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
+      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 2){
+      names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
+      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 3){
+      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
+      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
+    if(case == 4){
+      names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
+      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+    }
     
-    # Format output table sigfig
-    outData <- as.data.frame(lapply(outData, FUN=function(x) signif(as.numeric(x), digits=4)))
     
     # Subset table to print in the report
     if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
@@ -2099,7 +2119,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       txt <- paste(txt,paste0("Number of simulations performed: ",nsim),sep="\n")
       pddf <- cbind(pddf,OTL); names(pddf)[c((ncol(pddf)-1),ncol(pddf))] <- c("No. of outlier","Selected outliers ID and NCA metrics")
       
-      write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)   # write output table
+      write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)   # write output table
       fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
     }
   }
