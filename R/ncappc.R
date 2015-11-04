@@ -26,44 +26,51 @@
 #' individual from the corresponding NCA metric obtained from the observed data.
 #' Additionaly, \pkg{ncappc} reports the normalized prediction distribution 
 #' error (NPDE) of the simulated NCA metrics for each individual and their 
-#' distribution within a population. \pkg{ncappc} produces two default outputs
-#' depending on the type of analysis performed, i.e., traditional NCA and PopPK
-#' diagnosis. The PopPK diagnosis feature of \pkg{ncappc} produces 7 sets of
+#' distribution within a population. \pkg{ncappc} produces two default outputs 
+#' depending on the type of analysis performed, i.e., traditional NCA and PopPK 
+#' diagnosis. The PopPK diagnosis feature of \pkg{ncappc} produces 7 sets of 
 #' graphical outputs to assess the ability of a population model to simulate the
 #' concentration-time profile of a drug and thereby identify model 
 #' misspecification. In addition, tabular outputs are generated showing the 
 #' values of the NCA metrics estimated from the observed and the simulated data,
 #' along with the deviation, NPDE, regression parameters used to estimate the 
 #' elimination rate constant and the related population statistics. The default 
-#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage} 
-#' section of this document and/or in \strong{bold} in the \strong{Arguments} section.
+#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage}
+#' section of this document and/or in \strong{bold} in the \strong{Arguments} 
+#' section.
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
 #'   or an external table with comma, tab or space as separator
 #'   (\strong{"nca_original.npctab.dta"})
 #' @param simFile NONMEM simulation output with the simulated concentration-time
-#'   data from an internal data frame or an external table
-#'   (\strong{"nca_simulation.1.npctab.dta"}). \code{NULL} produces 
-#'   just the traditional NCA output, a filename or data frame prduces the NCA output
-#'   as well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can be a 
-#'   compressed file as well.
-#' @param str1Nm Column name for 1st level population stratifier (\strong{NULL})
-#' @param str1 Stratification ID of the members within 1st level stratification (e.g c(1,2)) (\strong{NULL})
-#' @param str2Nm Column name for 2nd level population stratifier (\strong{NULL})
-#' @param str2 Stratification ID of the members within 2nd level stratification (e.g c(1,2)) (\strong{NULL})
-#' @param str3Nm Column name for 3rd level population stratifier (\strong{NULL})
-#' @param str3 Stratification ID of the members within 3rd level stratification (e.g c(1,2)) (\strong{NULL})
-#' @param concUnit Unit of concentration ("ng/mL") (\strong{"[M].[L]^-3"})
-#' @param timeUnit Unit of time ("h") (\strong{"[T]})
-#' @param doseUnit Unit of dose amount ("ng") (\strong{"[M]"})
-#' @param doseNormUnit Normalization factor of dose amount if used (kg)
-#'   (\strong{NULL})
-#' @param obsLog Concentration in observed data in logarithmic form (TRUE,
-#'   FALSE) (\strong{FALSE})
-#' @param simLog Concentration in simulated data in logarithmic form (TRUE,
-#'   FALSE) (\strong{FALSE})
+#'   data from an internal data frame or an external table 
+#'   (\strong{"nca_simulation.1.npctab.dta"}). \code{NULL} produces just the
+#'   traditional NCA output, a filename or data frame prduces the NCA output as
+#'   well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can
+#'   be a compressed file as well.
+#' @param str1Nm Column name for 1st level population stratifier
+#'   (\strong{\code{NULL}})
+#' @param str1 Stratification ID of the members within 1st level stratification 
+#'   (e.g c(1,2)) (\strong{\code{NULL}})
+#' @param str2Nm Column name for 2nd level population stratifier
+#'   (\strong{\code{NULL}})
+#' @param str2 Stratification ID of the members within 2nd level stratification
+#'   (e.g c(1,2)) (\strong{\code{NULL}})
+#' @param str3Nm Column name for 3rd level population stratifier
+#'   (\strong{\code{NULL}})
+#' @param str3 Stratification ID of the members within 3rd level stratification 
+#'   (e.g c(1,2)) (\strong{\code{NULL}})
+#' @param concUnit Unit of concentration (e.g. "ng/mL") (\strong{"M.L^-3"})
+#' @param timeUnit Unit of time (e.g. "h") (\strong{"T"})
+#' @param doseUnit Unit of dose amount (e.g. "ng") (\strong{"M"})
+#' @param doseNormUnit Normalization factor of dose amount if used (e.g. "kg") 
+#'   (\strong{\code{NULL}})
+#' @param obsLog Concentration in observed data in logarithmic form
+#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{FALSE}})
+#' @param simLog Concentration in simulated data in logarithmic form
+#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{FALSE}})
 #' @param psnOut observed data is an output from PsN or in NONMEM output format 
-#'   (TRUE, FALSE) (\strong{TRUE})
+#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{TRUE}})
 #' @param idNmObs Column name for ID in observed data (\strong{"ID"})
 #' @param timeNmObs Column name for time in observed data (\strong{"TIME"})
 #' @param concNmObs Column name for concentration in observed data
@@ -73,45 +80,48 @@
 #' @param concNmSim Column name for concentration in simulated data
 #'   (\strong{"DV"})
 #' @param AUCTimeRange User-defined window of time used to estimate AUC
-#'   (\strong{NULL})
-#' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE)
-#'   (\strong{FALSE})
+#'   (\strong{\code{NULL}})
+#' @param backExtrp If back-extrapolation is needed for AUC (\code{TRUE} or
+#'   \code{FALSE}) (\strong{\code{FALSE}})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
-#'   rate-constant. This argument
-#'   lets the user to choose a specific window of time to be used to estimate
-#'   the elimination rate constant (Lambda) in the elimination phase. The
-#'   accepted format for the input to this argument is a
-#'   numeric array of two elements; \code{c(14,24)} will estimate the Lambda using the
-#'   data within the time units 14 to 24.  If \code{NULL} then all times are considered.
+#'   rate-constant. This argument lets the user to choose a specific window of
+#'   time to be used to estimate the elimination rate constant (Lambda) in the
+#'   elimination phase. The accepted format for the input to this argument is a 
+#'   numeric array of two elements; \code{c(14,24)} will estimate the Lambda
+#'   using the data within the time units 14 to 24.  If \code{NULL} then all
+#'   times are considered.
 #' @param LambdaExclude User-defined excluded observation time points for
-#'   estimation of elimination rate-constant (\strong{NULL})
-#' @param doseAmtNm Column name to specify dose amount (\strong{NULL})
+#'   estimation of elimination rate-constant (\strong{\code{NULL}})
+#' @param doseAmtNm Column name to specify dose amount (\strong{\code{NULL}})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
-#' @param Tau Dosing interval for steady-state data (\strong{NULL})
-#' @param TI Infusion duration (\strong{NULL})
+#' @param Tau Dosing interval for steady-state data (\strong{\code{NULL}})
+#' @param TI Infusion duration (\strong{\code{NULL}})
 #' @param method linear, loglinear or mixed (\strong{"mixed"})
-#' @param blqNm Name of BLQ column if used (\strong{NULL})
+#' @param blqNm Name of BLQ column if used (\strong{\code{NULL}})
 #' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
 #'   c(1,">3")) (\strong{"1"})
-#' @param evid Use EVID (TRUE, FALSE) (\strong{TRUE})
+#' @param evid Use EVID (\code{TRUE}, \code{FALSE}) (\strong{\code{TRUE}})
 #' @param evidIncl Included EVID (\strong{"0"})
-#' @param mdv Use MDV (TRUE(includes data for MDV==0), FALSE) (\strong{FALSE})
-#' @param filterNm Column name for filter (\strong{NULL})
+#' @param mdv Use MDV (\code{TRUE}(includes data for MDV==0), \code{FALSE})
+#'   (\strong{\code{FALSE}})
+#' @param filterNm Column name for filter (\strong{\code{NULL}})
 #' @param filterExcl Filter identifier or logical condition used for row
-#'   exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{NULL})
-#' @param negConcExcl Exclude -ve conc (\strong{FALSE})
+#'   exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})
+#' @param negConcExcl Exclude -ve conc (\strong{\code{FALSE}})
 #' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs, 
 #'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) (c(\strong{"AUClast",
 #'   "Cmax"}))
 #' @param timeFormat time format (number, H:M, H:M:S) (\strong{"number"})
-#' @param dateColNm colunm name for date if used (Date, DATE) (\strong{NULL})
+#' @param dateColNm colunm name for date if used (Date, DATE)
+#'   (\strong{\code{NULL}})
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
-#'   D,M,Y) (\strong{NULL})
-#' @param spread Measure of the spread of simulated data (\code{"ppi"} (95\% parametric
-#'   prediction interval) or \code{"npi"} (95\% nonparametric prediction interval))
+#'   D,M,Y) (\strong{\code{NULL}})
+#' @param spread Measure of the spread of simulated data (\code{"ppi"} (95\%
+#'   parametric prediction interval) or \code{"npi"} (95\% nonparametric
+#'   prediction interval))
 #' @param tabCol Output columns to be printed in the report in addition to ID, 
 #'   dose and population strata information (list of NCA metrics in a string 
 #'   array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
@@ -120,17 +130,19 @@
 #'   (\strong{"tiff"})
 #' @param noPlot Perform only NCA calculations without any plot generation
 #'   (\code{TRUE} or \code{FALSE}) 
-#' @param printOut Write/print output on the disk. No plot will be saved if
-#'   noPlot is set to TRUE (TRUE, FALSE) (\strong{TRUE})
+#' @param printOut Write/print output on the disk. No plot will be saved if 
+#'   noPlot is set to \code{TRUE} (\code{TRUE}, \code{FALSE})
+#'   (\strong{\code{TRUE}})
 #' @param studyName Name of the study to be added as a description in the report
-#'   (\strong{NULL})
-#' @param new_data_method \code{TRUE} or \code{FALSE}.  
-#' For testing a faster method of reading data.
-#' @param overwrite_SIMDATA Can be \code{TRUE}, to create new information in the SIMDATA directory,
-#' \code{FALSE}, to use the information in the SIMDATA directory or 
-#' \code{NULL} to have a dialog come up to ask the user what to do.
+#'   (\strong{\code{NULL}})
+#' @param new_data_method \code{TRUE} or \code{FALSE}. For testing a faster
+#'   method of reading data. (\strong{\code{TRUE}})
+#' @param overwrite_SIMDATA Can be \code{TRUE}, to create new information in the
+#'   SIMDATA directory, \code{FALSE}, to use the information in the SIMDATA 
+#'   directory or \code{NULL} to have a dialog come up to ask the user what to 
+#'   do. (\strong{\code{NULL}})
 #' @param outFileNm Additional tag to the name of the output html and pdf output
-#'   file hyphenated to the standard ncappc report file name standard ncappc
+#'   file hyphenated to the standard ncappc report file name standard ncappc 
 #'   report file name (\strong{Name of the observed data file})
 #'
 #' @import ggplot2

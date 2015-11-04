@@ -55,6 +55,8 @@ figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"t
 noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
 printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
 studyName | Name of the study to be added as a description in the report | Study name | **NULL**
+new_data_method | For testing a faster method of reading data | TRUE or FALSE | **TRUE**
+overwrite_SIMDATA | Create new information in the SIMDATA directory, or to use the information in the SIMDATA | TRUE, FALSE or NULL | **NULL**
 outFileNm | Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name | Output file name tag | **Name of the observed data file**
 
 
