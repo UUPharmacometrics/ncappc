@@ -214,16 +214,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (idNmObs%in%colnames(indf)==F | timeNmObs%in%colnames(indf)==F | concNmObs%in%colnames(indf)==F){
     setwd(usrdir);stop("Incorrect column names of ID, TIME and/or DV\n")
   }else{
-    idCol   <- which(colnames(indf) == idNmObs); id <- unique(indf[,idCol])
-    timeCol <- which(colnames(indf) == timeNmObs)
-    concCol <- which(colnames(indf) == concNmObs)
+    idCol   <- which(colnames(indf) == idNmObs)[1]; id <- unique(indf[,idCol])
+    timeCol <- which(colnames(indf) == timeNmObs)[1]
+    concCol <- which(colnames(indf) == concNmObs)[1]
   }
   
   # exclude data based on specific values on filter column (optional)
   if (!is.null(filterNm)){
     if(filterNm%in%colnames(indf)==T & !is.null(filterExcl)){
       # filterExcl  == values to be excluded
-      filterCol <- which(colnames(indf) == filterNm)
+      filterCol <- which(colnames(indf) == filterNm)[1]
       for (i in 1:length(filterExcl)){
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i])){
           indf <- indf[indf[,filterCol] != filterExcl[i],]
@@ -315,7 +315,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # ignore data with BLQ = 1 or user specified value (optional)
   if (!is.null(blqNm)){
     if(blqNm%in%colnames(indf) == T){
-      blqCol <- which(colnames(indf) == blqNm)
+      blqCol <- which(colnames(indf) == blqNm)[1]
       for (i in 1:length(blqExcl)){
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", blqExcl[i]) == T) {indf <- indf[indf[,blqNm] != blqExcl[i],]}
         if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", blqExcl[i]) == F) {indf <- eval(parse(text=paste0("subset(indf, !",blqNm,"%in% indf[as.numeric(as.character(indf[,",blqCol,"]))",blqExcl[i],",blqCol])")))}
@@ -1080,9 +1080,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       if (idNmSim%in%colnames(nmdf)==F | timeNmSim%in%colnames(nmdf)==F | concNmSim%in%colnames(nmdf)==F){
         setwd(usrdir);stop("Incorrect column names of ID, TIME and/or DV in simulation output\n")
       }else{
-        idCol   <- which(colnames(nmdf) == idNmSim)
-        timeCol <- which(colnames(nmdf) == timeNmSim)
-        concCol <- which(colnames(nmdf) == concNmSim)
+        idCol   <- which(colnames(nmdf) == idNmSim)[1]
+        timeCol <- which(colnames(nmdf) == timeNmSim)[1]
+        concCol <- which(colnames(nmdf) == concNmSim)[1]
       }
       
       # 1st level population stratification
@@ -1133,7 +1133,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       # ignore data with BLQ = 1 or user specified value (optional)
       if (!is.null(blqNm)){
         if(blqNm%in%colnames(nmdf)==T){
-          blqCol <- which(colnames(nmdf) == blqNm)
+          blqCol <- which(colnames(nmdf) == blqNm)[1]
           for (i in 1:length(blqExcl)) {nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]}
         }else{
           print("Note: Incorrect BLQ column name in simulation output. BLQ will not be used to process the data.\n")
@@ -1178,7 +1178,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       if (!is.null(filterNm)){
         if(filterNm%in%colnames(nmdf)==T & !is.null(filterExcl)){
           # filterExcl  == values to be excluded
-          filterCol <- which(colnames(nmdf) == filterNm)
+          filterCol <- which(colnames(nmdf) == filterNm)[1]
           for (i in 1:length(filterExcl)){
             if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == T) {nmdf <- nmdf[nmdf[,filterCol] != as.numeric(filterExcl[i]),]}
             if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == F) {nmdf <- eval(parse(text=paste("subset(nmdf, !",filterNm,"%in% nmdf[nmdf[,",filterCol,"]",filterExcl[i],",filterCol])",sep="")))}
