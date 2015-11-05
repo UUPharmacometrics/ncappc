@@ -252,7 +252,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # 2nd level population stratification
   if (!is.null(str2Nm)){
-    if (str2Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
+    if (str2Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column\n")}
     if (is.null(str2)){str2 <- unique(sort(indf[,str2Nm]))}
     #for (i in 1:length(str2)){
     #  if (nrow(indf[indf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
@@ -261,7 +261,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # 3rd level population stratification
   if (!is.null(str3Nm)){
-    if (str3Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
+    if (str3Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column\n")}
     if (is.null(str3)){str3 <- unique(sort(indf[,str3Nm]))}
     #for (i in 1:length(str3)){
     #  if (nrow(indf[indf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
@@ -780,7 +780,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             # DV plot
             figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
             cdata$FCT <- figlbl
-            gdr <- dv.plot(pdata=pdata,cunit=cunit,tunit=tunit)
+            gdr <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
             suppressMessages(suppressWarnings(grid.arrange(gdr)))
             ggr <- grid.grab()
             concplot[[length(concplot)+1]] <- ggr
