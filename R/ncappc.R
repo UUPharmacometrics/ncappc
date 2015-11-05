@@ -1459,8 +1459,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                          theme(plot.title = element_text(size=10,face="bold"),
                                axis.title.x = element_text(size=9,face="bold"),
                                axis.title.y = element_text(size=9,face="bold"),
-                               axis.text.x  = element_text(size=9,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                               axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
+                               axis.text.x  = element_text(size=7,face="bold",color="black",angle=45,vjust=1,hjust=1),
+                               axis.text.y  = element_text(size=7,face="bold",color="black",hjust=0),
                                legend.text  = element_text(size=9,face="bold"),
                                legend.background = element_rect(),
                                legend.position = "bottom", legend.direction = "horizontal",
@@ -1520,24 +1520,25 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
       
+      plotdata <- outData
+      if (nrow(plotdata) == 0) next
+      figlbl <- "All data"
+      # Deviation plot
       if(noPlot==FALSE){
-        plotdata <- outData
-        if (nrow(plotdata) == 0) next
-        figlbl <- "All data"
-        # Deviation plot
         ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
         if (!is.null(ggdev)){
           suppressMessages(suppressWarnings(print(ggdev)))
           if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
           devplot[[length(devplot)+1]] <- ggdev
         }
-        # NPDE plot
-        npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
-        if (is.null(npdeout$forestdata)) next
-        forestdata <- npdeout$forestdata
-        forestdata$str <- figlbl
-        fpval <- rbind(fpval, forestdata)
-        
+      }
+      # NPDE plot
+      npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
+      if (is.null(npdeout$forestdata)) next
+      forestdata <- npdeout$forestdata
+      forestdata$str <- figlbl
+      fpval <- rbind(fpval, forestdata)
+      if(noPlot==FALSE){
         npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
         suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1615,25 +1616,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
       
-      if(noPlot==FALSE){
-        for (s1 in 1:npopStr1){
-          plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]))
-          if (nrow(plotdata) == 0) next
-          figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
-          # Deviation plot
+      for (s1 in 1:npopStr1){
+        plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]))
+        if (nrow(plotdata) == 0) next
+        figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
+        # Deviation plot
+        if(noPlot==FALSE){
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
             if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
             devplot[[length(devplot)+1]] <- ggdev
           }
-          # NPDE plot
-          npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
-          if (is.null(npdeout$forestdata)) next
-          forestdata <- npdeout$forestdata
-          forestdata$str <- figlbl
-          fpval <- rbind(fpval, forestdata)
-          
+        }
+        # NPDE plot
+        npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
+        if (is.null(npdeout$forestdata)) next
+        forestdata <- npdeout$forestdata
+        forestdata$str <- figlbl
+        fpval <- rbind(fpval, forestdata)
+        if(noPlot==FALSE){
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
           if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1714,26 +1716,27 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
       
-      if(noPlot==FALSE){
-        for (s1 in 1:npopStr1){  
-          for (s2 in 1:npopStr2){
-            plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]))
-            if (nrow(plotdata) == 0) next
-            figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
-            # Deviation plot
+      for (s1 in 1:npopStr1){  
+        for (s2 in 1:npopStr2){
+          plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]))
+          if (nrow(plotdata) == 0) next
+          figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
+          # Deviation plot
+          if(noPlot==FALSE){
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
               if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
               devplot[[length(devplot)+1]] <- ggdev
             }
-            # NPDE plot
-            npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
-            if (is.null(npdeout$forestdata)) next
-            forestdata <- npdeout$forestdata
-            forestdata$str <- figlbl
-            fpval <- rbind(fpval, forestdata)
-            
+          }
+          # NPDE plot
+          npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
+          if (is.null(npdeout$forestdata)) next
+          forestdata <- npdeout$forestdata
+          forestdata$str <- figlbl
+          fpval <- rbind(fpval, forestdata)
+          if(noPlot==FALSE){
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
             if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1818,27 +1821,28 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
       
-      if(noPlot==FALSE){
-        for (s1 in 1:npopStr1){
-          for (s2 in 1:npopStr2){
-            for (s3 in 1:npopStr3){
-              plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]) & STRAT3==as.character(popStr3[s3]))
-              if (nrow(plotdata) == 0) next
-              figlbl  <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
-              # Deviation plot
+      for (s1 in 1:npopStr1){
+        for (s2 in 1:npopStr2){
+          for (s3 in 1:npopStr3){
+            plotdata <- subset(outData, STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]) & STRAT3==as.character(popStr3[s3]))
+            if (nrow(plotdata) == 0) next
+            figlbl  <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
+            # Deviation plot
+            if(noPlot==FALSE){
               ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
               if (!is.null(ggdev)){
                 suppressMessages(suppressWarnings(print(ggdev)))
                 if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
                 devplot[[length(devplot)+1]] <- ggdev
               }
-              # NPDE plot
-              npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
-              if (is.null(npdeout$forestdata)) next
-              forestdata <- npdeout$forestdata
-              forestdata$str <- figlbl
-              fpval <- rbind(fpval, forestdata)
-              
+            }
+            # NPDE plot
+            npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
+            if (is.null(npdeout$forestdata)) next
+            forestdata <- npdeout$forestdata
+            forestdata$str <- figlbl
+            fpval <- rbind(fpval, forestdata)
+            if(noPlot==FALSE){
               npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
               suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
               if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
