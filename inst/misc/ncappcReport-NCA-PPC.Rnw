@@ -237,7 +237,7 @@ Histogram of the NPDE values of the NCA metrics for all individuals within a giv
 
 \newpage
 \subsection{Figure 7. [Population level] Forest plot for the NPDE type analysis}
-<<forestplot, echo=FALSE, fig.pos="H", out.width='0.9\\textwidth', fig.align='center'>>=
+<<forestplot, echo=FALSE, fig.pos="H", out.width='1\\textwidth', fig.align='center'>>=
 if (length(forest)>0){
   for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
 }else{
