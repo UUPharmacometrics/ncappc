@@ -207,7 +207,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
     mxId   <- which(nconc == max(nconc))[1]
     Tmax   <- ntime[mxId]
     Cmax   <- nconc[mxId]
-    Cmax_D <- nconc[mxId]/doseAmt
+    Cmax_D <- ifelse(!is.null(doseAmt), nconc[mxId]/doseAmt, NA)
     lIdx   <- max(which(nconc == tail(nconc[nconc>0],1))) # Index for last positive concentration
     Tlast  <- ntime[lIdx]; Clast <- nconc[lIdx]
     
@@ -344,15 +344,15 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
       }
       
       if (AUClast != 0 & AUCINF_obs != 0){
-        AUCINF_obs  <- AUClast+AUCINF_obs;  AUCINF_D_obs  <- AUCINF_obs/doseAmt;  AUC_pExtrap_obs  <- 100*(AUCINF_obs-AUClast)/AUCINF_obs
-        AUCINF_pred <- AUClast+AUCINF_pred; AUCINF_D_pred <- AUCINF_pred/doseAmt; AUC_pExtrap_pred <- 100*(AUCINF_pred-AUClast)/AUCINF_pred
-        Vz_obs  <- doseAmt/(Lambda_z*AUCINF_obs);  Cl_obs  <- doseAmt/AUCINF_obs
-        Vz_pred <- doseAmt/(Lambda_z*AUCINF_pred); Cl_pred <- doseAmt/AUCINF_pred
+        AUCINF_obs  <- AUClast+AUCINF_obs;  AUCINF_D_obs  <- ifelse(!is.null(doseAmt),AUCINF_obs/doseAmt,NA);  AUC_pExtrap_obs  <- 100*(AUCINF_obs-AUClast)/AUCINF_obs
+        AUCINF_pred <- AUClast+AUCINF_pred; AUCINF_D_pred <- ifelse(!is.null(doseAmt),AUCINF_pred/doseAmt,NA); AUC_pExtrap_pred <- 100*(AUCINF_pred-AUClast)/AUCINF_pred
+        Vz_obs  <- ifelse(!is.null(doseAmt),doseAmt/(Lambda_z*AUCINF_obs),NA);  Cl_obs  <- ifelse(!is.null(doseAmt),doseAmt/AUCINF_obs,NA)
+        Vz_pred <- ifelse(!is.null(doseAmt),doseAmt/(Lambda_z*AUCINF_pred),NA); Cl_pred <- ifelse(!is.null(doseAmt),doseAmt/AUCINF_pred,NA)
       }
       
       if(AUMClast != 0 & AUMCINF_obs != 0){
-        AUMCINF_obs  <- AUMClast+AUMCINF_obs;  AUMCINF_D_obs  <- AUMCINF_obs/doseAmt;  AUMC_pExtrap_obs  <- 100*(AUMCINF_obs-AUMClast)/AUMCINF_obs
-        AUMCINF_pred <- AUMClast+AUMCINF_pred; AUMCINF_D_pred <- AUMCINF_pred/doseAmt; AUMC_pExtrap_pred <- 100*(AUMCINF_pred-AUMClast)/AUMCINF_pred
+        AUMCINF_obs  <- AUMClast+AUMCINF_obs;  AUMCINF_D_obs  <- ifelse(!is.null(doseAmt),AUMCINF_obs/doseAmt,NA);  AUMC_pExtrap_obs  <- 100*(AUMCINF_obs-AUMClast)/AUMCINF_obs
+        AUMCINF_pred <- AUMClast+AUMCINF_pred; AUMCINF_D_pred <- ifelse(!is.null(doseAmt),AUMCINF_pred/doseAmt,NA); AUMC_pExtrap_pred <- 100*(AUMCINF_pred-AUMClast)/AUMCINF_pred
       }
       
       if (AUCINF_obs  != 0 & AUMCINF_obs  != 0){MRTINF_obs  <- ifelse(adminType != "iv-infusion", AUMCINF_obs/AUCINF_obs,   ((AUMCINF_obs/AUCINF_obs)-(TI/2)))} #else{MRTINF_obs  <- "NaN"}
@@ -360,7 +360,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
       
       if (doseType == "ss" && ssnPt != 0){
         Cavg <- AUCtau/Tau
-        Clss <- doseAmt/AUCtau
+        Clss <- ifelse(!is.null(doseAmt),doseAmt/AUCtau,NA)
         Cmax <- max(sconc)
         p_Fluctuation <- 100*(Cmax-Cmin)/Cavg
         if (Lambda_z != "NaN"){Accumulation_Index <- 1/(1-exp(-Lambda_z*Tau))}
