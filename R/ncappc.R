@@ -1075,6 +1075,25 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       if (printOut==TRUE) write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
       
+      # exclude data based on specific values on filter column (optional)
+      if (!is.null(filterNm)){
+        if(filterNm%in%colnames(nmdf)==T & !is.null(filterExcl)){
+          # filterExcl  == values to be excluded
+          filterCol <- which(colnames(nmdf) == filterNm)[1]
+          for (i in 1:length(filterExcl)){
+            if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i])){
+              nmdf <- nmdf[nmdf[,filterCol] != filterExcl[i],]
+            }else if(!grepl("[<>!=]", filterExcl[i])){
+              nmdf <- nmdf[nmdf[,filterCol] != filterExcl[i],]
+            }else{
+              nmdf <- eval(parse(text=paste0("subset(nmdf, !",filterNm,"%in% nmdf[nmdf[,",filterCol,"]",filterExcl[i],",filterCol])")))
+            }
+          }
+        }else{
+          print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the simulated data.\n")
+        }
+      }
+      
       srdf <- nmdf[nmdf$NSUB == 1,]  # copy simulated data before processing
       
       if (idNmSim%in%colnames(nmdf)==F | timeNmSim%in%colnames(nmdf)==F | concNmSim%in%colnames(nmdf)==F){
@@ -1132,60 +1151,111 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # ignore data with BLQ = 1 or user specified value (optional)
       if (!is.null(blqNm)){
-        if(blqNm%in%colnames(nmdf)==T){
+        if(blqNm%in%colnames(nmdf) == T){
           blqCol <- which(colnames(nmdf) == blqNm)[1]
-          for (i in 1:length(blqExcl)) {nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]}
+          for (i in 1:length(blqExcl)){
+            if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", blqExcl[i])){
+              nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]
+            }else if(!grepl("[<>!=]", blqExcl[i])){
+              nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]
+            }else{
+              nmdf <- eval(parse(text=paste0("subset(nmdf, !",blqNm,"%in% nmdf[nmdf[,",blqCol,"]",blqExcl[i],",blqCol])")))
+            }
+          }
         }else{
-          print("Note: Incorrect BLQ column name in simulation output. BLQ will not be used to process the data.\n")
+          print("Note: Incorrect BLQ column name. BLQ will not be used to process the simulated data.\n")
         }
       }
       
+      #if (!is.null(blqNm)){
+      #  if(blqNm%in%colnames(nmdf)==T){
+      #    blqCol <- which(colnames(nmdf) == blqNm)[1]
+      #    for (i in 1:length(blqExcl)) {nmdf <- nmdf[nmdf[,blqNm] != blqExcl[i],]}
+      #  }else{
+      #    print("Note: Incorrect BLQ column name in simulation output. BLQ will not be used to process the data.\n")
+      #  }
+      #}
+      
       # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
       if (evid == TRUE){
-        if("EVID"%in%colnames(nmdf)==T){
+        if("EVID"%in%colnames(nmdf) == T){
           # uevid == unique values in EVID column
           # evidIncl == EVID values to be included
           # ievid == EVID values to be ignored
           uevid <- unique(as.numeric(as.character(nmdf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
-          if (length(ievid) != 0){
-            for (i in 1:length(ievid)){
-              if (ievid[i] != 1){
-                nmdf <- nmdf[nmdf$EVID != ievid[i],]
-              }else{
-                if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i]))) == 0) next
-                nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i])),]
-                #if (length(which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i])) == 0) next
-                #nmdf <- nmdf[-which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i]),]
-              }
-            }
-          }
+          if (length(ievid) != 0){for (i in 1:length(ievid)){nmdf <- nmdf[nmdf$EVID != ievid[i],]}}
         }else{
-          print("Note: Incorrect EVID column name in simulation output. EVID will not be used to process the simulated data.\n")
+          print("Note: EVID column is not present. EVID will not be used to process the simulated data.\n")
         }
+        #if("EVID"%in%colnames(nmdf)==T){
+        #  # uevid == unique values in EVID column
+        #  # evidIncl == EVID values to be included
+        #  # ievid == EVID values to be ignored
+        #  uevid <- unique(as.numeric(as.character(nmdf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
+        #  if (length(ievid) != 0){
+        #    for (i in 1:length(ievid)){
+        #      if (ievid[i] != 1){
+        #        nmdf <- nmdf[nmdf$EVID != ievid[i],]
+        #      }else{
+        #        if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i]))) == 0) next
+        #        nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$EVID)) == as.numeric(ievid[i])),]
+        #        #if (length(which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i])) == 0) next
+        #        #nmdf <- nmdf[-which(nmdf[,timeCol] != 0 & nmdf$EVID == ievid[i]),]
+        #      }
+        #    }
+        #  }
+        #}else{
+        #  print("Note: Incorrect EVID column name in simulation output. EVID will not be used to process the simulated data.\n")
+        #}
       }
       
       # if MDV fiter is present, exclude data for MDV == 1 but keep rows with TIME == 0
       if (mdv == TRUE){
         if("MDV"%in%colnames(nmdf) == T){
-          if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1)) == 0) next
-          nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1),]
+          nmdf <- nmdf[nmdf$MDV == 0,]
         }else{
-          print("Note: Incorrect MDV column name in simulation output. MDV will not be used to process the simulated data.\n")
+          print("Note: MDV column is not present. MDV will not be used to process the simulated data.\n")
         }
       }
+      #if (mdv == TRUE){
+      #  if("MDV"%in%colnames(nmdf) == T){
+      #    if (length(which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1)) == 0) next
+      #    nmdf <- nmdf[-which(as.numeric(as.character(nmdf[,timeCol])) != 0 & as.numeric(as.character(nmdf$MDV)) == 1),]
+      #  }else{
+      #    print("Note: Incorrect MDV column name in simulation output. MDV will not be used to process the simulated data.\n")
+      #  }
+      #}
       
-      # exclude data based on specific values on filter column (optional)
-      if (!is.null(filterNm)){
-        if(filterNm%in%colnames(nmdf)==T & !is.null(filterExcl)){
-          # filterExcl  == values to be excluded
-          filterCol <- which(colnames(nmdf) == filterNm)[1]
-          for (i in 1:length(filterExcl)){
-            if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == T) {nmdf <- nmdf[nmdf[,filterCol] != as.numeric(filterExcl[i]),]}
-            if (grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", filterExcl[i]) == F) {nmdf <- eval(parse(text=paste("subset(nmdf, !",filterNm,"%in% nmdf[nmdf[,",filterCol,"]",filterExcl[i],",filterCol])",sep="")))}
-          }
-        }else{
-          print("Note: Incorrect filterNm or filterExcl specification in simulation output. filterNm will not be used to process the simulated data.\n")
-        }
+      
+      # cpopStrNm = Combined stratifyting column names
+      # npopStr   = Number of stratification levels
+      # popStrNm1 = 1st level stratifying column name
+      # popStr1   = 1st level stratification ID names
+      # npopStr1  = Number of 1st level stratification ID names
+      if(is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-0} # No stratification
+      if(!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
+      if(is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
+      if(is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
+      
+      # Str1 & Str2
+      if(!is.null(str1Nm) & !is.null(str2Nm) & is.null(str3Nm)){
+        case<-3; cpopStrNm<-paste(str1Nm,str2Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStr1<-str1; popStr2<-str2; npopStr1<-length(str1); npopStr2<-length(str2)
+      }
+      # Str1 & Str3
+      if(!is.null(str1Nm) & is.null(str2Nm) & !is.null(str3Nm)){
+        case<-3; cpopStrNm<-paste(str1Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str3Nm; popStr1<-str1; popStr2<-str3; npopStr1<-length(str1); npopStr2<-length(str3)
+      }
+      # Str2 & Str3
+      if(is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+        case<-3; cpopStrNm<-paste(str2Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str2Nm; popStrNm2<-str3Nm; popStr1<-str2; popStr2<-str3; npopStr1<-length(str2); npopStr2<-length(str3)
+      }
+      # Str1 & Str2 & Str3
+      if(!is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+        case<-4; cpopStrNm<-paste(str1Nm,str2Nm,str3Nm,sep=", ")
+        npopStr<-3
+        popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStrNm3<-str3Nm
+        popStr1<-str1; popStr2<-str2; popStr3<-str3
+        npopStr1<-length(str1); npopStr2<-length(str2); npopStr3<-length(str3)
       }
       
       # Calculate AUC parameters for the simulation output
