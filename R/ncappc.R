@@ -97,6 +97,7 @@
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
+#' @param Tfirst Time of first observation for steady-state data (\strong{\code{NULL}})
 #' @param Tau Dosing interval for steady-state data (\strong{\code{NULL}})
 #' @param TI Infusion duration (\strong{\code{NULL}})
 #' @param method linear, loglinear or mixed (\strong{"mixed"})
@@ -168,8 +169,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
                    concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
                    LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,
-                   adminType="extravascular",doseType="ns",Tau=NULL,TI=NULL,
-                   method="mixed",blqNm=NULL,blqExcl=1,evid=TRUE,evidIncl=0,
+                   adminType="extravascular",doseType="ns",Tfirst=NULL,Tau=NULL,
+                   TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid=TRUE,evidIncl=0,
                    mdv=FALSE,filterNm=NULL,filterExcl=NULL,negConcExcl=FALSE,
                    param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,
                    dateFormat=NULL,spread="npi",
@@ -208,7 +209,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if ((!is.null(simFile)) && (!is.data.frame(simFile)) && (!file_test("-f", simFile))){print(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed.")); simFile <- NULL}
   
   # Check steady state dosing interval
-  if (doseType == "ss" && (is.null(Tau))){setwd(usrdir);stop("Dosing interval is required for steady-state data\n")}
+  if (doseType == "ss"){
+    if(is.null(Tau)){setwd(usrdir);stop("Time for dosing interval is required for steady-state data\n")}
+    if(is.null(Tfirst)){print("Note: Time for first observation is missing for steady-state data. Steady state observation period will be estimated based on the first non-zero obverved concentration and Tau.\n")}
+  }
   
   # Check for column names
   if (idNmObs%in%colnames(indf)==F | timeNmObs%in%colnames(indf)==F | concNmObs%in%colnames(indf)==F){
@@ -326,7 +330,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   
   # include data based on specific values on EVID column (optional) but keep rows with TIME == 0
-  if ((evid == TRUE)){
+  if (evid == TRUE){
     if("EVID"%in%colnames(indf) == T){
       # uevid == unique values in EVID column
       # evidIncl == EVID values to be included
@@ -554,7 +558,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       time <- as.numeric(tc$time)
       conc <- as.numeric(tc$conc)
       cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
       outData <- rbind(outData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm)))
     }
     
@@ -626,7 +630,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         conc <- as.numeric(tc$conc)
 
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
@@ -698,7 +702,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
@@ -772,7 +776,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             time   <- as.numeric(tc$time)
             conc   <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
@@ -954,19 +958,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if(case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     
     # Subset table to print in the report
@@ -1300,7 +1304,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if(nrow(stc)==0) next
             time <- as.numeric(stc$time)
             conc <- as.numeric(stc$conc)
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             simData <- rbind(simData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm),NSIM=s))
           }
         }
@@ -1321,7 +1325,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if(nrow(stc)==0) next
               time <- as.numeric(stc$time)
               conc <- as.numeric(stc$conc)
-              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
               simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
             }
           }
@@ -1343,7 +1347,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 if(nrow(stc)==0) next
                 time <- as.numeric(stc$time)
                 conc <- as.numeric(stc$conc)
-                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                 simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
               }
             }
@@ -1367,7 +1371,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   if(nrow(stc)==0) next
                   time <- as.numeric(stc$time)
                   conc <- as.numeric(stc$conc)
-                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                   simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
                 }
               }
@@ -2083,19 +2087,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if(case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     if(case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) signif(as.numeric(x), digits=4)))
+      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) format(round(as.numeric(x),4),nsmall=4)))
     }
     
     

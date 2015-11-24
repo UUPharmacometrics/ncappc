@@ -63,6 +63,7 @@ LambdaExclude | User-defined excluded observation time points for estimation of 
 doseAmtNm | Column name to specify dose amount | Cokumn name | **NULL**
 adminType | Route of administration | iv-bolus, iv-infusion, extravascular | **"extravascular"**
 doseType | Steady-state (ss) or nonsteady-state (ns) dose | "ss" or "ns" | **"ns"**
+Tfirst | Time of first observation for steady-state data | Numeric | **NULL**
 Tau | Dosing interval for steady-state data | Numeric | **NULL**
 TI | Infusion duration | Numeric | **NULL**
 method | Computational method to estimate AUC and AUMC | linear, loglinear or mixed | "mixed" | **"mixed"**

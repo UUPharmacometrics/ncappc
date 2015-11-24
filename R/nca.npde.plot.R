@@ -77,8 +77,8 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
       longdata[longdata$type==npdecol[i],"ci"]     <- abs(qt(0.025,length(npdeval)-1)*(sd(npdeval)/sqrt(length(npdeval))))
       longdata[longdata$type==npdecol[i],"sd1"]    <- abs(sd(npdeval)-(sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.975,length(npdeval)-1))))
       longdata[longdata$type==npdecol[i],"sd2"]    <- abs(sd(npdeval)-(sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.025,length(npdeval)-1))))
-      longdata[longdata$type==npdecol[i],"sdcil"]    <- sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.975,length(npdeval)-1))
-      longdata[longdata$type==npdecol[i],"sdciu"]    <- sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.025,length(npdeval)-1))
+      longdata[longdata$type==npdecol[i],"sdcil"]  <- sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.975,length(npdeval)-1))
+      longdata[longdata$type==npdecol[i],"sdciu"]  <- sd(npdeval)*sqrt((length(npdeval)-1)/qchisq(0.025,length(npdeval)-1))
     }
     
     longdata$FCT    <- paste0(longdata$type,"\nmean=", signif(longdata$mean,3), "+/-", signif(longdata$ci,3), "\nSD=", signif(longdata$sd,3), "(-", signif(longdata$sd1,3), ",+", signif(longdata$sd2,3),")")

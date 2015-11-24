@@ -13,14 +13,14 @@ ncappc(obsFile = "nca_original.npctab.dta",
   timeNmSim = "TIME", concNmSim = "DV", AUCTimeRange = NULL,
   backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
   doseAmtNm = NULL, adminType = "extravascular", doseType = "ns",
-  Tau = NULL, TI = NULL, method = "mixed", blqNm = NULL, blqExcl = 1,
-  evid = TRUE, evidIncl = 0, mdv = FALSE, filterNm = NULL,
-  filterExcl = NULL, negConcExcl = FALSE, param = c("AUClast", "Cmax"),
-  timeFormat = "number", dateColNm = NULL, dateFormat = NULL,
-  spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
-  "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff", noPlot = FALSE,
-  printOut = TRUE, studyName = NULL, new_data_method = TRUE,
-  overwrite_SIMDATA = NULL, outFileNm = NULL)
+  Tfirst = NULL, Tau = NULL, TI = NULL, method = "mixed",
+  blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE,
+  filterNm = NULL, filterExcl = NULL, negConcExcl = FALSE,
+  param = c("AUClast", "Cmax"), timeFormat = "number", dateColNm = NULL,
+  dateFormat = NULL, spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax",
+  "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff",
+  noPlot = FALSE, printOut = TRUE, studyName = NULL,
+  new_data_method = TRUE, overwrite_SIMDATA = NULL, outFileNm = NULL)
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -108,6 +108,8 @@ estimation of elimination rate-constant (\strong{\code{NULL}})}
 
 \item{doseType}{Steady-state (ss) or nonsteady-state (ns) dose
 (\strong{"ns"})}
+
+\item{Tfirst}{Time of first observation for steady-state data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{\code{NULL}})}
 

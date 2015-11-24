@@ -8,8 +8,8 @@ data.}
 est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   doseType = "ns", adminType = "extravascular", doseAmt = NULL,
   method = "linear", AUCTimeRange = NULL, LambdaTimeRange = NULL,
-  LambdaExclude = NULL, Tau = NULL, TI = NULL, simFile = NULL,
-  dset = "obs")
+  LambdaExclude = NULL, Tfirst = Tfirst, Tau = NULL, TI = NULL,
+  simFile = NULL, dset = "obs")
 }
 \arguments{
 \item{time}{Numeric array for time}
@@ -39,6 +39,8 @@ rate-constant (\strong{"NULL"})}
 
 \item{LambdaExclude}{User-defined excluded observation time points for
 estimation of elimination rate-constant (\strong{"NULL"})}
+
+\item{Tfirst}{Time of first observation for steady-state data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}
 
