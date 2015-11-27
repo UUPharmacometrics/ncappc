@@ -628,7 +628,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if(nrow(tc)==0) next
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
-
+        
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
         NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))

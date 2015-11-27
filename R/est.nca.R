@@ -233,7 +233,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
     
     nPt    <- length(nconc)   # No. of data points
     Cmax   <- max(nconc)
-    mxId   <- which(nconc == Cmax)
+    mxId   <- which(nconc == Cmax)[length(which(nconc == Cmax))]
     Tmax   <- ntime[mxId]
     Cmax_D <- ifelse(!is.null(doseAmt), nconc[mxId]/doseAmt, NA)
     lIdx   <- max(which(nconc == tail(nconc[nconc>0],1))) # Index for last positive concentration
