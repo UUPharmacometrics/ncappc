@@ -7,20 +7,20 @@ output: rmarkdown::html_vignette
 **Name** | **Description** | **Example of possible values** | **Default**
 :-------:|:---------------:|:------------------------------:|:-----------:
 obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | **"nca_original.npctab.dta"**
-simFile | Observed concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **"nca_simulation.1.npctab.dta"**
+simFile | Simulated concentration-time data in NONMEM format from an internal data frame or an external table | File name or data frame | **"nca_simulation.1.npctab.dta"**
 str1Nm | Column name for 1st level population stratifier | Column name | **NULL**
 str1 | Stratification ID within 1st level stratification | c(1,2) | **NULL**
 str2Nm | Column name for 2nd level population stratifier | Column name | **NULL**
 str2 | Stratification ID within 2nd level stratification | c(1,2) | **NULL**
 str3Nm | Column name for 3rd level population stratifier | **NULL**
 str3 | Stratification ID within 3rd level stratification | c(1,2) | **NULL**
-concUnit | Unit of concentration | "ng/mL" | **"[M].[L]^-3"**
-timeUnit | Unit of time | "h" | **"[T]"**
-doseUnit | Unit of dose amount | "mg" | **"[M]"**
+concUnit | Unit of concentration | "ng/mL" | **"M.L^-3"**
+timeUnit | Unit of time | "h" | **"T"**
+doseUnit | Unit of dose amount | "mg" | **"M"**
 doseNormUnit | Normalization factor of dose amount if used | kg | **NULL**
-obsLog | Concentration in observed data in logarithmic form | TRUE or FALSE | **FALSE**
-simLog | Concentration in simulated data in logarithmic form | TRUE or FALSE | **FALSE**
-psnOut | observed data is an output from PsN or in NONMEM output format | TRUE or FALSE | **FALSE**
+obsLog | Concentration in observed data in logarithmic form | Logical (TRUE or FALSE) | **FALSE**
+simLog | Concentration in simulated data in logarithmic form | Logical (TRUE or FALSE) | **FALSE**
+psnOut | observed data is an output from PsN or in NONMEM output format | Logical (TRUE or FALSE) | **FALSE**
 idNmObs | Column name for ID in observed data | Column name | **"ID"**
 timeNmObs | Column name for time in observed data | Column name | **"TIME"**
 concNmObs | Column name for concentration in observed data | Column name | **"DV"**
@@ -28,7 +28,7 @@ idNmSim | Column name for ID in simulated data | Column name | **"ID"**
 timeNmSim | Column name for time in simulated data | Column name | **"TIME"**
 concNmSim | Column name for concentration in simulated data | Column name | **"DV"**
 AUCTimeRange | User-defined window of time used to estimate AUC | c(0,24) | **NULL**
-backExtrp | If back-extrapolation is needed for AUC | TRUE or FALSE | **FALSE**
+backExtrp | If back-extrapolation is needed for AUC | Logical (TRUE or FALSE) | **FALSE**
 LambdaTimeRange | User-defined window of time to estimate elimination rate-constant | c(15,24) | **NULL**
 LambdaExclude | User-defined excluded observation time points for estimation of elimination rate-constant | c(20,22) | **NULL**
 doseAmtNm | Column name to specify dose amount | Cokumn name | **NULL**
@@ -40,12 +40,12 @@ TI | Infusion duration | Numeric | **NULL**
 method | Computational method to estimate AUC and AUMC | linear, loglinear or mixed | "mixed" | **"mixed"**
 blqNm | Name of BLQ column if used | Column name | **NULL**
 blqExcl | Excluded BLQ value or logical condition | 1, ">=1", c(1,">3") | **"1"**
-evid | Use EVID data to filter data | TRUE or FALSE | **TRUE**
-evidIncl | EVID values used to filter data | Numeric |**"0"**
-mdv | Use MDV dat to filter data | TRUE or FALSE | **FALSE**
+evid | Use EVID data to filter data | Logical (TRUE or FALSE) | **TRUE**
+evidIncl | EVID values used to filter data | Numeric |**0**
+mdv | Use MDV dat to filter data | Logical (TRUE or FALSE) | **FALSE**
 filterNm | Column name for filter | Column name | **NULL**
 filterExcl | Filter identifier or logical condition used for row exclusion | c(1, 2, "<20", ">=100", "!=100") | **NULL**
-negConcExcl | Exclude negative concentration | TRUE or FALSE | **FALSE**
+negConcExcl | Exclude negative concentration | Logical (TRUE or FALSE) | **FALSE**
 param | NCA metrics used for diagnostics | c(AUClast, AUClower_upper, AUCINF_obs, AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) | **c("AUClast", "Cmax")**
 timeFormat | Data format for time | "number", "H:M", "H:M:S") | **"number"**
 dateColNm | Name of the date column | Column name | **NULL**
@@ -53,10 +53,10 @@ dateFormat | Data format for date | "D-M-Y", "D/M/Y" or any other combination of
 spread | Measure of the spread of simulated data | "ppi" (95\% parametric prediction interval) or "npi" (95\% nonparametric prediction interval)) | **"npi"**
 tabCol | Output columns to be printed in the report in addition to ID, dose and population strata information | list of NCA metrics in a string array | **c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z")**
 figFormat | Format of the produced figures | "bmp", "jpeg", "tiff", "png" | **"tiff"**
-noPlot | Perform only NCA calculations without any plot generation | TRUE or FALSE | **FALSE**
-printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | TRUE or FALSE | **TRUE**
+noPlot | Perform only NCA calculations without any plot generation | Logical (TRUE or FALSE) | **FALSE**
+printOut | Write/print output on the disk. No plot will be saved if noPlot is set to TRUE | Logical (TRUE or FALSE) | **TRUE**
 studyName | Name of the study to be added as a description in the report | Study name | **NULL**
-new_data_method | For testing a faster method of reading data | TRUE or FALSE | **TRUE**
+new_data_method | For testing a faster method of reading data | Logical (TRUE or FALSE) | **TRUE**
 overwrite_SIMDATA | Create new information in the SIMDATA directory, or to use the information in the SIMDATA | TRUE, FALSE or NULL | **NULL**
 outFileNm | Additional tag to the name of the output html and pdf output file hyphenated to the standard ncappc report file name | Output file name tag | **Name of the observed data file**
 
@@ -120,6 +120,9 @@ This argument is used to specify the route of the drug administration. The allow
 
 **doseType**
 This argument is used to specify either the steady-state ("ss") or the nonsteady-state ("ns") dosage types. The default value to this argument is ***"ns"***.
+
+**Tfirst**
+Tfirst is the time of first observation for steady-state data. If the *doseType* argument is assigned to "ss" and Tfirst is *NULL*, steady state observation period will be estimated based on the first non-zero obverved concentration and Tau. The default value to this argument is ***NULL***.
 
 **Tau**
 The dosing interval for the steady-state data. This is a mandatory argument if the *doseType* argument is assigned to "ss". The default value to this argument is ***NULL***.

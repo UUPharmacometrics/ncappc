@@ -172,6 +172,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
     if (backExtrp == TRUE){
       if (ntime[1] == 0){
         C0 <- as.numeric(nconc[1])
+        noBackTime <- TRUE
       }else{
         if (adminType == "extravascular" | adminType == "iv-infusion"){
           C0 <- 0
@@ -191,6 +192,7 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
           }
         }
         ntime <- c(0, ntime)
+        noBackTime <- FALSE
       }
     }
     
@@ -245,7 +247,13 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         delaumc  <- 0.5*((nconc[r+1]*otime[r+1])+(nconc[r]*otime[r]))*(otime[r+1]-otime[r])
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (r>1 & backExtrp == TRUE){AUCnoC0 <- sum(AUCnoC0, delauc)}
+        if (backExtrp == TRUE){
+          if (noBackTime == TRUE){
+            AUCnoC0 <- sum(AUCnoC0, delauc)
+          }else if (noBackTime == FALSE & r>1){
+            AUCnoC0 <- sum(AUCnoC0, delauc)
+          }
+        }
         if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
         if (doseType == "ss" && ssnPt != 0){
           AUCtau  <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
@@ -255,7 +263,13 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+        if (backExtrp == TRUE){
+          if (noBackTime == TRUE){
+            AUCnoC0 <- sum(AUCnoC0, delauc)
+          }else if (noBackTime == FALSE & r>1){
+            AUCnoC0 <- sum(AUCnoC0, delauc)
+          }
+        }
         if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
         if (doseType == "ss" && ssnPt != 0){
           AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
@@ -266,7 +280,13 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
           delaumc  <- 0.5*((nconc[r+1]*otime[r+1])+(nconc[r]*otime[r]))*(otime[r+1]-otime[r])
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+          if (backExtrp == TRUE){
+            if (noBackTime == TRUE){
+              AUCnoC0 <- sum(AUCnoC0, delauc)
+            }else if (noBackTime == FALSE & r>1){
+              AUCnoC0 <- sum(AUCnoC0, delauc)
+            }
+          }
           if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
           if (doseType == "ss" && ssnPt != 0){
             AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
@@ -276,7 +296,13 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
           delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (r>1 & backExtrp == TRUE){AUCnoC0  <- sum(AUCnoC0, delauc)}
+          if (backExtrp == TRUE){
+            if (noBackTime == TRUE){
+              AUCnoC0 <- sum(AUCnoC0, delauc)
+            }else if (noBackTime == FALSE & r>1){
+              AUCnoC0 <- sum(AUCnoC0, delauc)
+            }
+          }
           if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
           if (doseType == "ss" && ssnPt != 0){
             AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
@@ -391,6 +417,11 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
       
       if (AUCINF_obs  != 0 & AUMCINF_obs  != 0){MRTINF_obs  <- ifelse(adminType != "iv-infusion", AUMCINF_obs/AUCINF_obs,   ((AUMCINF_obs/AUCINF_obs)-(TI/2)))} #else{MRTINF_obs  <- "NaN"}
       if (AUCINF_pred != 0 & AUMCINF_pred != 0){MRTINF_pred <- ifelse(adminType != "iv-infusion", AUMCINF_pred/AUCINF_pred, ((AUMCINF_pred/AUCINF_pred)-(TI/2)))} #else{MRTINF_pred <- "NaN"}
+      
+      if(doseType == "ns" && (adminType == "iv-bolus"|adminType == "iv-infusion")){
+        Vss_obs  <- MRTINF_obs*Cl_obs
+        Vss_pred <- MRTINF_pred*Cl_pred
+      }
       
       if (doseType == "ss" && ssnPt != 0){
         Cavg <- AUCtau/Tau

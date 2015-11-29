@@ -209,7 +209,7 @@ hr {
 </tr>
 <tr>
 <td align="center">simFile</td>
-<td align="center">Observed concentration-time data in NONMEM format from an internal data frame or an external table</td>
+<td align="center">Simulated concentration-time data in NONMEM format from an internal data frame or an external table</td>
 <td align="center">File name or data frame</td>
 <td align="center"><strong>&ldquo;nca_simulation.1.npctab.dta&rdquo;</strong></td>
 </tr>
@@ -253,19 +253,19 @@ hr {
 <td align="center">concUnit</td>
 <td align="center">Unit of concentration</td>
 <td align="center">&ldquo;ng/mL&rdquo;</td>
-<td align="center"><strong>&ldquo;[M].[L]<sup>-3&rdquo;</sup></strong></td>
+<td align="center"><strong>&ldquo;M.L<sup>-3&rdquo;</sup></strong></td>
 </tr>
 <tr>
 <td align="center">timeUnit</td>
 <td align="center">Unit of time</td>
 <td align="center">&ldquo;h&rdquo;</td>
-<td align="center"><strong>&ldquo;[T]&rdquo;</strong></td>
+<td align="center"><strong>&ldquo;T&rdquo;</strong></td>
 </tr>
 <tr>
 <td align="center">doseUnit</td>
 <td align="center">Unit of dose amount</td>
 <td align="center">&ldquo;mg&rdquo;</td>
-<td align="center"><strong>&ldquo;[M]&rdquo;</strong></td>
+<td align="center"><strong>&ldquo;M&rdquo;</strong></td>
 </tr>
 <tr>
 <td align="center">doseNormUnit</td>
@@ -276,19 +276,19 @@ hr {
 <tr>
 <td align="center">obsLog</td>
 <td align="center">Concentration in observed data in logarithmic form</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
 <td align="center">simLog</td>
 <td align="center">Concentration in simulated data in logarithmic form</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
 <td align="center">psnOut</td>
 <td align="center">observed data is an output from PsN or in NONMEM output format</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
@@ -336,7 +336,7 @@ hr {
 <tr>
 <td align="center">backExtrp</td>
 <td align="center">If back-extrapolation is needed for AUC</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
@@ -408,19 +408,19 @@ hr {
 <tr>
 <td align="center">evid</td>
 <td align="center">Use EVID data to filter data</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>TRUE</strong></td>
 </tr>
 <tr>
 <td align="center">evidIncl</td>
 <td align="center">EVID values used to filter data</td>
 <td align="center">Numeric</td>
-<td align="center"><strong>&ldquo;0&rdquo;</strong></td>
+<td align="center"><strong>0</strong></td>
 </tr>
 <tr>
 <td align="center">mdv</td>
 <td align="center">Use MDV dat to filter data</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
@@ -438,7 +438,7 @@ hr {
 <tr>
 <td align="center">negConcExcl</td>
 <td align="center">Exclude negative concentration</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
@@ -486,13 +486,13 @@ hr {
 <tr>
 <td align="center">noPlot</td>
 <td align="center">Perform only NCA calculations without any plot generation</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>FALSE</strong></td>
 </tr>
 <tr>
 <td align="center">printOut</td>
 <td align="center">Write/print output on the disk. No plot will be saved if noPlot is set to TRUE</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>TRUE</strong></td>
 </tr>
 <tr>
@@ -504,7 +504,7 @@ hr {
 <tr>
 <td align="center">new_data_method</td>
 <td align="center">For testing a faster method of reading data</td>
-<td align="center">TRUE or FALSE</td>
+<td align="center">Logical (TRUE or FALSE)</td>
 <td align="center"><strong>TRUE</strong></td>
 </tr>
 <tr>
