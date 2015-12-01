@@ -13,7 +13,7 @@ ncappc(obsFile = "nca_original.npctab.dta",
   timeNmSim = "TIME", concNmSim = "DV", AUCTimeRange = NULL,
   backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
   doseAmtNm = NULL, adminType = "extravascular", doseType = "ns",
-  Tfirst = NULL, Tau = NULL, TI = NULL, method = "mixed",
+  doseTime = NULL, Tau = NULL, TI = NULL, method = "linear-log",
   blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE,
   filterNm = NULL, filterExcl = NULL, negConcExcl = FALSE,
   param = c("AUClast", "Cmax"), timeFormat = "number", dateColNm = NULL,
@@ -109,13 +109,13 @@ estimation of elimination rate-constant (\strong{\code{NULL}})}
 \item{doseType}{Steady-state (ss) or nonsteady-state (ns) dose
 (\strong{"ns"})}
 
-\item{Tfirst}{Time of first observation for steady-state data (\strong{\code{NULL}})}
+\item{doseTime}{Dose time prior to the first observation for steady-state data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{\code{NULL}})}
 
 \item{TI}{Infusion duration (\strong{\code{NULL}})}
 
-\item{method}{linear, loglinear or mixed (\strong{"mixed"})}
+\item{method}{linear, log or linear-log (\strong{"linear-log"})}
 
 \item{blqNm}{Name of BLQ column if used (\strong{\code{NULL}})}
 

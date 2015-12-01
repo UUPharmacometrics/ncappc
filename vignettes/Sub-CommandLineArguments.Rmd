@@ -34,10 +34,10 @@ LambdaExclude | User-defined excluded observation time points for estimation of 
 doseAmtNm | Column name to specify dose amount | Cokumn name | **NULL**
 adminType | Route of administration | iv-bolus, iv-infusion, extravascular | **"extravascular"**
 doseType | Steady-state (ss) or nonsteady-state (ns) dose | "ss" or "ns" | **"ns"**
-Tfirst | Time of first observation for steady-state data | Numeric | **NULL**
+doseTime | Dose time prior to the first observation for steady-state data | Numeric | **NULL**
 Tau | Dosing interval for steady-state data | Numeric | **NULL**
 TI | Infusion duration | Numeric | **NULL**
-method | Computational method to estimate AUC and AUMC | linear, loglinear or mixed | "mixed" | **"mixed"**
+method | Computational method to estimate AUC and AUMC | linear, log or linear-log | "linear-log" | **"linear-log"**
 blqNm | Name of BLQ column if used | Column name | **NULL**
 blqExcl | Excluded BLQ value or logical condition | 1, ">=1", c(1,">3") | **"1"**
 evid | Use EVID data to filter data | Logical (TRUE or FALSE) | **TRUE**
@@ -121,8 +121,8 @@ This argument is used to specify the route of the drug administration. The allow
 **doseType**
 This argument is used to specify either the steady-state ("ss") or the nonsteady-state ("ns") dosage types. The default value to this argument is ***"ns"***.
 
-**Tfirst**
-Tfirst is the time of first observation for steady-state data. If the *doseType* argument is assigned to "ss" and Tfirst is *NULL*, steady state observation period will be estimated based on the first non-zero obverved concentration and Tau. The default value to this argument is ***NULL***.
+**doseTime**
+doseTime is the dose time prior to the first observation for steady-state data. If the *doseType* argument is assigned to "ss" and doseTime is *NULL*, steady state observation period will be estimated based on the first non-zero obverved concentration and Tau. The default value to this argument is ***NULL***.
 
 **Tau**
 The dosing interval for the steady-state data. This is a mandatory argument if the *doseType* argument is assigned to "ss". The default value to this argument is ***NULL***.
@@ -131,7 +131,7 @@ The dosing interval for the steady-state data. This is a mandatory argument if t
 The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the "RATE" and "AMT" values. This is a mandatory argument if the *doseType* argument is assigned to "ss" and the input data file does not contain "RATE" and "AMT" columns. The default value to this argument is ***NULL***.
 
 **method**
-The user is allowed to choose the method of area estimation (AUC, AUMC). The "linear" option uses linear trapezoidal method of area estimation; while the "loglinear" method uses log-linear trapezoidal method. The "mixed" option uses the linear approximation for the ascending part of the curve and log-linear approximation for the descending part of the curve during the area estimation. The default value for this argument is ***"linear"***.
+The user is allowed to choose the method of area estimation (AUC, AUMC). The "linear" option uses linear trapezoidal method of area estimation; while the "log" method uses logarithmic trapezoidal method. The "linear-log" option uses the linear trapezoidal approximation for the ascending part of the curve and logarithmic trapezoidal approximation for the descending part of the curve during the area estimation. The default value for this argument is ***"linear-log"***.
 
 **blqNm**
 Name of the BLQ data column, if the user decides to filter the input based on BLQ data. The default value for this argument is ***NULL***, which means the BLQ column will not be used to filter.

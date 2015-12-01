@@ -30,8 +30,8 @@ where TI is the infusion duration.
 **No_points_Lambda_z**  
 No_points_Lambda_z is the number of observed data points used to determine the best fitting regression line in the elimination phase.
 
-**AUC_pBack_Ext**  
-The percentage of AUClast that is contributed by the back extrapolation to estimate C0. The rules to to estimate C0 is given above.
+**AUC_pBack_Ext_obs and AUC_pBack_Ext_pred**  
+The percentage of AUC that is contributed by the back extrapolation to estimate C0. The rules to to estimate C0 is given above.
 
 **AUClower_upper**  
 The AUC under the concentration-time profile within the user-specified window of time privided as the "AUCTimeRange" argument. In case of empty "AUCTimeRange" argument, AUClower_upper is equal to the AUClast.

@@ -7,8 +7,8 @@ data.}
 \usage{
 est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   doseType = "ns", adminType = "extravascular", doseAmt = NULL,
-  method = "linear", AUCTimeRange = NULL, LambdaTimeRange = NULL,
-  LambdaExclude = NULL, Tfirst = Tfirst, Tau = NULL, TI = NULL,
+  method = "linear-log", AUCTimeRange = NULL, LambdaTimeRange = NULL,
+  LambdaExclude = NULL, doseTime = doseTime, Tau = NULL, TI = NULL,
   simFile = NULL, dset = "obs")
 }
 \arguments{
@@ -29,7 +29,7 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
-\item{method}{linear, loglinear or mixed (\strong{"linear"})}
+\item{method}{linear, log or linear-log (\strong{"linear-log"})}
 
 \item{AUCTimeRange}{User-defined window of time used to estimate AUC
 (\strong{"NULL"})}
@@ -40,7 +40,7 @@ rate-constant (\strong{"NULL"})}
 \item{LambdaExclude}{User-defined excluded observation time points for
 estimation of elimination rate-constant (\strong{"NULL"})}
 
-\item{Tfirst}{Time of first observation for steady-state data (\strong{\code{NULL}})}
+\item{doseTime}{Dose time prior to the first observation for steady-state data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}
 
@@ -89,7 +89,9 @@ below.
  \item \strong{No_points_Lambda_z} is the number of observed data points
  used to determine the best fitting regression line in the elimination
  phase.
- \item \strong{AUC_pBack_Ext} is the percentage of AUClast that is
+ \item \strong{AUC_pBack_Ext_obs} is the percentage of AUCINF_obs that is
+ contributed by the back extrapolation to estimate C0.
+ \item \strong{AUC_pBack_Ext_pred} is the percentage of AUCINF_pred that is
  contributed by the back extrapolation to estimate C0.
  \item \strong{AUClower_upper} is the AUC under the concentration-time
  profile within the user-specified window of time privided as the

@@ -74,7 +74,7 @@ histobs.plot <- function(plotData,figlbl=NULL,param=c("AUClast","AUCINF_obs","Cm
     }
   }
   
-  devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
+  devtag <- "2.5th and 97.5th percentile boundaries"
   
   meanObs  <- sapply(plotData, FUN=function(x) mean(as.numeric(x), na.rm=T))
   sdObs    <- sapply(plotData, FUN=function(x) sd(as.numeric(x), na.rm=T))

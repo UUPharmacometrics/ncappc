@@ -370,8 +370,8 @@ hr {
 <td align="center"><strong>&ldquo;ns&rdquo;</strong></td>
 </tr>
 <tr>
-<td align="center">Tfirst</td>
-<td align="center">Time of first observation for steady-state data</td>
+<td align="center">doseTime</td>
+<td align="center">Dose time prior to the first observation for steady-state data</td>
 <td align="center">Numeric</td>
 <td align="center"><strong>NULL</strong></td>
 </tr>
@@ -390,8 +390,8 @@ hr {
 <tr>
 <td align="center">method</td>
 <td align="center">Computational method to estimate AUC and AUMC</td>
-<td align="center">linear, loglinear or mixed</td>
-<td align="center">&ldquo;mixed&rdquo;</td>
+<td align="center">linear, log or linear-log</td>
+<td align="center">&ldquo;linear-log&rdquo;</td>
 </tr>
 <tr>
 <td align="center">blqNm</td>
@@ -581,6 +581,9 @@ This argument is used to specify the route of the drug administration. The allow
 <p><strong>doseType</strong>
 This argument is used to specify either the steady-state (&ldquo;ss&rdquo;) or the nonsteady-state (&ldquo;ns&rdquo;) dosage types. The default value to this argument is <strong><em>&ldquo;ns&rdquo;</em></strong>.</p>
 
+<p><strong>doseTime</strong>
+doseTime is the dose time prior to the first observation for steady-state data. If the <em>doseType</em> argument is assigned to &ldquo;ss&rdquo; and doseTime is <em>NULL</em>, steady state observation period will be estimated based on the first non-zero obverved concentration and Tau. The default value to this argument is <strong><em>NULL</em></strong>.</p>
+
 <p><strong>Tau</strong>
 The dosing interval for the steady-state data. This is a mandatory argument if the <em>doseType</em> argument is assigned to &ldquo;ss&rdquo;. The default value to this argument is <strong><em>NULL</em></strong>.</p>
 
@@ -588,7 +591,7 @@ The dosing interval for the steady-state data. This is a mandatory argument if t
 The infusion duration for the steady-state data. If the argument is empty, TI is calculated from the &ldquo;RATE&rdquo; and &ldquo;AMT&rdquo; values. This is a mandatory argument if the <em>doseType</em> argument is assigned to &ldquo;ss&rdquo; and the input data file does not contain &ldquo;RATE&rdquo; and &ldquo;AMT&rdquo; columns. The default value to this argument is <strong><em>NULL</em></strong>.</p>
 
 <p><strong>method</strong>
-The user is allowed to choose the method of area estimation (AUC, AUMC). The &ldquo;linear&rdquo; option uses linear trapezoidal method of area estimation; while the &ldquo;loglinear&rdquo; method uses log-linear trapezoidal method. The &ldquo;mixed&rdquo; option uses the linear approximation for the ascending part of the curve and log-linear approximation for the descending part of the curve during the area estimation. The default value for this argument is <strong><em>&ldquo;linear&rdquo;</em></strong>.</p>
+The user is allowed to choose the method of area estimation (AUC, AUMC). The &ldquo;linear&rdquo; option uses linear trapezoidal method of area estimation; while the &ldquo;log&rdquo; method uses logarithmic trapezoidal method. The &ldquo;linear-log&rdquo; option uses the linear trapezoidal approximation for the ascending part of the curve and logarithmic trapezoidal approximation for the descending part of the curve during the area estimation. The default value for this argument is <strong><em>&ldquo;linear-log&rdquo;</em></strong>.</p>
 
 <p><strong>blqNm</strong>
 Name of the BLQ data column, if the user decides to filter the input based on BLQ data. The default value for this argument is <strong><em>NULL</em></strong>, which means the BLQ column will not be used to filter.</p>
@@ -677,8 +680,8 @@ where TI is the infusion duration.</p>
 <p><strong>No_points_Lambda_z</strong><br/>
 No_points_Lambda_z is the number of observed data points used to determine the best fitting regression line in the elimination phase.</p>
 
-<p><strong>AUC_pBack_Ext</strong><br/>
-The percentage of AUClast that is contributed by the back extrapolation to estimate C0. The rules to to estimate C0 is given above.</p>
+<p><strong>AUC_pBack_Ext_obs and AUC_pBack_Ext_pred</strong><br/>
+The percentage of AUC that is contributed by the back extrapolation to estimate C0. The rules to to estimate C0 is given above.</p>
 
 <p><strong>AUClower_upper</strong><br/>
 The AUC under the concentration-time profile within the user-specified window of time privided as the &ldquo;AUCTimeRange&rdquo; argument. In case of empty &ldquo;AUCTimeRange&rdquo; argument, AUClower_upper is equal to the AUClast.</p>

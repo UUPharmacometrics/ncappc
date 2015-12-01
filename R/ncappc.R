@@ -97,10 +97,10 @@
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
 #'   (\strong{"ns"})
-#' @param Tfirst Time of first observation for steady-state data (\strong{\code{NULL}})
+#' @param doseTime Dose time prior to the first observation for steady-state data (\strong{\code{NULL}})
 #' @param Tau Dosing interval for steady-state data (\strong{\code{NULL}})
 #' @param TI Infusion duration (\strong{\code{NULL}})
-#' @param method linear, loglinear or mixed (\strong{"mixed"})
+#' @param method linear, log or linear-log (\strong{"linear-log"})
 #' @param blqNm Name of BLQ column if used (\strong{\code{NULL}})
 #' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
 #'   c(1,">3")) (\strong{"1"})
@@ -169,8 +169,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
                    concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
                    LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,
-                   adminType="extravascular",doseType="ns",Tfirst=NULL,Tau=NULL,
-                   TI=NULL,method="mixed",blqNm=NULL,blqExcl=1,evid=TRUE,evidIncl=0,
+                   adminType="extravascular",doseType="ns",doseTime=NULL,Tau=NULL,
+                   TI=NULL,method="linear-log",blqNm=NULL,blqExcl=1,evid=TRUE,evidIncl=0,
                    mdv=FALSE,filterNm=NULL,filterExcl=NULL,negConcExcl=FALSE,
                    param=c("AUClast","Cmax"),timeFormat="number",dateColNm=NULL,
                    dateFormat=NULL,spread="npi",
@@ -211,7 +211,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # Check steady state dosing interval
   if (doseType == "ss"){
     if(is.null(Tau)){setwd(usrdir);stop("Time for dosing interval is required for steady-state data\n")}
-    if(is.null(Tfirst)){print("Note: Time for first observation is missing for steady-state data. Steady state observation period will be estimated based on the first non-zero obverved concentration and Tau.\n")}
+    if(is.null(doseTime)){print("Note: Dose time prior to the first observation for steady-state data is missing. Steady state observation period will be estimated based on the first non-zero obverved concentration and Tau.\n")}
   }
   
   # Check for column names
@@ -558,7 +558,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       time <- as.numeric(tc$time)
       conc <- as.numeric(tc$conc)
       cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
       outData <- rbind(outData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm)))
     }
     
@@ -630,7 +630,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         conc <- as.numeric(tc$conc)
         
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
@@ -702,7 +702,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
           outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
@@ -776,7 +776,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             time   <- as.numeric(tc$time)
             conc   <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
@@ -824,7 +824,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   
   # Statistical analysis for each patient group
-  stNm <- c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","No_points_Lambda_z","AUC_pBack_Ext","AUClower_upper","Rsq","Rsq_adjusted","Corr_XY","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","AUC_pExtrap_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred","MRTINF_obs","MRTINF_pred","Vss_obs","Vss_pred","Tau","Tmin","Cmin","Cavg","p_Fluctuation","Accumulation_Index","Clss")
+  stNm <- c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","No_points_Lambda_z","AUC_pBack_Ext_obs","AUC_pBack_Ext_pred","AUClower_upper","Rsq","Rsq_adjusted","Corr_XY","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","AUC_pExtrap_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred","MRTINF_obs","MRTINF_pred","Vss_obs","Vss_pred","Tau","Tmin","Cmin","Cavg","p_Fluctuation","Accumulation_Index","Clss")
   grStat <- data.frame()
   if (case == 1){
     pm <- data.frame(Ntot=numeric(0),Nunique=numeric(0),Min=numeric(0),Max=numeric(0),Mean=numeric(0),Median=numeric(0),SD=numeric(0),SE=numeric(0),CVp=numeric(0),CI95l=numeric(0),CI95u=numeric(0),gMean=numeric(0),gCVp=numeric(0))
@@ -1304,7 +1304,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if(nrow(stc)==0) next
             time <- as.numeric(stc$time)
             conc <- as.numeric(stc$conc)
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
             simData <- rbind(simData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm),NSIM=s))
           }
         }
@@ -1325,7 +1325,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if(nrow(stc)==0) next
               time <- as.numeric(stc$time)
               conc <- as.numeric(stc$conc)
-              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
               simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
             }
           }
@@ -1347,7 +1347,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 if(nrow(stc)==0) next
                 time <- as.numeric(stc$time)
                 conc <- as.numeric(stc$conc)
-                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                 simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
               }
             }
@@ -1371,7 +1371,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   if(nrow(stc)==0) next
                   time <- as.numeric(stc$time)
                   conc <- as.numeric(stc$conc)
-                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,Tfirst=Tfirst,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
                   simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
                 }
               }
