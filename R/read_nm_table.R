@@ -8,21 +8,21 @@
 #' one header line  (\code{NOHEADER} option is not allowed in NONMEM table 
 #' files).
 #' 
-#' @param nm_table The NONMEM table file to read. A text string. If 
-#'   \code{\link[dplyr]{dplyr}} and \code{\link[readr]{readr}} are available and
-#'   \code{method="default"} or \code{method="readr_*"} then \code{nm_table} can
-#'   either a path to a file, a connection, or literal data (either a single 
-#'   string or a raw vector). Files ending in .gz, .bz2, .xz, or .zip will be 
-#'   automatically uncompressed. Files starting with http://, https://, ftp://, 
-#'   or ftps:// will be automatically downloaded. Remote gz files can also be 
-#'   automatically downloaded & decompressed.
+#' @param nm_table The NONMEM table file to read. A text string. If \code{dplyr}
+#'   and \code{readr} are available and \code{method="default"} or
+#'   \code{method="readr_*"} then \code{nm_table} can either a path to a file, a
+#'   connection, or literal data (either a single string or a raw vector). Files
+#'   ending in .gz, .bz2, .xz, or .zip will be automatically uncompressed. Files
+#'   starting with http://, https://, ftp://, or ftps:// will be automatically
+#'   downloaded. Remote gz files can also be automatically downloaded &
+#'   decompressed.
 #' @param only_obs Should the non-observation lines in the data set be removed? 
 #'   Currently filtered uisng the expected \code{MDV} column. \code{TRUE} or 
 #'   \code{FALSE}.
 #' @param method Can be one of \code{default}, \code{readr_1},  \code{readr_2}, 
 #'   \code{readr_3}, \code{slow}. \code{readr_1} should be fastest.  All but 
 #'   \code{slow} require \code{\link[dplyr]{dplyr}} and 
-#'   \code{\link[readr]{readr}} (version >= 0.2.2).
+#'   \code{readr} (version >= 0.2.2).
 #' @param quiet Should there be verbose messages about what the function is 
 #'   doing?
 #' @param sim_num Should the function add a column to the returned data frame 
@@ -37,6 +37,10 @@
 
 read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
                            quiet=TRUE,sim_num=FALSE,sim_name="NSIM"){
+  
+  # \code{\link[dplyr]{dplyr}} and \code{\link[readr]{readr}} are available and
+  # \code{\link[readr]{readr}} (version >= 0.2.2).
+  "MDV" <- NULL; rm(list=c("MDV"))
   
   if(method=="default"){
     if (requireNamespace("readr", quietly = TRUE) && 
