@@ -222,4 +222,8 @@ values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage}
 section of this document and/or in \strong{bold} in the \strong{Arguments}
 section.
 }
+\examples{
+ncappc(obsFile=system.file("extdata","pkdata.csv",package="ncappc"),
+psnOut=FALSE,noPlot=TRUE,printOut=FALSE)
+}
 

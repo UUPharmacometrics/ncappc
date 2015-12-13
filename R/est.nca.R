@@ -188,7 +188,8 @@ est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",ad
         sc1 <- nconc[ssIdx1]; st1 <- ntime[ssIdx1]
         # Steady state last observation time and conc
         lTm <- round(ntime[ssIdx1],0)+Tau  # Tau added to first time
-        ssIdx2 <- max(which(abs(round(ntime,0)-lTm)==0))  # Find the index in time vector that matches
+        ssIdx2 <- which(ntime==(st1+Tau-min(abs(round(ntime,0)-lTm))[1]))  # Find the index in time vector closest to first obs time + Tau
+        #ssIdx2 <- max(which(abs(round(ntime,0)-lTm)==0))  # Find the index in time vector that matches
         sc2 <- nconc[ssIdx2]; st2 <- ntime[ssIdx2]
       }
       # steady state observations

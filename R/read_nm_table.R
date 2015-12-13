@@ -40,7 +40,8 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   
   # \code{\link[dplyr]{dplyr}} and \code{\link[readr]{readr}} are available and
   # \code{\link[readr]{readr}} (version >= 0.2.2).
-  "MDV" <- NULL; rm(list=c("MDV"))
+  "MDV" <- "packageVersion" <- "write.table" <- "count.fields" <- "read.table" <- NULL
+  rm(list=c("MDV","packageVersion","write.table","count.fields","read.table"))
   
   if(method=="default"){
     if (requireNamespace("readr", quietly = TRUE) && 
@@ -53,6 +54,8 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   }
   
   read_nm_tab_readr_1 <- function(nm_table,sim_num){
+    "MDV" <- "packageVersion" <- "write.table" <- "count.fields" <- "read.table" <- NULL
+    rm(list=c("MDV","packageVersion","write.table","count.fields","read.table"))
     
     #tab_dat <- read_table(nm_table, skip = 1) 
     #tab_dat <- tab_dat %>% mutate_each(funs(suppressWarnings(as.numeric(.))))
@@ -91,6 +94,9 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   
   
   read_nm_tab_readr_2 <- function(nm_table){
+    "MDV" <- "packageVersion" <- "write.table" <- "count.fields" <- "read.table" <- NULL
+    rm(list=c("MDV","packageVersion","write.table","count.fields","read.table"))
+    
     ## get header names
     header_line <- readr::read_lines(nm_table,n_max=2)[2]
     comma_sep <- FALSE
@@ -136,6 +142,9 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   }
   
   read_nm_tab_readr_3 <- function(nm_table,sim_num){
+    "MDV" <- "packageVersion" <- "write.table" <- "count.fields" <- "read.table" <- NULL
+    rm(list=c("MDV","packageVersion","write.table","count.fields","read.table"))
+    
     ## get header names
     header_line <- readr::read_lines(nm_table,n_max=2)[2]
     comma_sep <- FALSE
@@ -175,7 +184,10 @@ read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
   
   
   
-  read_nm_tab_slow <- function (filename, quiet) {
+  read_nm_tab_slow <- function (filename, quiet){
+    "MDV" <- "packageVersion" <- "write.table" <- "count.fields" <- "read.table" <- NULL
+    rm(list=c("MDV","packageVersion","write.table","count.fields","read.table"))
+    
     ## Check which type of separator we have in our tables
     header.line = scan(file=filename,nlines=1,skip=1,what="character",sep="\n",quiet=T)
     sep.char = ""

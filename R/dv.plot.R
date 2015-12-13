@@ -23,8 +23,8 @@
 #'
 
 dv.plot <- function(pdata,cunit="[M].[L]^-3",tunit="[T]"){
-  "ID" <- "Time" <- "Conc" <- "theme" <- "unit" <- "element_text" <- "xlab" <- "ylab" <- "geom_line" <- "aes" <- "geom_point" <- "ggplot" <- "facet_wrap" <- "scale_y_log10" <- "arrangeGrob" <- "textGrob" <- "gpar" <- NULL
-  rm(list=c("ID","Time","Conc","theme","unit","element_text","xlab","ylab","geom_line","aes","geom_point","ggplot","facet_wrap","scale_y_log10","arrangeGrob","textGrob","gpar"))
+  "ID" <- "Time" <- "Conc" <- "theme" <- "unit" <- "element_text" <- "xlab" <- "ylab" <- "geom_line" <- "aes" <- "geom_point" <- "ggplot" <- "facet_wrap" <- "scale_y_log10" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "packageVersion" <- NULL
+  rm(list=c("ID","Time","Conc","theme","unit","element_text","xlab","ylab","geom_line","aes","geom_point","ggplot","facet_wrap","scale_y_log10","arrangeGrob","textGrob","gpar","packageVersion"))
   
   ggOpt_conc <- list(theme(plot.margin = unit(c(0.2,0.2,0.2,0.2), "cm"),
                            panel.margin = unit(0.2, "cm"),
