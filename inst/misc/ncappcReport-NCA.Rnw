@@ -117,6 +117,7 @@ print(arglist)
 \subsection{Table 1 (ncaOutput.tsv)}
 The \textbf{\textit{ncappc}} functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", \textit{i.e.}, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 100 rows.
 
+
 \begin{center}
 \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
 << Final table, echo=FALSE, results='asis'>>==
@@ -130,6 +131,21 @@ print(xtable(prnTab2, align=colform, rotate.colnames = T, auto=TRUE), file=paste
 @
 \input{tab}
 \end{center}
+
+% \begin{center}
+% \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
+% <<FinalTable, echo=FALSE, results='asis', fig.env="table">>==
+% suppressPackageStartupMessages(require(xtable))
+% tab <- list()
+% cnum <- seq(1,ncol(prnTab2),5)
+% for(i in 1:length(cnum)){
+%   iStrt <- cnum[i]; iEnd  <- min(ncol(prnTab2),(cnum[i]+4))
+%   print(xtable(prnTab2[,iStrt:iEnd]), size="tiny", include.rownames=FALSE)
+%   cat('\\clearpage\n')
+% }
+% @
+% \input{tab}
+% \end{center}
 
 \footnotesize
 \subsection{Table 2 (Obs\_Stat.tsv)}

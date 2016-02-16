@@ -252,7 +252,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # 1st level population stratification
   if (!is.null(str1Nm)){
     if (str1Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
-    if (is.null(str1)){str1 <- unique(sort(indf[,str1Nm]))}
+    if (is.null(str1)){
+      str1 <- unique(sort(indf[,str1Nm]))
+      #if(is.factor(indf[,str1Nm]))  str1 <- sort(unique(as.character(indf[,str2Nm])))
+      #if(is.numeric(indf[,str1Nm]) && anyNA(indf[,str1Nm])) str1 <- c(unique(sort(indf[,str1Nm])),NA)
+      #if(is.numeric(indf[,str1Nm]) && !anyNA(indf[,str1Nm])) str1 <- unique(sort(indf[,str1Nm]))
+    }
     #for (i in 1:length(str1)){
     #  if (nrow(indf[indf[,str1Nm]==str1[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
     #}
@@ -261,7 +266,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # 2nd level population stratification
   if (!is.null(str2Nm)){
     if (str2Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column\n")}
-    if (is.null(str2)){str2 <- unique(sort(indf[,str2Nm]))}
+    if (is.null(str2)){
+      str2 <- unique(sort(indf[,str2Nm]))
+      #if(is.factor(indf[,str2Nm]))  str2 <- sort(unique(as.character(indf[,str2Nm])))
+      #if(is.numeric(indf[,str2Nm]) && anyNA(indf[,str2Nm])) str2 <- c(unique(sort(indf[,str2Nm])),NA)
+      #if(is.numeric(indf[,str2Nm]) && !anyNA(indf[,str2Nm])) str2 <- unique(sort(indf[,str2Nm]))
+    }
     #for (i in 1:length(str2)){
     #  if (nrow(indf[indf[,str2Nm]==str2[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
     #}
@@ -270,7 +280,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # 3rd level population stratification
   if (!is.null(str3Nm)){
     if (str3Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column\n")}
-    if (is.null(str3)){str3 <- unique(sort(indf[,str3Nm]))}
+    if (is.null(str3)){
+      str3 <- unique(sort(indf[,str3Nm]))
+      #if(is.factor(indf[,str3Nm]))  str3 <- sort(unique(as.character(indf[,str2Nm])))
+      #if(is.numeric(indf[,str3Nm]) && anyNA(indf[,str3Nm])) str3 <- c(unique(sort(indf[,str3Nm])),NA)
+      #if(is.numeric(indf[,str3Nm]) && !anyNA(indf[,str3Nm])) str3 <- unique(sort(indf[,str3Nm]))
+    }
     #for (i in 1:length(str3)){
     #  if (nrow(indf[indf[,str3Nm]==str3[i],]) == 0){setwd(usrdir);stop("1st level stratification ID does not match the values within 1st level stratification column\n")}
     #}
@@ -978,22 +993,29 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     
     # Subset table to print in the report
-    if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
-    if(case == 2) prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-    if(case == 3) prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-    if(case == 4) prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
-    
-    # Add unit to output table header
-    names(outData)[names(outData)%in%c("Dose","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0(names(outData)[names(outData)%in%"Dose"]," (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
+    if(case == 1) {prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100); names(prnTab1)[1:2] <- names(outData)[1:2]}
+    if(case == 2) {prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100); names(prnTab1)[1:3] <- names(outData)[1:3]}
+    if(case == 3) {prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100); names(prnTab1)[1:4] <- names(outData)[1:4]}
+    if(case == 4) {prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100); names(prnTab1)[1:5] <- names(outData)[1:5]}
     
     # Add unit to report table header
-    tabUnit <- data.frame(NAME=c("Dose","C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred"),
-                          UNIT1=c(paste0(names(outData)[names(outData)%in%"Dose"],"\n(",dunit,")"),paste0("C0\n(",cunit,")"),paste0("Tmax\n(",tunit,")"),paste0("Cmax\n(",cunit,")"),paste0("Cmax_D\n(",cunit,"/",dunit,")"),paste0("Tlast\n(",tunit,")"),paste0("Clast\n(",cunit,")"),paste0("AUClast\n(",aucunit,")"),paste0("AUMClast\n(",aumcunit,")"),paste0("MRTlast\n(",tunit,")"),paste0("AUClower_upper\n(",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower\n(",tunit,")"),paste0("Lambda_z_upper\n(",tunit,")"),paste0("HL_Lambda_z\n(",tunit,")"),paste0("AUCINF_obs\n(",aucunit,")"),paste0("AUCINF_D_obs\n(",aucunit,"/",dunit,")"),paste0("Vz_obs\n(",vlunit,")"),paste0("Cl_obs\n(",clunit,")"),paste0("AUCINF_pred\n(",aucunit,")"),paste0("AUCINF_D_pred\n(",aucunit,"/",dunit,")"),paste0("Vz_pred\n(",vlunit,")"),paste0("Cl_pred\n(",clunit,")"),paste0("AUMCINF_obs\n(",aumcunit,")"),paste0("AUMCINF_pred\n(",aumcunit,")"),paste0("MRTINF_obs\n(",tunit,")"),paste0("MRTINF_pred\n(",tunit,")"),paste0("Tau\n(",tunit,")"),paste0("Tmin\n(",tunit,")"),paste0("Cmin\n(",cunit,")"),paste0("Cavg\n(",cunit,")"),paste0("AUCtau\n(",aucunit,")"),paste0("AUMCtau\n(",aumcunit,")"),paste0("Clss\n(",clunit,")"),paste0("Vss_obs\n(",vlunit,")"),paste0("Vss_pred\n(",vlunit,")")),
-                          UNIT2=c(paste0(names(outData)[names(outData)%in%"Dose"]," (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+    tabUnit1 <- data.frame(NAME=c("Dose"),
+                           UNIT1=c(paste0(names(outData)[names(outData)%in%"Dose"],"\n(",dunit,")")),
+                           UNIT2=c(paste0(names(outData)[names(outData)%in%"Dose"]," (",dunit,")")))
+    
+    tabUnit2 <- data.frame(NAME=c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred"),
+                           UNIT1=c(paste0("C0\n(",cunit,")"),paste0("Tmax\n(",tunit,")"),paste0("Cmax\n(",cunit,")"),paste0("Cmax_D\n(",cunit,"/",dunit,")"),paste0("Tlast\n(",tunit,")"),paste0("Clast\n(",cunit,")"),paste0("AUClast\n(",aucunit,")"),paste0("AUMClast\n(",aumcunit,")"),paste0("MRTlast\n(",tunit,")"),paste0("AUClower_upper\n(",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower\n(",tunit,")"),paste0("Lambda_z_upper\n(",tunit,")"),paste0("HL_Lambda_z\n(",tunit,")"),paste0("AUCINF_obs\n(",aucunit,")"),paste0("AUCINF_D_obs\n(",aucunit,"/",dunit,")"),paste0("Vz_obs\n(",vlunit,")"),paste0("Cl_obs\n(",clunit,")"),paste0("AUCINF_pred\n(",aucunit,")"),paste0("AUCINF_D_pred\n(",aucunit,"/",dunit,")"),paste0("Vz_pred\n(",vlunit,")"),paste0("Cl_pred\n(",clunit,")"),paste0("AUMCINF_obs\n(",aumcunit,")"),paste0("AUMCINF_pred\n(",aumcunit,")"),paste0("MRTINF_obs\n(",tunit,")"),paste0("MRTINF_pred\n(",tunit,")"),paste0("Tau\n(",tunit,")"),paste0("Tmin\n(",tunit,")"),paste0("Cmin\n(",cunit,")"),paste0("Cavg\n(",cunit,")"),paste0("AUCtau\n(",aucunit,")"),paste0("AUMCtau\n(",aumcunit,")"),paste0("Clss\n(",clunit,")"),paste0("Vss_obs\n(",vlunit,")"),paste0("Vss_pred\n(",vlunit,")")),
+                           UNIT2=c(paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")")))
+    tabUnit <- rbind(tabUnit1,tabUnit2)
     
     prnTab2 <- prnTab1
-    names(prnTab1) <- unlist(lapply(names(prnTab1), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT1"])}else{x}}))
-    names(prnTab2) <- unlist(lapply(names(prnTab2), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT2"])}else{x}}))
+    names(prnTab1) <- unlist(lapply(names(prnTab1), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT1"])[1]}else{x}}))
+    names(prnTab2) <- unlist(lapply(names(prnTab2), FUN=function(x){if(x%in%tabUnit$NAME){x <- as.character(tabUnit[tabUnit$NAME==x,"UNIT2"])[1]}else{x}}))
+    
+    
+    # Add unit to output table header
+    names(outData)[names(outData)%in%"Dose"] <- paste0(names(outData)[names(outData)%in%"Dose"]," (",dunit,")")
+    names(outData)[names(outData)%in%c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","AUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))
     
     streamsEnv <- parent.frame()
     if(exists("outData")) assign("ncaOutput",  outData,   envir=streamsEnv)
