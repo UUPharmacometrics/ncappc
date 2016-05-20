@@ -1,7 +1,10 @@
 -
-# Report of *ncappc* package [*]
+# Report of *ncappc*^* package
 -
-------------------------------------------------------------------
+-
+^\* Acharya, C., Hooker, A. C., Türkyılmaz, G. Y., Jönsson, S., Karlsson, M. O., A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, *Computer Methods and Programs in Biomedicine*, 2016, Vol. 127, 83-93
+
+--------------------------------------------------------------
 
 ==============================================================
 
@@ -26,8 +29,8 @@ if(fnOut$spread=="ppi"){
 -
 
 Summary of the data set and the results
--------------------------------
-
+-
+-
 
 ```{r txt, echo=FALSE}
 cat(txt)
@@ -41,36 +44,47 @@ kable(pddf, align='c')
 
 -------------------------------
 -
-Command-line arguments passed to ncappc function
--------------------------------
+Command-line arguments passed to *ncappc* function
+-
+-
 
 ```{r cmd, echo=FALSE}
 print(arglist)
 ```
 
+-
+-
+-
 
 ------------------------------
 -
 Description of the tabular output
-------------------------------
+-
+-
 
-**Table 1 (ncaOutput.tsv).** The ***ncappc*** functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 100 rows.
+**Table 1 (ncaOutput.tsv).** The *ncappc* functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 100 rows.
 
-# Table 1. ncaOutput.tsv (selected columns of top 100 rows)
+## Table 1. ncaOutput.tsv (selected columns of top 100 rows)
 
 ```{r Final table, echo=FALSE, results='asis'}
 suppressPackageStartupMessages(require(xtable))
-print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html')
+print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html', size="\\fontsize{8pt}{8pt}\\selectfont")
 ```
+
+-
+-
 
 **Table 2 (Obs_Stat.tsv).** A set of statistical parameters calculated for the entire population or the stratified population for the following NCA metrics estimated from the observed data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
 
 -
+-
+
 ---------------------------------
 Description of the graphical output
-------------------------------
+-
+-
 
-```{r plot, echo=FALSE, fig.height=4, fig.width=7, fig.align='center', dpi=80}
+```{r plot, echo=FALSE, fig.height=5, fig.width=9, fig.align='center', dpi=60}
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -81,8 +95,9 @@ if (length(conc)>0){
 **Figure 1.** [Individual level] Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
 
 -
+-
 
-```{r histobsplot, echo=FALSE, fig.align='center',fig.height=8, fig.width=6, dpi=100}
+```{r histobsplot, echo=FALSE, fig.height=14, fig.width=12, fig.align='center', dpi=45}
 if (length(histobs)>0){
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -91,12 +106,4 @@ if (length(histobs)>0){
 ```
 
 **Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
-
-
-
--
-[*] Created and maintained by:
-### Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson
-### *Department of Pharmaceutical Biosciences*
-### *Uppsala University, Sweden*
 

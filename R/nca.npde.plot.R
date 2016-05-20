@@ -116,39 +116,61 @@ nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M]
     # ggplot options for individual NPDE plots
     nc    <- ifelse(length(npdecol)<2, 1, ifelse(length(npdecol)>=2 & length(npdecol)<=6, 2, 3))
     ggOpt_npde <- list(xlab("\nID"), ylab("NPDE\n"),
-                       theme(plot.title = element_text(size=10,face="bold"),
-                             axis.title.x = element_text(size=10,face="bold"),
-                             axis.title.y = element_text(size=10,face="bold"),
-                             axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                             axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-                             panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
-                       geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"),
-                       theme(strip.text.x = element_text(size=10, face="bold")))
+                       theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
+                             axis.text.y  = element_text(hjust=0)),
+                       geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"))
+    
+    
+#     ggOpt_npde <- list(xlab("\nID"), ylab("NPDE\n"),
+#                        theme(plot.title = element_text(size=10,face="bold"),
+#                              axis.title.x = element_text(size=10,face="bold"),
+#                              axis.title.y = element_text(size=10,face="bold"),
+#                              axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
+#                              axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
+#                              panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
+#                        geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"),
+#                        theme(strip.text.x = element_text(size=10, face="bold")))
     
     # ggplot options for histogram of NPDE
     ggOpt_histnpde <- list(scale_linetype_manual(name="",values=c("meanNormal"="solid","meanNPDE"="solid","SD"="dashed")),
                            scale_color_manual(name="",values=c("meanNormal"="red","meanNPDE"="blue","SD"="blue")),
                            xlab("\nNPDE"), ylab(""),
                            guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0 ))),
-                           theme(plot.title = element_text(size=10,face="bold"),
-                                 axis.title.x = element_text(size=10,face="bold"),
-                                 axis.title.y = element_text(size=10,face="bold"),
-                                 axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                                 axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-                                 legend.text  = element_text(size=10,face="bold"),
+                           theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
+                                 axis.text.y  = element_text(hjust=0),
                                  legend.background = element_rect(),
-                                 legend.position = "bottom", legend.direction = "horizontal",
-                                 legend.key.size = unit(0.8, "cm"),
-                                 panel.margin = unit(0.5, "cm"),
-                                 plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
+                                 legend.position = "bottom", legend.direction = "horizontal"),
                            geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                            scale_y_continuous(labels = percent),
-                           geom_vline(aes(xintercept=0, color="meanNormal", lty="meanNormal"), size=1, show_guide=T),
+                           geom_vline(aes(xintercept=0, color="meanNormal", lty="meanNormal"), size=1, show.legend=T),
                            geom_vline(aes(xintercept=as.numeric(mean), color="meanNPDE", lty="meanNPDE"), size=1),
                            geom_vline(aes(xintercept=as.numeric(sdl), color="SD", lty="SD"), size=1),
                            geom_vline(aes(xintercept=as.numeric(sdu), color="SD", lty="SD"), size=1),
-                           facet_wrap(~FCT, ncol=nc, scales="free"),
-                           theme(strip.text.x = element_text(size=10, face="bold")))
+                           facet_wrap(~FCT, ncol=nc, scales="free"))
+    
+#     ggOpt_histnpde <- list(scale_linetype_manual(name="",values=c("meanNormal"="solid","meanNPDE"="solid","SD"="dashed")),
+#                        scale_color_manual(name="",values=c("meanNormal"="red","meanNPDE"="blue","SD"="blue")),
+#                        xlab("\nNPDE"), ylab(""),
+#                        guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0 ))),
+#                        theme(plot.title = element_text(size=10,face="bold"),
+#                              axis.title.x = element_text(size=10,face="bold"),
+#                              axis.title.y = element_text(size=10,face="bold"),
+#                              axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
+#                              axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
+#                              legend.text  = element_text(size=10,face="bold"),
+#                              legend.background = element_rect(),
+#                              legend.position = "bottom", legend.direction = "horizontal",
+#                              legend.key.size = unit(0.8, "cm"),
+#                              panel.margin = unit(0.5, "cm"),
+#                              plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
+#                        geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
+#                        scale_y_continuous(labels = percent),
+#                        geom_vline(aes(xintercept=0, color="meanNormal", lty="meanNormal"), size=1, show.legend=T),
+#                        geom_vline(aes(xintercept=as.numeric(mean), color="meanNPDE", lty="meanNPDE"), size=1),
+#                        geom_vline(aes(xintercept=as.numeric(sdl), color="SD", lty="SD"), size=1),
+#                        geom_vline(aes(xintercept=as.numeric(sdu), color="SD", lty="SD"), size=1),
+#                        facet_wrap(~FCT, ncol=nc, scales="free"),
+#                        theme(strip.text.x = element_text(size=10, face="bold")))
     
     if (is.null(figlbl)){
       ttl   <- paste("NPDE vs. ",xvar,"\n\n",sep="")

@@ -188,6 +188,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   options(warning.length=5000)
   options(scipen=999)
   usrdir <- getwd()
+  theme_set(theme_bw(base_size=22))
   
   # Observed data
   if (is.null(obsFile)){stop("Name of the file with observed data is required\n")}
@@ -993,10 +994,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     
     # Subset table to print in the report
-    if(case == 1) {prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100); names(prnTab1)[1:2] <- names(outData)[1:2]}
-    if(case == 2) {prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100); names(prnTab1)[1:3] <- names(outData)[1:3]}
-    if(case == 3) {prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100); names(prnTab1)[1:4] <- names(outData)[1:4]}
-    if(case == 4) {prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100); names(prnTab1)[1:5] <- names(outData)[1:5]}
+    if(case == 1) {prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50); names(prnTab1)[1:2] <- names(outData)[1:2]}
+    if(case == 2) {prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50); names(prnTab1)[1:3] <- names(outData)[1:3]}
+    if(case == 3) {prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50); names(prnTab1)[1:4] <- names(outData)[1:4]}
+    if(case == 4) {prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50); names(prnTab1)[1:5] <- names(outData)[1:5]}
     
     # Add unit to report table header
     tabUnit1 <- data.frame(NAME=c("Dose"),
@@ -1022,9 +1023,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
     if(printOut==TRUE){
-      write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)                          # write the output in a file
-      fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, spread=spread, conc=concplot, histobs=histobsplot)        # Function output list
-    }
+      write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)   # write the output in a file
+      fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, spread=spread, conc=concplot, histobs=histobsplot)   # Function output list
+    }    
   }else{
     ########################################################################
     ############## Analyze the simulated data if exists ####################
@@ -1555,19 +1556,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     npdecol <- paste0("npde",param)
     # ggplot options for the forest plot
     ggOpt_forest <- list(scale_color_manual(name="",values=c("mean"="red","SD"="darkgreen")),
-                         theme(plot.title = element_text(size=10,face="bold"),
-                               axis.title.x = element_text(size=9,face="bold"),
-                               axis.title.y = element_text(size=9,face="bold"),
-                               axis.text.x  = element_text(size=7,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                               axis.text.y  = element_text(size=7,face="bold",color="black",hjust=0),
-                               legend.text  = element_text(size=9,face="bold"),
+                         theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
+                               axis.text.y  = element_text(hjust=0),
                                legend.background = element_rect(),
-                               legend.position = "bottom", legend.direction = "horizontal",
-                               legend.key.size = unit(0.8, "cm"),
-                               panel.margin = unit(0.5, "cm"),
-                               plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
-                         facet_wrap(~type, scales="free", ncol=2),
-                         theme(strip.text.x = element_text(size=9, face="bold")))
+                               legend.position = "bottom", legend.direction = "horizontal"),
+                         facet_wrap(~type, scales="free", ncol=2))
+    
+#     ggOpt_forest <- list(scale_color_manual(name="",values=c("mean"="red","SD"="darkgreen")),
+#                          theme(plot.title = element_text(size=10,face="bold"),
+#                                axis.title.x = element_text(size=9,face="bold"),
+#                                axis.title.y = element_text(size=9,face="bold"),
+#                                axis.text.x  = element_text(size=7,face="bold",color="black",angle=45,vjust=1,hjust=1),
+#                                axis.text.y  = element_text(size=7,face="bold",color="black",hjust=0),
+#                                legend.text  = element_text(size=9,face="bold"),
+#                                legend.background = element_rect(),
+#                                legend.position = "bottom", legend.direction = "horizontal",
+#                                legend.key.size = unit(0.8, "cm"),
+#                                panel.margin = unit(0.5, "cm"),
+#                                plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
+#                          facet_wrap(~type, scales="free", ncol=2),
+#                          theme(strip.text.x = element_text(size=9, face="bold")))
     
     OTL   <- data.frame(No_of_outliers=numeric(0),ID_metric=character(0))
     npde  <- data.frame()
@@ -1652,17 +1660,18 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
-          labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
-          geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
+          labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n") +
+          geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
           geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
           geom_point(aes(sd,str,color="SD"), size=2) +
           geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
-          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=2,show_guide=F)
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          scale_x_continuous(breaks=seq(-0.2,1.2,by=0.2),limits=c(-0.2,1.2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1751,16 +1760,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
-          geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
+          geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
           geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
           geom_point(aes(sd,str,color="SD"), size=2) +
           geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
-          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=2,show_guide=F)
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          scale_x_continuous(breaks=seq(-0.2,1.2,by=0.2),limits=c(-0.2,1.2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1853,16 +1863,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
-          geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
+          geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
           geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
           geom_point(aes(sd,str,color="SD"), size=2) +
           geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
-          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=2,show_guide=F)
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          scale_x_continuous(breaks=seq(-0.2,1.2,by=0.2),limits=c(-0.2,1.2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -1960,16 +1971,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         ggplt <- ggplot(fpval) + ggOpt_forest +
           xlab("\nNPDE") + ylab("") +
           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
-          geom_point(aes(mean,str,color="mean"), show_guide=T, size=2) +
+          geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
           geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
           geom_point(aes(sd,str,color="SD"), size=2) +
           geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
-          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=2,show_guide=F) +
-          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=2,show_guide=F)
+          geom_text(aes(label=signif(mean,2),x=mean,y=str,color="mean",vjust=-1),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mcil,2),x=mcil,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(mciu,2),x=mciu,y=str,color="mean",vjust=-2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sd,2),x=sd,y=str,color="SD",vjust=1.5),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdcil,2),x=sdcil,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          geom_text(aes(label=signif(sdciu,2),x=sdciu,y=str,color="SD",vjust=2),size=7,show.legend=F) +
+          scale_x_continuous(breaks=seq(-0.2,1.2,by=0.2),limits=c(-0.2,1.2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
         if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
@@ -2129,10 +2141,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     
     # Subset table to print in the report
-    if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),100)
-    if(case == 2) prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),100)
-    if(case == 3) prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),100)
-    if(case == 4) prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),100)
+    if(case == 1) prnTab1 <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50)
+    if(case == 2) prnTab1 <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50)
+    if(case == 3) prnTab1 <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50)
+    if(case == 4) prnTab1 <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50)
     
     # Add unit to output table header
     names(outData)[names(outData)%in%c("Dose","C0","Tmax","simTmax","dTmax","Cmax","simCmax","dCmax","Cmax_D","Tlast","Clast","AUClast","simAUClast","dAUClast","AUMClast","simAUMClast","dAUMClast","MRTlast","AUClower_upper","simAUClower_upper","dAUClower_upper","Lambda_z","Lambda_z_lower","Lambda_z_upper","HL_Lambda_z","simHL_Lambda_z","dHL_Lambda_z","AUCINF_obs","simAUCINF_obs","dAUCINF_obs","AUCINF_D_obs","Vz_obs","Cl_obs","AUCINF_pred","simAUCINF_pred","dAUCINF_pred","AUCINF_D_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMCINF_pred","MRTINF_obs","MRTINF_pred","Tau","Tmin","Cmin","Cavg","AUCtau","AUMCtau","Clss","Vss_obs","Vss_pred")] <- c(paste0(names(outData)[names(outData)%in%"Dose"]," (",dunit,")"),paste0("C0 (",cunit,")"),paste0("Tmax (",tunit,")"),paste0("simTmax (",tunit,")"),paste0("dTmax (",tunit,")"),paste0("Cmax (",cunit,")"),paste0("simCmax (",cunit,")"),paste0("dCmax (",cunit,")"),paste0("Cmax_D (",cunit,"/",dunit,")"),paste0("Tlast (",tunit,")"),paste0("Clast (",cunit,")"),paste0("AUClast (",aucunit,")"),paste0("simAUClast (",aucunit,")"),paste0("dAUClast (",aucunit,")"),paste0("AUMClast (",aumcunit,")"),paste0("simAUMClast (",aumcunit,")"),paste0("dAUMClast (",aumcunit,")"),paste0("MRTlast (",tunit,")"),paste0("AUClower_upper (",aucunit,")"),paste0("simAUClower_upper (",aucunit,")"),paste0("dAUClower_upper (",aucunit,")"),paste0("Lambda_z (/",tunit,")"),paste0("Lambda_z_lower (",tunit,")"),paste0("Lambda_z_upper (",tunit,")"),paste0("HL_Lambda_z (",tunit,")"),paste0("simHL_Lambda_z (",tunit,")"),paste0("dHL_Lambda_z (",tunit,")"),paste0("AUCINF_obs (",aucunit,")"),paste0("simAUCINF_obs (",aucunit,")"),paste0("dAUCINF_obs (",aucunit,")"),paste0("AUCINF_D_obs (",aucunit,"/",dunit,")"),paste0("Vz_obs (",vlunit,")"),paste0("Cl_obs (",clunit,")"),paste0("AUCINF_pred (",aucunit,")"),paste0("simAUCINF_pred (",aucunit,")"),paste0("dAUCINF_pred (",aucunit,")"),paste0("AUCINF_D_pred (",aucunit,"/",dunit,")"),paste0("Vz_pred (",vlunit,")"),paste0("Cl_pred (",clunit,")"),paste0("AUMCINF_obs (",aumcunit,")"),paste0("AUMCINF_pred (",aumcunit,")"),paste0("MRTINF_obs (",tunit,")"),paste0("MRTINF_pred (",tunit,")"),paste0("Tau (",tunit,")"),paste0("Tmin (",tunit,")"),paste0("Cmin (",cunit,")"),paste0("Cavg (",cunit,")"),paste0("AUCtau (",aucunit,")"),paste0("AUMCtau (",aumcunit,")"),paste0("Clss (",clunit,")"),paste0("Vss_obs (",vlunit,")"),paste0("Vss_pred (",vlunit,")"))

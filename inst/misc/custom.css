@@ -6,15 +6,53 @@
    readability through optimal line
    length. Note: this setting is ignored
    by Word/Libre Office*/
-body  {
+html {
+  height:100%;
+  width:100%;
+  background-color:#e5f5f9;}
+
+a:link {color:#0000FF;text-decoration:none;}
+a:visited {color:#0000FF;text-decoration:none;}
+a:hover {color:#0000FF;text-decoration:none;}
+a:active {color:#0000FF;text-decoration:none;}
+
+#page {
+  width:1000px;
+  Min-height:100%;
+  position:relative; }
+#footer {
+  position:absolute;
+  bottom:0;
+  width:1000px;}
+body {
+  height:100% auto;
+  width:1000px;
+  margin:auto;
+  padding: 2em;
+  background-color: #FFFFFF; /* #FFFAF0; */
+  color:#000000;
+  font-family:Verdana, Geneva, sans-serif;
+  font-size:13px;
+  line-height:120%;
+  text-align:justify;
+  border:2px;
+  margin-top:0px; }
+p {
+  text-align:justify;
+  padding:25; }
+ul,ol {
+  text-align:justify; }
+
+
+/*body  {
    font-family: Garamond, Georgia;
    font-size: 13pt;
-   background-color: #FFFFF9;
+   background-color: #FFFFFF;
    padding-top: 1em;
    margin: auto;
    max-width: 50em;
    text-align:justify;
-}
+}*/
  
 /* Set the paragraph margin and
    padding to 0 except for the bottom */
@@ -62,40 +100,40 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   margin: 24pt 0pt 0pt 0pt;
   font-size: 20pt;
-  color: #990000;
+  color: #006666;
   text-align:center;
 }
  
  
 h2 {
-  font-size: 18pt;
-  color: #990000;
+  font-size: 15pt;
+  color: #006666;
   text-align:center;
 }
  
 h3 {
   font-size: 11pt;
-  color: #4F81BD;
+  color: #006666;
 }
  
 h4 {
   font-size: 11pt;
   font-weight: bold;
   font-style: italic;
-  color: #4F81BD;
+  color: #006666;
 }
  
 h5 {
   font-size: 11pt;
   font-weight: normal;
-  color: #243F5D;
+  color: #006666;
 }
  
 h6 {
   font-size: 11pt;
   font-weight: normal;
   font-style: italic;
-  color: #243F5D;
+  color: #006666;
 }
  
 /* The following sections are mostly

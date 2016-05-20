@@ -82,14 +82,19 @@ nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread
     
     # ggplot options for deviation plots
     ggOpt_dev <- list(xlab(paste("\n",xvar,sep="")), ylab("Deviation\n"),
-                      theme(plot.title = element_text(size=10,face="bold"),
-                            axis.title.x = element_text(size=10,face="bold"),
-                            axis.title.y = element_text(size=10,face="bold"),
-                            axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                            axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-                            panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
-                      geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"),
-                      theme(strip.text.x = element_text(size=10, face="bold")))
+                      theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
+                            axis.text.y  = element_text(hjust=0)),
+                      geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"))
+    
+#     ggOpt_dev <- list(xlab(paste("\n",xvar,sep="")), ylab("Deviation\n"),
+#                       theme(plot.title = element_text(size=10,face="bold"),
+#                             axis.title.x = element_text(size=10,face="bold"),
+#                             axis.title.y = element_text(size=10,face="bold"),
+#                             axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
+#                             axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
+#                             panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
+#                       geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"),
+#                       theme(strip.text.x = element_text(size=10, face="bold")))
     
     
     longdata$type <- factor(longdata$type, levels=fctNm$prmNm, labels=fctNm$prmUnit)

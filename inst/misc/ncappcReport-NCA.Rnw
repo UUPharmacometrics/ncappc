@@ -1,4 +1,14 @@
 \documentclass[pdflatex, a4paper, 11pt]{article}
+<<MAINknitr,cache=FALSE,message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide'>>=
+### Load and set up knitr
+library(knitr)
+library(Cairo)
+opts_knit$set(self.contained=FALSE)
+opts_chunk$set(message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide', 
+               cache=TRUE,fig.align='center',size='normalsize',dev=c('cairo_pdf','png'),tidy=FALSE,concordance=FALSE)
+@
+
+
 \usepackage{booktabs, longtable, adjustbox, array, enumerate, mathtools, fancyhdr, graphicx, fancybox, amsmath, lscape, caption}
 \usepackage[hmargin=2.5cm,vmargin=3.5cm]{geometry}
 \usepackage[utf8]{inputenc}
@@ -8,6 +18,8 @@
 \usepackage{needspace}
 \usepackage{listings}
 \usepackage{inconsolata}
+\usepackage[para,flushleft]{threeparttablex}
+\usepackage{float}
 
 %%% Hyperref and cref settings
 \usepackage[bookmarksnumbered]{hyperref} % hyperlinks
@@ -37,15 +49,11 @@
 \thispagestyle{empty}
 
 \vfill
-\textit{\textsuperscript{*} \textbf{ncappc} package is created and maintained by:}
-\newline
-\textit{Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson}
-\newline
-\textit{Department of Pharmaceutical Biosciences, Uppsala University, Sweden}
+\textsuperscript{*} Acharya, C., Hooker, A. C., Türkyılmaz, G. Y., Jönsson, S., Karlsson, M. O.; A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, \textit{Computer Methods and Programs in Biomedicine}, 2016, Vol. 127, 83-93
 \clearpage
 
 \newpage{}
-\footnotesize
+\normalsize
 \tableofcontents
 \thispagestyle{empty}
 \clearpage
@@ -60,7 +68,7 @@ listing <- function(x, options){
 knit_hooks$set(source=listing, output=listing)
 @
 
-\footnotesize
+\normalsize
 \section{Summary of the data set and the results}
 
 <<main, echo=FALSE>>=
@@ -80,7 +88,7 @@ if(fnOut$spread=="ppi"){
 }
 @
 
-<<txt, echo=FALSE, tidy=TRUE>>=
+<<txt, echo=FALSE, tidy=TRUE, results='markup'>>=
 cat(txt)
 @
 \paragraph{}
@@ -95,59 +103,34 @@ if(case==3) colform <- c(rep("p{1cm}",3),rep("p{2.5cm}",ncol(pddf)-2))
 if(case==4) colform <- c(rep("p{1cm}",4),rep("p{2.5cm}",ncol(pddf)-3))
 mtable <- xtable(pddf, align=colform, rotate.colnames = T, digits = 3)
 print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
-      tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
+      tabular.environment="longtable", caption.placement = "top", size="\\footnotesize", floating=FALSE)
 @
 \input{sum}
 \end{center}
 \paragraph{}
 
-\footnotesize
-\section{Command-line arguments passed to ncappc function}
-<<cmd, echo=FALSE, listing=FALSE,source=FALSE,output=FALSE>>=
+\section{Command-line arguments passed to \textit{ncappc} function}
+<<cmd, echo=FALSE,results='markup'>>=
 print(arglist)
 @
 
 \newpage
-\footnotesize
 \section{Description of the tabular output}
 
 % Figure and Table description in the absence of simulated data
 \begin{sloppypar}
 
 \subsection{Table 1 (ncaOutput.tsv)}
-The \textbf{\textit{ncappc}} functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", \textit{i.e.}, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 100 rows.
+The \textbf{\textit{ncappc}} functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", \textit{i.e.}, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 50 rows.
 
 
-\begin{center}
-\textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
-<< Final table, echo=FALSE, results='asis'>>==
-suppressPackageStartupMessages(require(xtable))
-if(case==1) colform <- c(rep("p{0.5cm}",2),rep("p{1.5cm}",ncol(prnTab2)-1))
-if(case==2) colform <- c(rep("p{0.5cm}",3),rep("p{1.5cm}",ncol(prnTab2)-2))
-if(case==3) colform <- c(rep("p{0.5cm}",4),rep("p{1.5cm}",ncol(prnTab2)-3))
-if(case==4) colform <- c(rep("p{0.5cm}",5),rep("p{1.5cm}",ncol(prnTab2)-4))
-print(xtable(prnTab2, align=colform, rotate.colnames = T, auto=TRUE), file=paste(usrdir,"/tab.tex",sep=""), include.rownames=FALSE,
-      tabular.environment="longtable", caption.placement = "top", size="\\tiny", floating=FALSE)
+<<FinalTable, echo=FALSE, results='asis', fig.env="table">>==
+source("makeLatexRepresentativeDataTable.R")
+makeLatexRepresentativeDataTable(dataDir="",dataFile=prnTab2,iColWidth=7,iRowNums=50,strLabel="tab:repDataPK",strShortCaption="Representative portion of the ncaOutput.tsv file", strLongCaption="Representative portion of the ncaOutput.tsv file")
 @
-\input{tab}
-\end{center}
 
-% \begin{center}
-% \textbf{Table 1. ncaOutput.tsv (selected columns of top 100 rows)}
-% <<FinalTable, echo=FALSE, results='asis', fig.env="table">>==
-% suppressPackageStartupMessages(require(xtable))
-% tab <- list()
-% cnum <- seq(1,ncol(prnTab2),5)
-% for(i in 1:length(cnum)){
-%   iStrt <- cnum[i]; iEnd  <- min(ncol(prnTab2),(cnum[i]+4))
-%   print(xtable(prnTab2[,iStrt:iEnd]), size="tiny", include.rownames=FALSE)
-%   cat('\\clearpage\n')
-% }
-% @
-% \input{tab}
-% \end{center}
-
-\footnotesize
+\newpage
+\normalsize
 \subsection{Table 2 (Obs\_Stat.tsv)}
 A set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
 
@@ -155,7 +138,7 @@ A set of statistical parameters calculated for the entire population or the stra
 \section{Description of the graphical output}
 
 \subsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
-<<concplot, echo=FALSE, fig.pos="H", fig.height=4, fig.width=6, out.width='0.7\\textwidth', fig.align="center">>=
+<<concplot, echo=FALSE, fig.pos="H", fig.height=6, fig.width=12, out.width='0.8\\textwidth', fig.align="center">>=
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -167,7 +150,7 @@ Concentration vs time profile for each individual stratified by dose or populati
 
 \newpage
 \subsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
-<<histobsplot, echo=FALSE, fig.pos="H", fig.height=12, fig.width=10, out.width='0.7\\textwidth', fig.align='center'>>=
+<<histobsplot, echo=FALSE, fig.pos="H", fig.height=16, fig.width=14, out.width='0.8\\textwidth', fig.align='center'>>=
 if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}

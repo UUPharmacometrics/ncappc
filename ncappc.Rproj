@@ -15,5 +15,3 @@ LaTeX: XeLaTeX
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageCheckArgs: --as_cran
-PackageRoxygenize: rd,collate,namespace

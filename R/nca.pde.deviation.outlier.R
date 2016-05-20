@@ -161,22 +161,39 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
                         xlab(""), ylab(""),
                         geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                         scale_y_continuous(labels = percent),
-                        geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show_guide=T, size=1),
-                        geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show_guide=T, size=1),
-                        geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
-                        geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show_guide=T, size=1),
+                        geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show.legend=T, size=1),
+                        geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show.legend=T, size=1),
+                        geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
+                        geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
                         facet_grid(~type, scales="free"),
-                        theme(plot.title = element_text(size=9, face="bold"),
-                              axis.title.x = element_text(size=9,face="bold"),
-                              axis.title.y = element_text(size=9,face="bold"),
-                              axis.text.x  = element_text(size=9,face="bold",color="black",angle=45,vjust=1,hjust=1),
-                              axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
-                              panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.2,0.2,0.2,0.2), "cm"),
+                        theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
+                              axis.text.y  = element_text(hjust=0),
                               legend.position = "bottom", legend.direction = "horizontal",
-                              legend.text  = element_text(size=8,face="bold"),
-                              legend.background = element_rect(),
-                              legend.key.size = unit(0.8, "cm"),
-                              strip.text.x = element_text(size=8, face="bold")))
+                              legend.background = element_rect()))
+      
+      
+#       ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
+#                         scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
+#                         xlab(""), ylab(""),
+#                         geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
+#                         scale_y_continuous(labels = percent),
+#                         geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show.legend=T, size=1),
+#                         geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show.legend=T, size=1),
+#                         geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
+#                         geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
+#                         facet_grid(~type, scales="free"),
+#                         theme(plot.title = element_text(size=9, face="bold"),
+#                               axis.title.x = element_text(size=9,face="bold"),
+#                               axis.title.y = element_text(size=9,face="bold"),
+#                               axis.text.x  = element_text(size=9,face="bold",color="black",angle=45,vjust=1,hjust=1),
+#                               axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
+#                               panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.2,0.2,0.2,0.2), "cm"),
+#                               legend.position = "bottom", legend.direction = "horizontal",
+#                               legend.text  = element_text(size=8,face="bold"),
+#                               legend.background = element_rect(),
+#                               legend.key.size = unit(0.8, "cm"),
+#                               strip.text.x = element_text(size=8, face="bold")))
+      
       devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
       gplt   <- list()
       
@@ -198,8 +215,8 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       lheight  <- sum(mylegend$heights)
       for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
       
-      plot_args <- list(top = textGrob(figttl,vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
-                        bottom = textGrob("Value\n\n",vjust=1,gp=gpar(fontface="bold",cex = 0.8)),
+      plot_args <- list(top = textGrob(figttl,vjust=1,gp=gpar(cex = 2.2)),
+                        bottom = textGrob("Value\n\n",vjust=1,gp=gpar(cex = 2.2)),
                         ncol=nc)
       if(packageVersion("gridExtra") < "0.9.2"){
         arg_names <- names(plot_args)
