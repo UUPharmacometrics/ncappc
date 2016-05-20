@@ -147,14 +147,13 @@
 #'   report file name (\strong{Name of the observed data file})
 #'
 #' @import ggplot2
-#' @import grid
 #' @import gridExtra
-#' @import scales
 #' @import gtable
 #' @import knitr
 #' @import xtable
 #' @import reshape2
 #' @import testthat
+#' @import plyr
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
