@@ -3,7 +3,6 @@ title: "CommandLineArguments"
 output: rmarkdown::html_vignette
 ---
 
-
 **Name** | **Description** | **Example of possible values** | **Default**
 :-------:|:---------------:|:------------------------------:|:-----------:
 obsFile | Observed concentration-time data from an internal data frame or an external table with comma, tab or space as separator | File name or data frame | **"nca_original.npctab.dta"**

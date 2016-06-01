@@ -2191,19 +2191,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       outNm  <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
     }
     
-    knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"))
-    knit(input=nwFile, output=outNm)
+    knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"), force_v1 = TRUE)
+    knit(input=nwFile, output=outNm, force_v1 = TRUE)
     if (.Platform$OS.type == "unix"){
       texcomp <- system('which texi2pdf')
       if (texcomp == 0){
-        knit2pdf(input=nwFile, output=outNm)
+        knit2pdf(input=nwFile, output=outNm, force_v1 = TRUE)
       }else{
         print("Please install \"texi2pdf\" to compile the produced tex file into a PDF report")
       }
     }else if (.Platform$OS.type == "windows"){
       texcomp <- system('kpsewhich pdftex --version')
       if (texcomp == 0){
-        knit2pdf(input=nwFile, output=outNm)
+        knit2pdf(input=nwFile, output=outNm, force_v1 = TRUE)
       }else{
         print("Please install \"pdftex\" to compile the produced tex file into a PDF report")
       }

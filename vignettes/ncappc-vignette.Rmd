@@ -1,12 +1,12 @@
+%\VignetteIndexEntry{ncappc}
+%\VignetteEngine{knitr::knitr}
 ---
 title: "ncappc"
 author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
-
-
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ncappc}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\usepackage[utf8]{inputenc}
 ---
 

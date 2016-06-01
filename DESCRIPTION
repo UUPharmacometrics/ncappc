@@ -1,11 +1,11 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
 Version: 0.2.1.2
-Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email =
-    "chayan.acharya@farmbio.uu.se"), person("Andrew C.", "Hooker", role =
-    "aut"), person("Gülbeyaz Yıldız", "Türkyılmaz", role =
-    "aut"), person("Siv", "Jonsson", role = "aut"), person("Mats O.",
-    "Karlsson", role = "aut"))
+Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email = "chayan.acharya@farmbio.uu.se"),
+             person("Andrew C.", "Hooker", role = "aut"),
+             person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),
+             person("Siv", "Jonsson", role = "aut"),
+             person("Mats O.", "Karlsson", role = "aut"))
 Description: A flexible tool is presented here that can perform
     (i) traditional non-compartmental analysis (NCA) and
     (ii) simulation-based posterior predictive checks for a population

@@ -1,3 +1,5 @@
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ncappc}
 ---
 title: "ncappc"
 author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
@@ -31,6 +33,12 @@ In the presence of the non-empty simFile argument (NONMEM output file with the s
 
 # Command-line arguments
 
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ncappc}
+---
+title: "CommandLineArguments"
+output: rmarkdown::html_vignette
+---
 
 
 **Name** | **Description** | **Example of possible values** | **Default**
@@ -223,6 +231,12 @@ Additional tag to the name of the output html and pdf output file hyphenated to 
 
 # Estimated NCA metrics
 
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ncappc}
+---
+title: "Sub-EstimatedNCAmetrics"
+output: rmarkdown::html_vignette
+---
 
 NCA metrics are eatimated according to traditional PK calculations. The names of the various NCA metrics estimated in this package are assigned mainly following the names used in WinNonlin. This package accepts any of the three different types of drug administration, (i) iv-bolus, (ii) iv-infusion and (iii) extravascular; ***ncappc*** also can accept both non-steady state and steady-state data. The NCa metric that are estimated and reported by ***ncappc*** are listed below.
 
@@ -413,6 +427,12 @@ $HL\_Lambda\_z = \frac{log2}{Lambda\_z}$ (Equation 6)
 
 # Output
 
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ncappc}
+---
+title: "Sub-Output"
+output: rmarkdown::html_vignette
+---
 
 ## Tabular output  
 ### ncaOutput.tsv  
