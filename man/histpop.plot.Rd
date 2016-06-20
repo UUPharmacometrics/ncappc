@@ -4,7 +4,7 @@
 \alias{histpop.plot}
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
-histpop.plot(obsdata = outData, simdata = smeanData, figlbl = NULL,
+histpop.plot(obsdata = outData, simdata = smedianData, figlbl = NULL,
   param = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]",
   spread = "npi")
 }

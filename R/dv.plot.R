@@ -29,14 +29,6 @@ dv.plot <- function(pdata,cunit="[M].[L]^-3",tunit="[T]"){
   ggOpt_conc <- list(theme(legend.position = "none"),
                      xlab(""),ylab(""),geom_line(aes(colour=factor(ID)), size=0.5),geom_point(aes(colour=factor(ID)), size=1))
   
-#   ggOpt_conc <- list(theme(plot.margin = unit(c(0.2,0.2,0.2,0.2), "cm"),
-#                            panel.margin = unit(0.2, "cm"),
-#                            axis.text.x  = element_text(size=9,face="bold",color="black",vjust=1,hjust=0.5),
-#                            axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
-#                            legend.position = "none",
-#                            strip.text.x = element_text(size=9, face="bold")),
-#                      xlab(""),ylab(""),geom_line(aes(colour=factor(ID)), size=0.5),geom_point(aes(colour=factor(ID)), size=1))
-  
   p01 <- ggplot(pdata, aes(x=as.numeric(as.character(Time)), y=as.numeric(as.character(Conc)), color=factor(ID))) + ggOpt_conc
   
   if ("FCT"%in%names(pdata)) p01 <- p01 + facet_wrap(~FCT, scales="free", ncol=1)

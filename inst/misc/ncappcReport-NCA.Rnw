@@ -1,5 +1,5 @@
 \documentclass[pdflatex, a4paper, 11pt]{article}
-<<MAINknitr,cache=FALSE,message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide'>>=
+<<MAINknitr, message=FALSE, comment=NA, warning=FALSE, echo=FALSE, results='hide', cache=FALSE>>=
 ### Load and set up knitr
 library(knitr)
 library(Cairo)
@@ -9,8 +9,13 @@ opts_chunk$set(message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide',
 @
 
 
+%%%%% Modified
+\usepackage[a4paper,pdftex,hmargin=2.5cm,vmargin=3.5cm]{geometry}			% A4paper margins
+\setlength{\oddsidemargin}{0mm}				    % Adjusting margins to center the colorbox, ...
+\setlength{\evensidemargin}{0mm}					% ... you might want to change these
+\usepackage[english]{babel}
+\usepackage{fix-cm}
 \usepackage{booktabs, longtable, adjustbox, array, enumerate, mathtools, fancyhdr, graphicx, fancybox, amsmath, lscape, caption}
-\usepackage[hmargin=2.5cm,vmargin=3.5cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[table]{xcolor}
 \usepackage[T1]{fontenc}
@@ -20,6 +25,31 @@ opts_chunk$set(message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide',
 \usepackage{inconsolata}
 \usepackage[para,flushleft]{threeparttablex}
 \usepackage{float}
+\usepackage{etoolbox}
+
+\newcommand{\HRule}[1]{\hfill \rule{0.2\linewidth}{#1}} 	% Horizontal rule
+\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\definecolor{aliceblue}{rgb}{0.94, 0.97, 1.0}
+\definecolor{ballblue}{rgb}{0.13, 0.67, 0.8}
+\makeatletter							% Title
+\def\printtitle{%						
+    {\centering \@title\par}}
+\makeatother									
+\makeatletter							% Author
+\def\printauthor{%					
+    {\centering \large \@author}}				
+\makeatother
+
+\title{
+  \fontsize{20}{20}\selectfont
+	\vspace*{0.7cm}
+	\textbf{Report of \textit{ncappc}\textsuperscript{*} package}
+}
+
+\author{
+  \textsuperscript{*} Acharya, C., Hooker, A. C., Turkyilmaz, G. Y., Jonsson, S., Karlsson, M. O.; A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, \textit{Computer Methods and Programs in Biomedicine}, 2016, Vol. 127, 83-93
+}
+
 
 %%% Hyperref and cref settings
 \usepackage[bookmarksnumbered]{hyperref} % hyperlinks
@@ -30,26 +60,44 @@ opts_chunk$set(message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide',
             linktoc=page}
 
 \captionsetup{labelformat=empty}
-\pagestyle{fancy}
-\fancyhf{}
+
+%%% Header and footer
+\makeatletter
+%\patchcmd{\@fancyhead}{\rlap}{\color{ballblue}\rlap}{}{}
 \fancyhead[L]{\textbf{Report}}
 \fancyhead[R]{\textit{ncappc}}
 \fancyfoot[C]{\thepage}
+\patchcmd{\headrule}{\hrule}{\color{grey}\hrule}{}{}
+%\patchcmd{\@fancyfoot}{\rlap}{\color{ballblue}\rlap}{}{}
+\patchcmd{\footrule}{\hrule}{\color{grey}\hrule}{}{}
+\makeatother
+\pagestyle{fancy}
+
+% \pagestyle{fancy}
+% \fancyhf{}
+% \fancyhead[L]{\textbf{Report}}
+% \fancyhead[R]{\textit{ncappc}}
+% \fancyfoot[C]{\thepage}
+
+% Eqn, Fig and Tab
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{4pt}}m{#1}}
-\title{\textbf{Report of \textit{ncappc}\textsuperscript{*} package}}
-\author{\vspace{-0cm}}
-\date{\today}
+
 
 \begin{document}
-\raggedright{}
-\maketitle
-\thispagestyle{empty}
+\thispagestyle{empty}				% Remove page numbering on this page
+
+\colorbox{grey}{
+\parbox[t]{1.0\linewidth}{
+\printtitle 
+\vspace*{0.7cm}
+}}
 
 \vfill
-\textsuperscript{*} Acharya, C., Hooker, A. C., Türkyılmaz, G. Y., Jönsson, S., Karlsson, M. O.; A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, \textit{Computer Methods and Programs in Biomedicine}, 2016, Vol. 127, 83-93
+\printauthor								% Print the author data as defined above
+\HRule{1pt}
 \clearpage
 
 \newpage{}
@@ -71,7 +119,7 @@ knit_hooks$set(source=listing, output=listing)
 \normalsize
 \section{Summary of the data set and the results}
 
-<<main, echo=FALSE>>=
+<<main, echo=FALSE, cache=FALSE>>=
 arglist <- fnOut$arglist
 case    <- fnOut$case
 txt     <- fnOut$TXT
@@ -88,14 +136,14 @@ if(fnOut$spread=="ppi"){
 }
 @
 
-<<txt, echo=FALSE, tidy=TRUE, results='markup'>>=
+<<txt, echo=FALSE, tidy=TRUE, results='markup', cache=FALSE>>=
 cat(txt)
 @
 \paragraph{}
 
 \begin{center}
 \textbf{Summary table}
-<< Summary table, echo=FALSE, results='asis'>>==
+<< Summary table, echo=FALSE, results='asis', cache=FALSE>>==
 suppressPackageStartupMessages(require(xtable))
 if(case==1) colform <- c(rep("p{1cm}",1),rep("p{2.5cm}",ncol(pddf)))
 if(case==2) colform <- c(rep("p{1cm}",2),rep("p{2.5cm}",ncol(pddf)-1))
@@ -110,7 +158,7 @@ print(mtable, file=paste(usrdir,"/sum.tex",sep=""), include.rownames=FALSE,
 \paragraph{}
 
 \section{Command-line arguments passed to \textit{ncappc} function}
-<<cmd, echo=FALSE,results='markup'>>=
+<<cmd, echo=FALSE, results='markup', cache=FALSE>>=
 print(arglist)
 @
 
@@ -124,7 +172,7 @@ print(arglist)
 The \textbf{\textit{ncappc}} functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", \textit{i.e.}, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. Below is an excerpt of selected columns of top 50 rows.
 
 
-<<FinalTable, echo=FALSE, results='asis', fig.env="table">>==
+<<FinalTable, echo=FALSE, results='asis', fig.env="table", cache=FALSE>>==
 source("makeLatexRepresentativeDataTable.R")
 makeLatexRepresentativeDataTable(dataDir="",dataFile=prnTab2,iColWidth=7,iRowNums=50,strLabel="tab:repDataPK",strShortCaption="Representative portion of the ncaOutput.tsv file", strLongCaption="Representative portion of the ncaOutput.tsv file")
 @
@@ -132,13 +180,13 @@ makeLatexRepresentativeDataTable(dataDir="",dataFile=prnTab2,iColWidth=7,iRowNum
 \newpage
 \normalsize
 \subsection{Table 2 (Obs\_Stat.tsv)}
-A set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
+A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower\_upper, AUCINF\_obs, AUC\_pExtrap\_obs, AUCINF\_pred, AUC\_pExtrap\_pred, AUMClast, AUMCINF\_obs, AUMC\_pExtrap\_obs, AUMCINF\_pred, AUMC\_pExtrap\_pred, HL\_Lambda\_z, Rsq, Rsq\_adjusted, No\_points\_Lambda\_z obtained from the observed data. Brief description of the calculated statistical parameters: \textbf{Ntot} = Total number of data points, \textbf{Nunique} = number of unique data points, \textbf{Min} = minimum value, \textbf{Max} = maximum value, \textbf{Mean} = mean/average value, \textbf{SD} = standard deviation, \textbf{SE} = standard error, \textbf{CVp} = coefficient of variation \%, \textbf{a95CIu} = upper limit of 95\% arithmetic confidence interval, \textbf{a95CIl} = lower limit of 95\% arithmetic confidence interval, \textbf{gMean} = geometric mean, \textbf{gCVp} = geometric coefficient of variation \%.
 
 \newpage
 \section{Description of the graphical output}
 
 \subsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
-<<concplot, echo=FALSE, fig.pos="H", fig.height=6, fig.width=12, out.width='0.8\\textwidth', fig.align="center">>=
+<<concplot, echo=FALSE, fig.pos="H", fig.height=6, fig.width=12, out.width='1\\textwidth', fig.align="center", cache=FALSE>>=
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -150,16 +198,16 @@ Concentration vs time profile for each individual stratified by dose or populati
 
 \newpage
 \subsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
-<<histobsplot, echo=FALSE, fig.pos="H", fig.height=16, fig.width=14, out.width='0.8\\textwidth', fig.align='center'>>=
+<<histobsplot, echo=FALSE, fig.pos="H", fig.height=16, fig.width=14, out.width='1\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
-  cat("No histogram is available as the number of individuals is less than 5 in\nall population strata!")
+  print("No histogram is available as the number of individuals is less than 5 in\nall population strata!")
 }
 @
 
-Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by \Sexpr{sprtxt} obtained from the observed data.
+Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population median and the "spread" of the data. The "spread" is defined by \Sexpr{sprtxt} obtained from the observed data.
 
 \end{sloppypar}
 \end{document}

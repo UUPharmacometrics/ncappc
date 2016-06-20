@@ -82,33 +82,22 @@ nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread
     
     # ggplot options for deviation plots
     ggOpt_dev <- list(xlab(paste("\n",xvar,sep="")), ylab("Deviation\n"),
-                      theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
-                            axis.text.y  = element_text(hjust=0)),
+                      theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1),
+                            axis.text.y = element_text(hjust=0)),
                       geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"))
-    
-#     ggOpt_dev <- list(xlab(paste("\n",xvar,sep="")), ylab("Deviation\n"),
-#                       theme(plot.title = element_text(size=10,face="bold"),
-#                             axis.title.x = element_text(size=10,face="bold"),
-#                             axis.title.y = element_text(size=10,face="bold"),
-#                             axis.text.x  = element_text(size=10,face="bold",color="black",angle=45,vjust=1,hjust=1),
-#                             axis.text.y  = element_text(size=10,face="bold",color="black",hjust=0),
-#                             panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.5,0.5,0.5,0.5), "cm")),
-#                       geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"),
-#                       theme(strip.text.x = element_text(size=10, face="bold")))
-    
     
     longdata$type <- factor(longdata$type, levels=fctNm$prmNm, labels=fctNm$prmUnit)
     if (is.null(figlbl)){
       ttl <- ifelse (spread=="ppi",
-                     "Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n\n",
-                     "Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n\n")
+                     "Deviation = (obs-medianSim)/d\nd = distance between medianSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n\n",
+                     "Deviation = (obs-medianSim)/d\nd = distance between medianSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n\n")
     }else{
       ttl <- ifelse (spread=="ppi",
-                     paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""),
-                     paste("Deviation = (obs-meanSim)/d\nd = distance between meanSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""))
+                     paste("Deviation = (obs-medianSim)/d\nd = distance between medianSim and 95% parametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""),
+                     paste("Deviation = (obs-medianSim)/d\nd = distance between medianSim and 95% nonparametric prediction\ninterval boundary proximal to the observed value\n",figlbl,"\n\n",sep=""))
     }
     
-    ggplt <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(dist)))) + ggOpt_dev + labs(title = ttl)
+    ggplt <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(dist)))) + ggOpt_dev + labs(title = ttl) + theme(plot.title = element_text(size = rel(0.85)))
   }
   return(ggplt)
 }

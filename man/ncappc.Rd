@@ -13,7 +13,7 @@ ncappc(obsFile = "nca_original.npctab.dta",
   timeNmSim = "TIME", concNmSim = "DV", AUCTimeRange = NULL,
   backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
   doseAmtNm = NULL, adminType = "extravascular", doseType = "ns",
-  doseTime = NULL, Tau = NULL, TI = NULL, method = "linear-log",
+  doseTime = NULL, Tau = NULL, TI = NULL, method = "linearup-logdown",
   blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE,
   filterNm = NULL, filterExcl = NULL, negConcExcl = FALSE,
   param = c("AUClast", "Cmax"), timeFormat = "number", dateColNm = NULL,
@@ -99,7 +99,8 @@ using the data within the time units 14 to 24.  If \code{NULL} then all
 times are considered.}
 
 \item{LambdaExclude}{User-defined excluded observation time points for
-estimation of elimination rate-constant (\strong{\code{NULL}})}
+estimation of Lambda. This can be numeric value or logical condition (e.g.
+c(1, 2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})}
 
 \item{doseAmtNm}{Column name to specify dose amount (\strong{\code{NULL}})}
 
@@ -109,13 +110,20 @@ estimation of elimination rate-constant (\strong{\code{NULL}})}
 \item{doseType}{Steady-state (ss) or nonsteady-state (ns) dose
 (\strong{"ns"})}
 
-\item{doseTime}{Dose time prior to the first observation for steady-state data (\strong{\code{NULL}})}
+\item{doseTime}{Dose time prior to the first observation for steady-state
+data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{\code{NULL}})}
 
 \item{TI}{Infusion duration (\strong{\code{NULL}})}
 
-\item{method}{linear, log or linear-log (\strong{"linear-log"})}
+\item{method}{Method to estimate AUC. \code{linear} method applies the linear
+trapezoidal rule to estimate the area under the curve. \code{log} method
+applies the logarithmic trapezoidal rule to estimate the area under the
+curve. \code{linearup-logdown} method applies the linear trapezoidal rule to
+estimate the area under the curve for the ascending part of the curve and
+the logarithmic trapezoidal rule to estimate the area under the curve for
+the descending part of the curve. (\strong{"linearup-logdown"})}
 
 \item{blqNm}{Name of BLQ column if used (\strong{\code{NULL}})}
 
@@ -131,8 +139,9 @@ c(1,">3")) (\strong{"1"})}
 
 \item{filterNm}{Column name for filter (\strong{\code{NULL}})}
 
-\item{filterExcl}{Filter identifier or logical condition used for row
-exclusion (e.g. c(1, 2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})}
+\item{filterExcl}{Row exclusion criteria based on the column defined by
+\code{filterNm}. This can be numeric value or logical condition (e.g. c(1,
+2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})}
 
 \item{negConcExcl}{Exclude -ve conc (\strong{\code{FALSE}})}
 

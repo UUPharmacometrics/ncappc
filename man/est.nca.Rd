@@ -7,16 +7,16 @@ data.}
 \usage{
 est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   doseType = "ns", adminType = "extravascular", doseAmt = NULL,
-  method = "linear-log", AUCTimeRange = NULL, LambdaTimeRange = NULL,
-  LambdaExclude = NULL, doseTime = doseTime, Tau = NULL, TI = NULL,
-  simFile = NULL, dset = "obs")
+  method = "linearup-logdown", AUCTimeRange = NULL,
+  LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
+  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs")
 }
 \arguments{
 \item{time}{Numeric array for time}
 
 \item{conc}{Numeric array for concentration}
 
-\item{backExtrp}{If back-extrapolation is needed for AUC (TRUE or FALSE)
+\item{backExtrp}{If back-extrapolation is needed for AUC (TRUE or FALSE) 
 (\strong{FALSE})}
 
 \item{negConcExcl}{Exclude -ve conc (\strong{FALSE})}
@@ -29,7 +29,13 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
-\item{method}{linear, log or linear-log (\strong{"linear-log"})}
+\item{method}{Method to estimate AUC. \code{linear} method applies the linear
+trapezoidal rule to estimate the area under the curve. \code{log} method
+applies the logarithmic trapezoidal rule to estimate the area under the
+curve. \code{linearup-logdown} method applies the linear trapezoidal rule to
+estimate the area under the curve for the ascending part of the curve and
+the logarithmic trapezoidal rule to estimate the area under the curve for
+the descending part of the curve. (\strong{"linearup-logdown"})}
 
 \item{AUCTimeRange}{User-defined window of time used to estimate AUC 
 (\strong{"NULL"})}
@@ -40,7 +46,8 @@ rate-constant (\strong{"NULL"})}
 \item{LambdaExclude}{User-defined excluded observation time points for
 estimation of elimination rate-constant (\strong{"NULL"})}
 
-\item{doseTime}{Dose time prior to the first observation for steady-state data (\strong{\code{NULL}})}
+\item{doseTime}{Dose time prior to the first observation for steady-state
+data (\strong{\code{NULL}})}
 
 \item{Tau}{Dosing interval for steady-state data (\strong{"NULL"})}
 
@@ -96,7 +103,7 @@ below.
  \item \strong{AUClower_upper} is the AUC under the concentration-time 
  profile within the user-specified window of time privided as the 
  "AUCTimeRange" argument. In case of empty "AUCTimeRange" argument, 
- AUClower_upper is equal to the AUClast.
+ AUClower_upper is the same as AUClast.
  \item \strong{Rsq, Rsq_adjusted and Corr_XY} are regression coefficient 
  of the regression line used to estimate the elimination rate constant, the 
  adjusted value of Rsq and the square root of Rsq, respectively.

@@ -2,7 +2,7 @@
 # Report of *ncappc*^* package
 -
 -
-^\* Acharya, C., Hooker, A. C., Türkyılmaz, G. Y., Jönsson, S., Karlsson, M. O., A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, *Computer Methods and Programs in Biomedicine*, 2016, Vol. 127, 83-93
+^\* Acharya, C., Hooker, A. C., Turkyilmaz, G. Y., Jonsson, S., Karlsson, M. O., A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, *Computer Methods and Programs in Biomedicine*, 2016, Vol. 127, 83-93
 
 --------------------------------------------------------------
 
@@ -105,5 +105,5 @@ if (length(histobs)>0){
 }
 ```
 
-**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
+**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population median and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
 

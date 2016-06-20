@@ -2,7 +2,7 @@
 # Report of *ncappc*^* package
 -
 -
-^\* Acharya, C., Hooker, A. C., Türkyılmaz, G. Y., Jönsson, S., Karlsson, M. O., A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, *Computer Methods and Programs in Biomedicine*, 2016, Vol. 127, 83-93
+^\* Acharya, C., Hooker, A. C., Turkyilmaz, G. Y., Jonsson, S., Karlsson, M. O., A diagnostic tool for population models using non-compartmental analysis: The ncappc package for R, *Computer Methods and Programs in Biomedicine*, 2016, Vol. 127, 83-93
 
 --------------------------------------------------------------
 
@@ -75,7 +75,7 @@ Description of the tabular output
 -
 -
 
-**Table 1 (ncaOutput.tsv).** The *ncappc* functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the mean of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the mean of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics. Below is an excerpt of selected columns of top 100 rows.
+**Table 1 (ncaOutput.tsv).** The *ncappc* functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the median of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the median of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics. Below is an excerpt of selected columns of top 100 rows.
 
 
 ## Table 1. ncaOutput.tsv (selected columns of top 100 rows)
@@ -88,12 +88,12 @@ print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), incl
 -
 -
 
-**Table 2 (Obs_Stat.tsv).** A set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
+**Table 2 (Obs_Stat.tsv).** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
 
 -
 -
 
-**Table 3 (Sim_Stat.tsv).** A set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the estimated data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
+**Table 3 (Sim_Stat.tsv).** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the estimated data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
 
 -
 -
@@ -135,7 +135,7 @@ if (length(histobs)>0){
 }
 ```
 
-**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population mean and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
+**Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population median and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
 
 -
 -
@@ -149,7 +149,7 @@ if (length(pop)>0){
 }
 ```
 
-**Figure 3.** [Population level] Histogram of the population mean of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population mean of the NCA matric obtained from the observed data and the mean of the population means of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data.
+**Figure 3.** [Population level] Histogram of the population median of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population median of the NCA matric obtained from the observed data and the median of the population medians of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data.
 
 -
 -
@@ -162,7 +162,7 @@ if (length(dev)>0){
 }
 ```
 
-**Figure 4.** [Individual level] Deviation of the mean of the NCA metrics for each individual estimated from the simulated data obtained from `r nsim` simulations (meanSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (`r sprtxt`) proximal to the observed value (** Deviation = (Obs - meanSim)/ spread **). The negative value of the deviation signifies over-prediction of the corresponding NCA matric, while a positive value of the deviation signifies under-prediction of the same.
+**Figure 4.** [Individual level] Deviation of the median of the NCA metrics for each individual estimated from the simulated data obtained from `r nsim` simulations (medianSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (`r sprtxt`) proximal to the observed value (** Deviation = (Obs - medianSim)/ spread **). The negative value of the deviation signifies over-prediction of the corresponding NCA matric, while a positive value of the deviation signifies under-prediction of the same.
 
 -
 -
@@ -176,7 +176,7 @@ if (length(outlier)>0){
 }
 ```
 
-**Figure 5.** [Individual level] Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA matric value and the mean of the simulated NCA matric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (`r sprtxt`) of the simulated distribution.
+**Figure 5.** [Individual level] Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA matric value and the median of the simulated NCA matric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (`r sprtxt`) of the simulated distribution.
 
 -
 -

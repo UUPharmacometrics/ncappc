@@ -54,8 +54,8 @@
 
 nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noPlot=FALSE){
   
-  "type" <- "..density.." <- "oval" <- "mval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "sd" <- "quantile" <- "scale_y_continuous" <- "percent" <- "packageVersion" <- NULL
-  rm(list=c("type","..density..","oval","mval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar","..count..","..PANEL..","sd","quantile","scale_y_continuous","percent","packageVersion"))
+  "type" <- "..density.." <- "oval" <- "mval" <- "mdval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "sd" <- "quantile" <- "scale_y_continuous" <- "percent" <- "packageVersion" <- NULL
+  rm(list=c("type","..density..","oval","mval","mdval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar","..count..","..PANEL..","sd","quantile","scale_y_continuous","percent","packageVersion"))
   
   # Check the mandatory arguments
   if(is.null(obsdata) | is.null(simdata)){stop("None of the obsdata and simdata arguments can be empty.")}
@@ -68,6 +68,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   if (!all(diagparam%in%names(simdata))){stop("simdata data frame must contain columns with NCA mterics given in diagparam argument.")}
   
   if (!(idNm%in%names(obsdata)) | !(idNm%in%names(simdata))){stop("Column name for ID is not present in observed and/or simulated data.")}
+  
   if (is.null(id)){
     obsuid <- unique(obsdata[,idNm])
     simuid <- unique(simdata[,idNm])
@@ -86,7 +87,7 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
   
   metric     <- ""    # NCA metric associated with the outlier
   diagNm     <- ""    # List of outliers for each NCA diagnostic metric
-  pdata      <- data.frame(oval=numeric(0),sval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
+  pdata      <- data.frame(oval=numeric(0),sval=numeric(0),mdval=numeric(0),mval=numeric(0),devl=numeric(0),devu=numeric(0),xl=numeric(0),xu=numeric(0),type=character(0))
   pde        <- data.frame(matrix(ncol=length(calcparam),nrow=1))   # store PDE values
   names(pde) <- calcparam
   if (length(iobslst)==0 | length(isimlst)==0){
@@ -103,23 +104,24 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       }else{
         obsval    <- iobslst[[pnm]]
         simval    <- unlist(isimlst[,pnm])
+        mdsimval  <- median(simval)
         msimval   <- mean(simval)
         sdsimval  <- sd(simval)
         sdsimmean <- sdsimval*(simval-msimval)
         sdobsmean <- sdsimval*(obsval-msimval)
         if (spread == "ppi"){
-          distprm <- ifelse(sdsimval==0, (obsval-msimval), (obsval-msimval)/(2*sdsimval))
+          distprm <- ifelse(sdsimval==0, (obsval-mdsimval), (obsval-mdsimval)/(2*sdsimval))
           lldist  <- msimval-1.96*sdsimval
           uldist  <- msimval+1.96*sdsimval
         }else if (spread == "npi"){
-          distprm <- ifelse((obsval-msimval)>0, (obsval-msimval)/(unname(quantile(simval, 0.975))-msimval), (obsval-msimval)/(msimval-unname(quantile(simval, 0.025))))
+          distprm <- ifelse((obsval-mdsimval)>0, (obsval-mdsimval)/(unname(quantile(simval, 0.975))-mdsimval), (obsval-mdsimval)/(mdsimval-unname(quantile(simval, 0.025))))
           lldist  <- unname(quantile(simval, 0.025))
           uldist  <- unname(quantile(simval, 0.975))
         }
         pde[,pnm]                         <- ifelse (obsval<min(simval), 1/length(simval), ifelse (obsval>max(simval), 1-(1/length(simval)), sum(sdsimmean<sdobsmean)/length(simval)))
         obsdata[,paste("d",pnm,sep="")]   <- distprm
-        obsdata[,paste("sim",pnm,sep="")] <- msimval
-        pdata  <- rbind(pdata, data.frame(oval=obsval, sval=simval, mval=msimval, devl=lldist, devu=uldist, xl=min(lldist,obsval), xu=max(uldist,obsval), type=pnm, stringsAsFactors = F))
+        obsdata[,paste("sim",pnm,sep="")] <- mdsimval
+        pdata  <- rbind(pdata, data.frame(oval=obsval, sval=simval, mdval=mdsimval, mval=msimval, devl=lldist, devu=uldist, xl=min(lldist,obsval), xu=max(uldist,obsval), type=pnm, stringsAsFactors = F))
         if ((!is.na(distprm) & !is.nan(distprm)) && (pnm%in%diagparam) & (abs(distprm)>1)){
           metric <- paste(metric,paste("ID-",id,"_",pnm,sep=""),sep=", ")
         }
@@ -156,43 +158,19 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
     }
     
     if(noPlot==FALSE){
-      ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
-                        scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
+      ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","medianSim"="blue","+/-spread"="blue")),
+                        scale_linetype_manual(name="",values=c("Obs"="solid","medianSim"="solid","+/-spread"="dashed")),
                         xlab(""), ylab(""),
-                        geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
                         scale_y_continuous(labels = percent),
                         geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show.legend=T, size=1),
-                        geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show.legend=T, size=1),
+                        geom_vline(aes(xintercept=mdval, color="medianSim", linetype="medianSim"), show.legend=T, size=1),
                         geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
                         geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
-                        facet_grid(~type, scales="free"),
-                        theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
-                              axis.text.y  = element_text(hjust=0),
+                        facet_grid(~FCT, scales="free"),
+                        theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1),
+                              axis.text.y = element_text(hjust=0),
                               legend.position = "bottom", legend.direction = "horizontal",
                               legend.background = element_rect()))
-      
-      
-#       ggOpt_otl <- list(scale_color_manual(name="",values=c("Obs"="red","meanSim"="blue","+/-spread"="blue")),
-#                         scale_linetype_manual(name="",values=c("Obs"="solid","meanSim"="solid","+/-spread"="dashed")),
-#                         xlab(""), ylab(""),
-#                         geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white"),
-#                         scale_y_continuous(labels = percent),
-#                         geom_vline(aes(xintercept=oval, color="Obs", linetype="Obs"), show.legend=T, size=1),
-#                         geom_vline(aes(xintercept=mval, color="meanSim", linetype="meanSim"), show.legend=T, size=1),
-#                         geom_vline(aes(xintercept=devl, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
-#                         geom_vline(aes(xintercept=devu, color="+/-spread", linetype="+/-spread"), show.legend=T, size=1),
-#                         facet_grid(~type, scales="free"),
-#                         theme(plot.title = element_text(size=9, face="bold"),
-#                               axis.title.x = element_text(size=9,face="bold"),
-#                               axis.title.y = element_text(size=9,face="bold"),
-#                               axis.text.x  = element_text(size=9,face="bold",color="black",angle=45,vjust=1,hjust=1),
-#                               axis.text.y  = element_text(size=9,face="bold",color="black",hjust=0),
-#                               panel.margin = unit(0.5, "cm"), plot.margin  = unit(c(0.2,0.2,0.2,0.2), "cm"),
-#                               legend.position = "bottom", legend.direction = "horizontal",
-#                               legend.text  = element_text(size=8,face="bold"),
-#                               legend.background = element_rect(),
-#                               legend.key.size = unit(0.8, "cm"),
-#                               strip.text.x = element_text(size=8, face="bold")))
       
       devtag <- ifelse (spread=="ppi","95% parametric prediction interval","95% nonparametric prediction interval")
       gplt   <- list()
@@ -206,17 +184,19 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
       for (p in 1:npr){
         df <- subset(pdata, type==diagparam[p])
         df$type <- factor(df$type, levels=diagparam[p], labels=fctNm[fctNm$prmNm==diagparam[p],"prmUnit"])
+        df$FCT  <- paste0(df$type,"Obs=",out.digits(df$oval[1],dig=4),"\nmedianSim=",out.digits(df$mdval[1],dig=4),"\n+/-spread=(",out.digits(df$devl[1],dig=4),",",out.digits(df$devu[1],dig=4),")")
         xl <- df$xl[1]; xu <- df$xu[1]
-        gplt[[p]] <- ggplot(df,aes(x=as.numeric(sval))) + ggOpt_otl +
-          labs(title=paste("Obs=",format(df$oval[1],digits=2),", meanSim=",format(df$mval[1],digits=2),"\n+/-spread=(",format(df$devl[1],digits=2),",",format(df$devu[1],digits=2),")\n",sep="")) +
-          coord_cartesian(xlim=c(xl,xu))
+        bw <- diff(unname(quantile(as.numeric(df$sval),c(0.005,0.985))))/(2*IQR(as.numeric(df$sval)))/length(as.numeric(df$sval))^(1/3)
+        gplt[[p]] <- ggplot(df,aes(x=as.numeric(sval))) +
+          geom_histogram(aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]), size=0.6, color="black", fill="white", binwidth = bw) +
+          ggOpt_otl + coord_cartesian(xlim=c(xl,xu))
       }
       mylegend <- suppressMessages(suppressWarnings(gtable_filter(ggplot_gtable(ggplot_build(gplt[[1]])), "guide-box", trim=T)))
       lheight  <- sum(mylegend$heights)
       for (p in 1:npr){gplt[[p]] <- gplt[[p]] + theme(legend.position="none")}
       
-      plot_args <- list(top = textGrob(figttl,vjust=1,gp=gpar(cex = 2.2)),
-                        bottom = textGrob("Value\n\n",vjust=1,gp=gpar(cex = 2.2)),
+      plot_args <- list(top = textGrob(figttl,vjust=1,gp=gpar(cex = 1.5)),
+                        bottom = textGrob("Value\n\n",vjust=1,gp=gpar(cex = 1.5)),
                         ncol=nc)
       if(packageVersion("gridExtra") < "0.9.2"){
         arg_names <- names(plot_args)
@@ -225,7 +205,6 @@ nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="
         names(plot_args) <- arg_names
       }
       gdr <- suppressMessages(suppressWarnings(do.call(arrangeGrob,c(gplt,plot_args))))
-      #grid.arrange(gdr)
     }
   }
   return(list(obsdata=obsdata,pde=pde,metric=metric,grob=gdr,legend=mylegend,lheight=lheight))
