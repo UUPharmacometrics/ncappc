@@ -21,7 +21,8 @@
 #' @export
 #'
 
-nca.npde <- function(pdedata,pdecol){
+nca.npde <- function(pdedata,
+                     pdecol){
   "qnorm" <- NULL
   rm(list=c("qnorm"))
   

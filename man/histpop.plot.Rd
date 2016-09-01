@@ -5,7 +5,7 @@
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
 histpop.plot(obsdata = outData, simdata = smedianData, figlbl = NULL,
-  param = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]",
+  param = c("AUClast", "Cmax"), cunit = "M.L^-3", tunit = "T",
   spread = "npi")
 }
 \arguments{
@@ -23,9 +23,9 @@ for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
 (\strong{c("AUClast", "Cmax")})}
 
-\item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
+\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
 
-\item{tunit}{Unit for time (\strong{"[T]"})}
+\item{tunit}{Unit for time (\strong{"T"})}
 
 \item{spread}{Measure of the spread of simulated data (ppi (95\% parametric
 prediction interval) or npi (95\% nonparametric prediction interval))

@@ -8,7 +8,7 @@ Identifies outlier to population PK model.}
 \usage{
 nca.pde.deviation.outlier(obsdata, simdata, idNm = "ID", id = NULL,
   spread = "npi", figlbl = NULL, calcparam = c("AUClast", "Cmax"),
-  diagparam = c("AUClast", "Cmax"), cunit = "[M].[L]^-3", tunit = "[T]",
+  diagparam = c("AUClast", "Cmax"), cunit = "M.L^-3", tunit = "T",
   noPlot = FALSE)
 }
 \arguments{
@@ -39,9 +39,9 @@ test. The allowed NCA metrics for this histograms are "AUClast",
 "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" 
 and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
 
-\item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
+\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
 
-\item{tunit}{Unit for time (\strong{"[T]"})}
+\item{tunit}{Unit for time (\strong{"T"})}
 
 \item{noPlot}{Perform only NCA calculations without any plot generation
 (TRUE, FALSE) (\strong{FALSE})}

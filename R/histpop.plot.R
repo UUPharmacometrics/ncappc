@@ -23,8 +23,8 @@
 #'   for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs", 
 #'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
 #'   (\strong{c("AUClast", "Cmax")})
-#' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
-#' @param tunit Unit for time (\strong{"[T]"})
+#' @param cunit Unit for concentration (\strong{"M.L^-3"})
+#' @param tunit Unit for time (\strong{"T"})
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric
 #'   prediction interval) or npi (95\% nonparametric prediction interval))
 #'   (\strong{"npi"})
@@ -33,7 +33,13 @@
 #' @export
 #'
 
-histpop.plot <- function(obsdata=outData,simdata=smedianData,figlbl=NULL,param=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",spread="npi"){
+histpop.plot <- function(obsdata=outData,
+                         simdata=smedianData,
+                         figlbl=NULL,
+                         param=c("AUClast","Cmax"),
+                         cunit="M.L^-3",
+                         tunit="T",
+                         spread="npi"){
   
   "..density.." <- "TYPE" <- "obs" <- "sim" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "labs" <- "coord_cartesian" <- "facet_wrap" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "scale_y_continuous" <- "percent" <- "sd" <- "quantile" <- "packageVersion" <- NULL
   rm(list=c("..density..","TYPE","obs","sim","arrangeGrob","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","melt","ggplot","labs","coord_cartesian","facet_wrap","gtable_filter","ggplot_gtable","ggplot_build","textGrob","gpar","..count..","..PANEL..","scale_y_continuous","percent","sd","quantile","packageVersion"))

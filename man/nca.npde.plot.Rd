@@ -5,7 +5,7 @@
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
 nca.npde.plot(plotdata, xvar = NULL, npdecol = NULL, figlbl = NULL,
-  cunit = "[M].[L]^-3", tunit = "[T]")
+  cunit = "M.L^-3", tunit = "T")
 }
 \arguments{
 \item{plotdata}{Data frame with the values of the NPDE values of each

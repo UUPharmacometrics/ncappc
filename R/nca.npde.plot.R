@@ -24,7 +24,12 @@
 #' @export
 #'
 
-nca.npde.plot <- function(plotdata,xvar=NULL,npdecol=NULL,figlbl=NULL,cunit="[M].[L]^-3",tunit="[T]"){
+nca.npde.plot <- function(plotdata,
+                          xvar=NULL,
+                          npdecol=NULL,
+                          figlbl=NULL,
+                          cunit="M.L^-3",
+                          tunit="T"){
   
   "npde" <- "type" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "..density.." <- "sdl" <- "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "scale_linetype_manual" <- "scale_color_manual" <- "guides" <- "guide_legend" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "ggplot" <- "labs" <- "..count.." <- "..PANEL.." <- "na.omit" <- "sd" <- "qt" <- "qchisq" <- "scale_y_continuous" <- "percent" <- "sdcil" <- "sdciu" <- NULL
   rm(list=c("npde","type","mcil","mciu","sdu","sducil","sduciu","..density..","sdl","XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","scale_linetype_manual","scale_color_manual","guides","guide_legend","element_rect","geom_histogram","aes","geom_vline","ggplot","labs","..count..","..PANEL..","na.omit","sd","qt","qchisq","scale_y_continuous","percent","sdcil","sdciu"))

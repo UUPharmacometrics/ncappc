@@ -35,8 +35,12 @@
 #' @export
 #'   
 
-read_nm_table <- function (nm_table, only_obs=FALSE, method="default",
-                           quiet=TRUE,sim_num=FALSE,sim_name="NSIM"){
+read_nm_table <- function (nm_table,
+                           only_obs=FALSE,
+                           method="default",
+                           quiet=TRUE,
+                           sim_num=FALSE,
+                           sim_name="NSIM"){
   
   # \code{\link[dplyr]{dplyr}} and \code{\link[readr]{readr}} are available and
   # \code{\link[readr]{readr}} (version >= 0.2.2).

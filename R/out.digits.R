@@ -14,7 +14,8 @@
 
 
 ## Format parameter values in output table
-out.digits <- function(x, dig=3){
+out.digits <- function(x,
+                       dig=3){
   if(length(x)==0){
     tmp <- ""
   }else if(length(x)>1){

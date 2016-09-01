@@ -151,9 +151,22 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # function to estimate NCA parameters
 
-est.nca <- function(time,conc,backExtrp=FALSE,negConcExcl=FALSE,doseType="ns",adminType="extravascular",
-                    doseAmt=NULL,method="linearup-logdown",AUCTimeRange=NULL,LambdaTimeRange=NULL,LambdaExclude=NULL,
-                    doseTime=doseTime,Tau=NULL,TI=NULL,simFile=NULL,dset="obs"){
+est.nca <- function(time,
+                    conc,
+                    backExtrp=FALSE,
+                    negConcExcl=FALSE,
+                    doseType="ns",
+                    adminType="extravascular",
+                    doseAmt=NULL,
+                    method="linearup-logdown",
+                    AUCTimeRange=NULL,
+                    LambdaTimeRange=NULL,
+                    LambdaExclude=NULL,
+                    doseTime=doseTime,
+                    Tau=NULL,
+                    TI=NULL,
+                    simFile=NULL,
+                    dset="obs"){
 
   "tail" <- "head" <- "lm" <- "coef" <- NULL
   rm(list=c("tail","head","lm","coef"))

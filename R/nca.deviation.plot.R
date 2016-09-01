@@ -26,13 +26,19 @@
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric
 #'   prediction interval) or npi (95\% nonparametric prediction interval))
 #'   (\strong{"npi"})
-#' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
-#' @param tunit Unit for time (\strong{"[T]"})
+#' @param cunit Unit for concentration (\strong{"M.L^-3"})
+#' @param tunit Unit for time (\strong{"T"})
 #' @return returns the data frame with the NPDE values based on the input data.
 #' @export
 #'
 
-nca.deviation.plot <- function(plotdata,xvar=NULL,devcol=NULL,figlbl=NULL,spread="npi",cunit="[M].[L]^-3",tunit="[T]"){
+nca.deviation.plot <- function(plotdata,
+                               xvar=NULL,
+                               devcol=NULL,
+                               figlbl=NULL,
+                               spread="npi",
+                               cunit="M.L^-3",
+                               tunit="T"){
   
   "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "ggplot" <- "aes" <- "labs" <- "na.omit" <- "dist" <- NULL
   rm(list=c("XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","ggplot","aes","labs","na.omit","dist"))

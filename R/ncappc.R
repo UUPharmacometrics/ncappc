@@ -40,120 +40,131 @@
 #' section.
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
-#'   or an external table with comma, tab or space as separator
-#'   (\strong{"nca_original.npctab.dta"})
+#'   or an external table with comma, tab or space as separators. Default is
+#'   \strong{"nca_original.npctab.dta"}
 #' @param simFile NONMEM simulation output with the simulated concentration-time
-#'   data from an internal data frame or an external table 
-#'   (\strong{"nca_simulation.1.npctab.dta"}). \code{NULL} produces just the
-#'   traditional NCA output, a filename or data frame prduces the NCA output as
+#'   data from an internal data frame or an external table. \code{NULL} produces
+#'   just the NCA output, a filename or data frame prduces the NCA output as
 #'   well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can
-#'   be a compressed file as well.
-#' @param str1Nm Column name for 1st level population stratifier
-#'   (\strong{\code{NULL}})
-#' @param str1 Stratification ID of the members within 1st level stratification 
-#'   (e.g c(1,2)) (\strong{\code{NULL}})
-#' @param str2Nm Column name for 2nd level population stratifier
-#'   (\strong{\code{NULL}})
+#'   be a compressed file as well. Default is
+#'   \strong{"nca_simulation.1.npctab.dta"}.
+#' @param str1Nm Column name for 1st level population stratifier. Default is
+#'   \strong{\code{NULL}}
+#' @param str1 Stratification ID of the members within 1st level stratification
+#'   (e.g c(1,2)). Default is \strong{\code{NULL}}
+#' @param str2Nm Column name for 2nd level population stratifier. Default is
+#'   \strong{\code{NULL}}
 #' @param str2 Stratification ID of the members within 2nd level stratification
-#'   (e.g c(1,2)) (\strong{\code{NULL}})
-#' @param str3Nm Column name for 3rd level population stratifier
-#'   (\strong{\code{NULL}})
-#' @param str3 Stratification ID of the members within 3rd level stratification 
-#'   (e.g c(1,2)) (\strong{\code{NULL}})
-#' @param concUnit Unit of concentration (e.g. "ng/mL") (\strong{"M.L^-3"})
-#' @param timeUnit Unit of time (e.g. "h") (\strong{"T"})
-#' @param doseUnit Unit of dose amount (e.g. "ng") (\strong{"M"})
-#' @param doseNormUnit Normalization factor of dose amount if used (e.g. "kg") 
-#'   (\strong{\code{NULL}})
-#' @param obsLog Concentration in observed data in logarithmic form
-#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{FALSE}})
-#' @param simLog Concentration in simulated data in logarithmic form
-#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{FALSE}})
-#' @param psnOut observed data is an output from PsN or in NONMEM output format 
-#'   (\code{TRUE}, \code{FALSE}) (\strong{\code{TRUE}})
-#' @param idNmObs Column name for ID in observed data (\strong{"ID"})
-#' @param timeNmObs Column name for time in observed data (\strong{"TIME"})
-#' @param concNmObs Column name for concentration in observed data
-#'   (\strong{"DV"})
-#' @param idNmSim Column name for ID in simulated data (\strong{"ID"})
-#' @param timeNmSim Column name for time in simulated data (\strong{"TIME"})
-#' @param concNmSim Column name for concentration in simulated data
-#'   (\strong{"DV"})
-#' @param AUCTimeRange User-defined window of time used to estimate AUC
-#'   (\strong{\code{NULL}})
-#' @param backExtrp If back-extrapolation is needed for AUC (\code{TRUE} or
-#'   \code{FALSE}) (\strong{\code{FALSE}})
-#' @param LambdaTimeRange User-defined window of time to estimate elimination 
+#'   (e.g c(1,2)). Default is \strong{\code{NULL}}
+#' @param str3Nm Column name for 3rd level population stratifier. Default is
+#'   \strong{\code{NULL}}
+#' @param str3 Stratification ID of the members within 3rd level stratification
+#'   (e.g c(1,2)). Default is \strong{\code{NULL}}
+#' @param concUnit Unit of concentration (e.g. "ng/mL"). Default is
+#'   \strong{"M.L^-3"}
+#' @param timeUnit Unit of time (e.g. "h"). Default is \strong{"T"}
+#' @param doseUnit Unit of dose amount (e.g. "ng"). Default is \strong{"M"}
+#' @param obsLog If \code{TRUE} concentration in observed data is in logarithmic
+#'   scale. Default is \strong{\code{FALSE}}
+#' @param simLog If \code{TRUE} concentration in simulated data is in
+#'   logarithmic scale. Default is \strong{\code{FALSE}}
+#' @param psnOut If \code{TRUE} observed data is an output from PsN or in NONMEM
+#'   output format. Default is \strong{\code{TRUE}}
+#' @param idNmObs Column name for ID in observed data. Default is \strong{"ID"}
+#' @param timeNmObs Column name for time in observed data. Default is
+#'   \strong{"TIME"}
+#' @param concNmObs Column name for concentration in observed data. Default is
+#'   \strong{"DV"}
+#' @param idNmSim Column name for ID in simulated data. Default is \strong{"ID"}
+#' @param timeNmSim Column name for time in simulated data. Default is
+#'   \strong{"TIME"}
+#' @param concNmSim Column name for concentration in simulated data. Default is
+#'   \strong{"DV"}
+#' @param AUCTimeRange User-defined window of time used to estimate AUC. Default
+#'   is \strong{\code{NULL}}
+#' @param backExtrp If \code{TRUE} back-extrapolation is performed while
+#'   estimating AUC. Default is \strong{\code{FALSE}}
+#' @param LambdaTimeRange User-defined window of time to estimate elimination
 #'   rate-constant. This argument lets the user to choose a specific window of
 #'   time to be used to estimate the elimination rate constant (Lambda) in the
-#'   elimination phase. The accepted format for the input to this argument is a 
+#'   elimination phase. The accepted format for the input to this argument is a
 #'   numeric array of two elements; \code{c(14,24)} will estimate the Lambda
-#'   using the data within the time units 14 to 24.  If \code{NULL} then all
-#'   times are considered.
+#'   using the data within the time units 14 to 24. Default is
+#'   \strong{\code{NULL}}
 #' @param LambdaExclude User-defined excluded observation time points for
 #'   estimation of Lambda. This can be numeric value or logical condition (e.g.
-#'   c(1, 2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})
-#' @param doseAmtNm Column name to specify dose amount (\strong{\code{NULL}})
-#' @param adminType Route of administration
-#'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
-#' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
-#'   (\strong{"ns"})
+#'   c(1, 2, "<20", ">=100", "!=100")). Default is \strong{\code{NULL}}
+#' @param doseAmtNm Column name to specify dose amount. Default is
+#'   \strong{\code{NULL}}
+#' @param adminType Route of administration. Allowed options are iv-bolus,
+#'   iv-infusion or extravascular. Default is \strong{"extravascular"}
+#' @param doseType Steady-state (ss) or nonsteady-state (ns) dose. Default is
+#'   \strong{"ns"}
 #' @param doseTime Dose time prior to the first observation for steady-state
-#'   data (\strong{\code{NULL}})
-#' @param Tau Dosing interval for steady-state data (\strong{\code{NULL}})
-#' @param TI Infusion duration (\strong{\code{NULL}})
+#'   data. Default is \strong{\code{NULL}}
+#' @param Tau Dosing interval for steady-state data. Default is
+#'   \strong{\code{NULL}}
+#' @param TI Infusion duration. If TI is a single numeric value, TI is the same
+#'   for all individuals. If TI is the name of a column with numeric data
+#'   present in the data set, TI is set to the unique value of the column for a
+#'   given individual. Default is \strong{\code{NULL}}
 #' @param method Method to estimate AUC. \code{linear} method applies the linear
-#'   trapezoidal rule to estimate the area under the curve. \code{log} method
-#'   applies the logarithmic trapezoidal rule to estimate the area under the
-#'   curve. \code{linearup-logdown} method applies the linear trapezoidal rule to
-#'   estimate the area under the curve for the ascending part of the curve and
-#'   the logarithmic trapezoidal rule to estimate the area under the curve for
-#'   the descending part of the curve. (\strong{"linearup-logdown"})
-#' @param blqNm Name of BLQ column if used (\strong{\code{NULL}})
-#' @param blqExcl Excluded BLQ value or logical condition (e.g. 1 or ">=1" or 
-#'   c(1,">3")) (\strong{"1"})
-#' @param evid Use EVID (\code{TRUE}, \code{FALSE}) (\strong{\code{TRUE}})
-#' @param evidIncl Included EVID (\strong{"0"})
-#' @param mdv Use MDV (\code{TRUE}(includes data for MDV==0), \code{FALSE})
-#'   (\strong{\code{FALSE}})
-#' @param filterNm Column name for filter (\strong{\code{NULL}})
+#'   trapezoidal rule to estimate the area under the curve. \code{log} method 
+#'   applies the logarithmic trapezoidal rule to estimate the area under the 
+#'   curve. \code{linearup-logdown} method applies the linear trapezoidal rule
+#'   to estimate the area under the curve for the ascending part of the curve
+#'   and the logarithmic trapezoidal rule to estimate the area under the curve
+#'   for the descending part of the curve. Default is
+#'   \strong{"linearup-logdown"}
+#' @param blqNm Name of BLQ column if used to exclude data. Default is
+#'   \strong{\code{NULL}}
+#' @param blqExcl Excluded BLQ value; either a numeric value or a logical
+#'   condition (e.g. 1 or ">=1" or c(1,">3")). Used only if the \code{blqNm} is
+#'   not \code{NULL}. Default is \strong{"1"}
+#' @param evid If \code{TRUE} EVID is used to filter data. Default is
+#'   \strong{\code{TRUE}}
+#' @param evidIncl Included values in EVID. Default is \strong{"0"}
+#' @param mdv If \code{TRUE} MDV is used to include data when MDV=0. Default is
+#'   \strong{\code{FALSE}}
+#' @param filterNm Column name to filter data. Default is \strong{\code{NULL}}
 #' @param filterExcl Row exclusion criteria based on the column defined by
 #'   \code{filterNm}. This can be numeric value or logical condition (e.g. c(1,
-#'   2, "<20", ">=100", "!=100")) (\strong{\code{NULL}})
-#' @param negConcExcl Exclude -ve conc (\strong{\code{FALSE}})
-#' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs, 
-#'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z) (c(\strong{"AUClast",
-#'   "Cmax"}))
-#' @param timeFormat time format (number, H:M, H:M:S) (\strong{"number"})
-#' @param dateColNm colunm name for date if used (Date, DATE)
-#'   (\strong{\code{NULL}})
+#'   2, "<20", ">=100", "!=100")). Default is \strong{\code{NULL}}
+#' @param negConcExcl If \code{TRUE} negative concentrations are excluded.
+#'   Default is \strong{\code{FALSE}}
+#' @param param NCA parameters (AUClast, AUClower_upper, AUCINF_obs,
+#'   AUCINF_pred, AUMClast, Cmax, Tmax, HL_Lambda_z). Default is
+#'   \strong{(c"AUClast", "Cmax")}
+#' @param timeFormat time format (number, H:M, H:M:S). Default is
+#'   \strong{"number"}
+#' @param dateColNm colunm name for date if used (e.g. "Date", "DATE"). Default
+#'   is \strong{\code{NULL}}
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
-#'   D,M,Y) (\strong{\code{NULL}})
+#'   D,M,Y). Default is \strong{\code{NULL}}
 #' @param spread Measure of the spread of simulated data (\code{"ppi"} (95\%
 #'   parametric prediction interval) or \code{"npi"} (95\% nonparametric
-#'   prediction interval))
-#' @param tabCol Output columns to be printed in the report in addition to ID, 
-#'   dose and population strata information (list of NCA metrics in a string 
-#'   array) (\strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs", "Vz_obs",
-#'   "Cl_obs", "HL_Lambda_z")})
-#' @param figFormat format of the produced figures (bmp, jpeg, tiff, png)
-#'   (\strong{"tiff"})
-#' @param noPlot Perform only NCA calculations without any plot generation
-#'   (\code{TRUE} or \code{FALSE}) 
-#' @param printOut Write/print output on the disk. No plot will be saved if 
-#'   noPlot is set to \code{TRUE} (\code{TRUE}, \code{FALSE})
-#'   (\strong{\code{TRUE}})
-#' @param studyName Name of the study to be added as a description in the report
-#'   (\strong{\code{NULL}})
-#' @param new_data_method \code{TRUE} or \code{FALSE}. For testing a faster
-#'   method of reading data. (\strong{\code{TRUE}})
-#' @param overwrite_SIMDATA Can be \code{TRUE}, to create new information in the
-#'   SIMDATA directory, \code{FALSE}, to use the information in the SIMDATA 
-#'   directory or \code{NULL} to have a dialog come up to ask the user what to 
-#'   do. (\strong{\code{NULL}})
+#'   prediction interval)). Default is \strong{"npi"}
+#' @param tabCol Output columns to be printed in the report in addition to ID,
+#'   dose and population strata information (list of NCA metrics in a string
+#'   array). Default is \strong{c("AUClast", "Cmax", "Tmax", "AUCINF_obs",
+#'   "Vz_obs", "Cl_obs", "HL_Lambda_z")}
+#' @param figFormat format of the produced figures (bmp, jpeg, tiff, png).
+#'   Default is \strong{"tiff"}
+#' @param noPlot If \code{TRUE} only NCA calculations are performed without any
+#'   plot generation. Default is \strong{\code{FALSE}}
+#' @param printOut If \code{TRUE} tabular and graphical outputs are saved on the
+#'   disk. Default is \strong{\code{TRUE}}
+#' @param studyName Name of the study to be added as a description in the
+#'   report. Default is \strong{\code{NULL}}
+#' @param new_data_method If \code{TRUE} a faster method of reading data is
+#'   tested. Default is \strong{\code{TRUE}}
+#' @param overwrite_SIMDATA If \code{TRUE} new information is created in the
+#'   SIMDATA directory. If \code{FALSE} the information in the SIMDATA directory
+#'   is used. If \code{NULL} a dialog will come up to ask the user what to do.
+#'   Default is \strong{\code{NULL}}
 #' @param outFileNm Additional tag to the name of the output html and pdf output
-#'   file hyphenated to the standard ncappc report file name standard ncappc 
-#'   report file name (\strong{Name of the observed data file})
+#'   file hyphenated to the standard ncappc report file name standard ncappc
+#'   report file name. Default is the \strong{name of the observed data file}
 #'
 #' @import ggplot2
 #' @import grid
@@ -177,12 +188,14 @@
 ncappc <- function(obsFile="nca_original.npctab.dta",
                    simFile="nca_simulation.1.npctab.dta",
                    str1Nm=NULL,str1=NULL,
-                   str2Nm=NULL,str2=NULL,str3Nm=NULL,str3=NULL,
+                   str2Nm=NULL,str2=NULL,
+                   str3Nm=NULL,str3=NULL,
                    concUnit=NULL,timeUnit=NULL,doseUnit=NULL,
-                   doseNormUnit=NULL,obsLog=FALSE,simLog=FALSE,
-                   psnOut=TRUE,idNmObs="ID",timeNmObs="TIME",
-                   concNmObs="DV",idNmSim="ID",timeNmSim="TIME",
-                   concNmSim="DV",AUCTimeRange=NULL,backExtrp=FALSE,
+                   obsLog=FALSE,simLog=FALSE,
+                   psnOut=TRUE,
+                   idNmObs="ID",timeNmObs="TIME",concNmObs="DV",
+                   idNmSim="ID",timeNmSim="TIME",concNmSim="DV",
+                   AUCTimeRange=NULL,backExtrp=FALSE,
                    LambdaTimeRange=NULL,LambdaExclude=NULL,doseAmtNm=NULL,
                    adminType="extravascular",doseType="ns",doseTime=NULL,Tau=NULL,
                    TI=NULL,method="linearup-logdown",blqNm=NULL,blqExcl=1,
@@ -206,7 +219,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (!is.data.frame(obsFile)){
     if (!file_test("-f", obsFile)){stop("File for the observed data does not exist\n")}
     # read observed data file
-    if (psnOut == FALSE){
+    if (!psnOut){
       extn <- tail(unlist(strsplit(obsFile, ".", fixed=T)), n=1)
       if(extn=="csv"){indf <- read.csv(obsFile)}else{indf <- read.table(obsFile, header=T)}
     }else{
@@ -262,7 +275,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # 1st level population stratification
   if (!is.null(str1Nm)){
-    if (str1Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
+    if (!str1Nm%in%colnames(indf)){setwd(usrdir);stop("Incorrect name for the 1st level stratification column\n")}
     if (is.null(str1)){
       str1 <- unique(sort(indf[,str1Nm]))
     }
@@ -270,7 +283,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # 2nd level population stratification
   if (!is.null(str2Nm)){
-    if (str2Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column\n")}
+    if (!str2Nm%in%colnames(indf)){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column\n")}
     if (is.null(str2)){
       str2 <- unique(sort(indf[,str2Nm]))
     }
@@ -278,7 +291,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # 3rd level population stratification
   if (!is.null(str3Nm)){
-    if (str3Nm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column\n")}
+    if (!str3Nm%in%colnames(indf)){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column\n")}
     if (is.null(str3)){
       str3 <- unique(sort(indf[,str3Nm]))
     }
@@ -294,8 +307,27 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   
   # check requirements for infusion data
-  if (adminType == "iv-infusion" & is.null(TI) & ((!"AMT"%in%colnames(indf)) | (!"RATE"%in%colnames(indf)))){
-    setwd(usrdir);stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data\n")
+  if(adminType == "iv-infusion"){
+    if(is.null(TI)){
+      if((!"AMT"%in%colnames(indf)) | (!"RATE"%in%colnames(indf))){
+        setwd(usrdir); stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data\n")
+      }
+      TInum <- NULL
+    }else{
+      if(length(TI)!=1){
+        setwd(usrdir); stop("Incorrect TI information. TI has to be either a single numeric value or a column name.\n")
+      }else{
+        if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", TI)){
+          TI <- as.numeric(TI); TInum <- TRUE
+        }else{
+          if(!TI%in%colnames(indf)){
+            setwd(usrdir); stop("Incorrect TI information. TI has to be either a single numeric value or a column name.\n")
+          }else{
+            TInum <- FALSE
+          }
+        }
+      }
+    }
   }
   
   # Set backExtrp to FALSE in the presence of simulated data
@@ -316,12 +348,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if("AMT"%in%colnames(indf)) doseAmtNm <- "AMT"
   }
   
-  # Dose unit
-  if (is.null(doseUnit)) doseUnit <- "M"
-  
   # Preliminary description
   # Units for dose, time and conc
-  dunit    <- ifelse(is.null(doseNormUnit), doseUnit, paste0(doseUnit,"/",doseNormUnit))
+  dunit    <- ifelse(is.null(doseUnit), "M", doseUnit)
   tunit    <- ifelse(is.null(timeUnit), "T", timeUnit)
   cunit    <- ifelse(is.null(concUnit), "M.L^-3", concUnit)
   aucunit  <- paste0(tunit,"*",cunit)
@@ -372,7 +401,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # Appropriate date format
   if (!is.null(dateColNm)){
-    if (dateColNm%in%colnames(indf)==F){setwd(usrdir);stop("Incorrect name for the date column\n")}
+    if (!dateColNm%in%colnames(indf)){setwd(usrdir);stop("Incorrect name for the date column\n")}
     if (dateFormat == "D-M-Y"){
       dateFormat <- "%d-%m-%Y"
     }else if (dateFormat == "D-Y-M"){
@@ -505,13 +534,31 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   # Function to generate time and conc data to calculate NCA metrics
   ncaId <- function(ifdf,ID){
-    if(adminType == "iv-infusion" & is.null(TI)){
-      amt  <- ifdf[ifdf[,idCol]==ID & ifdf$AMT > 0,"AMT"][1]
-      rate <- ifdf[ifdf[,idCol]==ID & ifdf$RATE > 0,"RATE"][1]
-      if (is.na(amt) | is.na(rate) | rate==0){setwd(usrdir);stop(paste0("Incorrect AMT and/or RATE value for ",ID))}else{TI <- amt/rate}
+    if(adminType == "iv-infusion"){
+      if(is.null(TInum)){
+        amt  <- ifdf[ifdf[,idCol]==ID & ifdf$AMT > 0,"AMT"][1]
+        rate <- ifdf[ifdf[,idCol]==ID & ifdf$RATE > 0,"RATE"][1]
+        if (is.na(amt) | is.na(rate) | rate==0){
+          setwd(usrdir);stop(paste0("Incorrect AMT and/or RATE value for ",ID))
+        }else{
+          iTI <- amt/rate
+        }
+      }else{
+        if(!TInum){
+          TItmp <- unique(ifdf[ifdf[,idCol]==ID,TI])
+          if(length(TItmp)!=1 || !grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", TItmp)){
+            setwd(usrdir); stop(paste0("Incorrect TI information. TI column has either more than one unique value or non-numeric data for the individual with ID = ",ID,".\n"))
+          }else{
+            iTI <- as.numeric(as.character(TItmp))
+          }
+        }else{
+          iTI <- TI
+        }
+      }
     }else{
-      TI <- "NaN"
+      iTI <- "NaN"
     }
+    
     if (timeFormat != "number"){
       time <- numeric(0)
       if (!is.null(dateColNm)){
@@ -546,12 +593,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       tc <- tc[order(tc$time),]
       #if (tc$time[1]<0) tc$time <- tc$time + abs(min(tc$time))
     }
-    return(tc)
+    return(list(tc=tc,iTI=iTI))
   }
   
-  # Estimate NCA metrics for case = 1
-  pddf <- data.frame()
+  pddf   <- data.frame()                            # Summary table
+  DVleg  <- paste0("Concentration (",cunit,")")     # DV legend
+  IDVleg <- paste0("Time (",tunit,")")              # IDV legend
   
+  # Estimate NCA metrics for case = 1
   if (case == 1){
     ifdf <- indf
     if (length(which(is.na(ifdf[,concCol]) | ifdf[,concCol]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concCol]) | ifdf[,concCol]==""),]}
@@ -572,24 +621,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }else{
         idzAmt <- NA
       }
-      tc   <- ncaId(ifdf,as.character(idd[i]))
+      tcTI <- ncaId(ifdf,as.character(idd[i]))
+      tc   <- tcTI$tc
+      iTI  <- tcTI$iTI
       if(nrow(tc)==0) next
       time <- as.numeric(tc$time)
       conc <- as.numeric(tc$conc)
       cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+      NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
       outData <- rbind(outData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm)))
     }
     
-    if(noPlot==FALSE){
+    if(!noPlot){
       # DV plot
       figlbl    <- "All-data"
       cdata$FCT <- figlbl
-      gdr       <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+      gdr       <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if (printOut==TRUE){
+      if (printOut){
         fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
         eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -607,7 +658,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         gdr         <- histobsgrob$gdr
         mylegend    <- histobsgrob$legend
         lheight     <- histobsgrob$lheight
-        if (printOut==TRUE){
+        if (printOut){
           fl <- paste0(usrdir,"/HistObs")
           eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -643,25 +694,27 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }else{
           idzAmt <- NA
         }
-        tc   <- ncaId(ifdf,as.character(idd[i]))
+        tcTI <- ncaId(ifdf,as.character(idd[i]))
+        tc   <- tcTI$tc
+        iTI  <- tcTI$iTI
         if(nrow(tc)==0) next
         time <- as.numeric(tc$time)
         conc <- as.numeric(tc$conc)
         
         cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+        NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
         outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
-      if(noPlot==FALSE){
+      if(!noPlot){
         # DV plot
         figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
         cdata$FCT <- figlbl
-        gdr       <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+        gdr       <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
         ggr <- grid.grab()
         concplot[[length(concplot)+1]] <- ggr
-        if (printOut==TRUE){
+        if (printOut){
           fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -679,7 +732,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         gdr         <- histobsgrob$gdr
         mylegend    <- histobsgrob$legend
         lheight     <- histobsgrob$lheight
-        if (printOut==TRUE){
+        if (printOut){
           fl <- paste0(usrdir,"/HistObs_",figlbl)
           eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -716,24 +769,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }else{
             idzAmt <- NA
           }
-          tc   <- ncaId(ifdf,as.character(idd[i]))
+          tcTI <- ncaId(ifdf,as.character(idd[i]))
+          tc   <- tcTI$tc
+          iTI  <- tcTI$iTI
           if(nrow(tc)==0) next
           time <- as.numeric(tc$time)
           conc <- as.numeric(tc$conc)
           cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+          NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
           outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
-        if(noPlot==FALSE){
+        if(!noPlot){
           # DV plot
           figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
           cdata$FCT <- figlbl
-          gdr <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+          gdr <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
           ggr <- grid.grab()
           concplot[[length(concplot)+1]] <- ggr
-          if (printOut==TRUE){
+          if (printOut){
             fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
             eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
             suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -751,7 +806,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           gdr         <- histobsgrob$gdr
           mylegend    <- histobsgrob$legend
           lheight     <- histobsgrob$lheight
-          if (printOut==TRUE){
+          if (printOut){
             fl <- paste0(usrdir,"/HistObs_",figlbl)
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
             suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -790,24 +845,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }else{
               idzAmt <- NA
             }
-            tc     <- ncaId(ifdf,as.character(idd[i]))
+            tcTI <- ncaId(ifdf,as.character(idd[i]))
+            tc   <- tcTI$tc
+            iTI  <- tcTI$iTI
             if(nrow(tc)==0) next
             time   <- as.numeric(tc$time)
             conc   <- as.numeric(tc$conc)
             cdata  <- rbind(cdata,cbind(Time=time,Conc=conc,ID=as.character(idd[i])))
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
             outData <- rbind(outData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
-          if(noPlot==FALSE){
+          if(!noPlot){
             # DV plot
             figlbl    <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
             cdata$FCT <- figlbl
-            gdr <- dv.plot(pdata=cdata,cunit=cunit,tunit=tunit)
+            gdr <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
             suppressMessages(suppressWarnings(grid.arrange(gdr)))
             ggr <- grid.grab()
             concplot[[length(concplot)+1]] <- ggr
-            if (printOut==TRUE){
+            if (printOut){
               fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
               eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=8,width=16,units=\"cm\",res=200)")))
               suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -825,7 +882,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             gdr         <- histobsgrob$gdr
             mylegend    <- histobsgrob$legend
             lheight     <- histobsgrob$lheight
-            if (printOut==TRUE){
+            if (printOut){
               fl <- paste0(usrdir,"/HistObs_",figlbl)
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=15,width=14,units=\"cm\",res=200)")))
               suppressMessages(suppressWarnings(grid.arrange(gdr, mylegend, heights = unit.c(unit(1,"npc")-lheight, lheight))))
@@ -973,7 +1030,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     grStat[,c(5:ncol(grStat))] <- as.data.frame(apply(grStat[,c(5:ncol(grStat))], 2, FUN=function(x) out.digits(as.numeric(x),dig=4)))
   }
   
-  if(printOut==TRUE) write.table(grStat, file=paste0(usrdir,"/ObsStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
+  if(printOut) write.table(grStat, file=paste0(usrdir,"/ObsStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
   
   
   # Print output files if simulated data does not exist
@@ -1025,7 +1082,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(exists("outData")) assign("ncaOutput",  outData,   envir=streamsEnv)
     if(exists("grStat"))  assign("ObsStat",    grStat,    envir=streamsEnv)
     
-    if(printOut==TRUE){
+    if(printOut){
       write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)   # write the output in a file
       fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab1=prnTab1, prnTab2=prnTab2, spread=spread, conc=concplot, histobs=histobsplot)   # Function output list
     }    
@@ -1041,14 +1098,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                             Overwrite it? (type 1)\n
                             Rename the existing folder and create a new one? (type 2)\n
                             Use data from the existing folder? (type 3)\n")
-      } else if(overwrite_SIMDATA==T){
+      } else if(overwrite_SIMDATA){
         dirTest <- "1"
-      } else if(overwrite_SIMDATA==F) {
+      } else if(!overwrite_SIMDATA) {
         dirTest <- "3"
       }
       
       if (dirTest == "1"){
-        unlink(od, recursive=T)
+        unlink(od, recursive=TRUE)
         dir.create(od)
       }else if (dirTest == "2"){
         print("\nRenaming \"SIMDATA\" to \"SIMDATA_PREVIOUS\"\n")
@@ -1079,7 +1136,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         sim <- sim[!is.na(sim[,1]),]
         sim$NSUB <- rep(1:(nrow(sim)/Nro),each=Nro)
         #nsim <- max(sim$NSUB)
-        if(MDV.rm==T){
+        if(MDV.rm){
           if(any(colnames(sim)=='MDV')){sim <- sim[sim[,'MDV']==0,]
           }else{cat('\nWarning MDV data item not listed in header,
                          Could not remove dose events!')}
@@ -1106,7 +1163,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       simID <- unique(nmdf$NSUB)
       nsim <- length(simID)
       
-      if (printOut==TRUE) write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
+      if (printOut) write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
       
       # exclude data based on specific values on filter column (optional)
       # Values in filterExcl will be excluded from the analysis
@@ -1138,28 +1195,28 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # 1st level population stratification
       if (!is.null(str1Nm)){
-        if (str1Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 1st level stratification column in simulation output\n")}
+        if (!str1Nm%in%colnames(srdf)){setwd(usrdir);stop("Incorrect name for the 1st level stratification column in simulation output\n")}
         if (is.null(str1)){str1 <- unique(sort(srdf[,str1Nm]))}
         nstr1 <- length(str1)
       }
       
       # 2nd level population stratification
       if (!is.null(str2Nm)){
-        if (str2Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
+        if (!str2Nm%in%colnames(srdf)){setwd(usrdir);stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
         if (is.null(str2)){str2 <- unique(sort(srdf[,str2Nm]))}
         nstr2 <- length(str2)
       }
       
       # 3rd level population stratification
       if (!is.null(str3Nm)){
-        if (str3Nm%in%colnames(srdf)==F){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
+        if (!str3Nm%in%colnames(srdf)){setwd(usrdir);stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
         if (is.null(str3)){str3 <- unique(sort(srdf[,str3Nm]))}
         nstr3 <- length(str3)
       }
       
       # Dose amount is extracted from doseAmtNm column
       if (!is.null(doseAmtNm)){
-        if (doseAmtNm%in%colnames(nmdf)==T){
+        if (doseAmtNm%in%colnames(nmdf)){
           doseAmtNm <- doseAmtNm
         }else if ("AMT"%in%colnames(nmdf)){
           doseAmtNm <- "AMT"
@@ -1246,13 +1303,34 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # Calculate AUC parameters for the simulation output
       dset = "sim"
+      
       # Function to extract time and conc data for NCA metrics calculation for simulated data
       simNcaId <- function(ifdf,ID){
-        if(adminType == "iv-infusion" & is.null(TI)){
-          amt  <- ifdf[ifdf[,idCol]==ID & ifdf$AMT > 0,"AMT"][1]
-          rate <- ifdf[ifdf[,idCol]==ID & ifdf$RATE > 0,"RATE"][1]
-          if (is.na(amt) | is.na(rate) | rate==0){setwd(usrdir);stop(paste("Incorrect AMT and/or RATE value IN NONMEM output for ",ID,sep=""))}else{TI <- amt/rate}
-        }else{TI <- "NaN"}
+        if(adminType == "iv-infusion"){
+          if(is.null(TInum)){
+            amt  <- ifdf[ifdf[,idCol]==ID & ifdf$AMT > 0,"AMT"][1]
+            rate <- ifdf[ifdf[,idCol]==ID & ifdf$RATE > 0,"RATE"][1]
+            if (is.na(amt) | is.na(rate) | rate==0){
+              setwd(usrdir);stop(paste0("Incorrect AMT and/or RATE value in NONMEM output file for ",ID,".\n"))
+            }else{
+              iTI <- amt/rate
+            }
+          }else{
+            if(!TInum){
+              TItmp <- unique(ifdf[ifdf[,idCol]==ID,TI])
+              if(length(TItmp)!=1 || !grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", TItmp)){
+                setwd(usrdir); stop(paste0("Incorrect TI information. TI column has either more than one unique value or non-numeric data for the individual with ID = ",ID,".\n"))
+              }else{
+                iTI <- as.numeric(as.character(TItmp))
+              }
+            }else{
+              iTI <- TI
+            }
+          }
+        }else{
+          iTI <- "NaN"
+        }
+        
         conc <- as.numeric(as.character(ifdf[ifdf[,idCol]==ID,concCol]))
         if (simLog == TRUE){
           for (c in 1:length(conc)){conc[c] <- ifelse ((conc[c] != 0), exp(conc[c]), 0)}
@@ -1264,7 +1342,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           tc <- tc[order(tc$time),]
           tc$time <- tc$time + abs(min(tc$time))
         }
-        return(tc)
+        return(list(tc=tc,iTI=iTI))
       }
       
       for (s in 1:nsim){
@@ -1282,11 +1360,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }else{
               idzAmt <- NA
             }
-            stc  <- simNcaId(ifdf,as.character(idd[i]))
+            stcTI <- simNcaId(ifdf,as.character(idd[i]))
+            stc   <- stcTI$tc
+            iTI   <- stcTI$iTI
             if(nrow(stc)==0) next
             time <- as.numeric(stc$time)
             conc <- as.numeric(stc$conc)
-            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+            NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
             simData <- rbind(simData, data.frame(ID=as.character(idd[i]),Dose=idzAmt,t(NCAprm),NSIM=s))
           }
         }
@@ -1303,11 +1383,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               }else{
                 idzAmt <- NA
               }
-              stc  <- simNcaId(ifdf,as.character(idd[i]))
+              stcTI <- simNcaId(ifdf,as.character(idd[i]))
+              stc   <- stcTI$tc
+              iTI   <- stcTI$iTI
               if(nrow(stc)==0) next
               time <- as.numeric(stc$time)
               conc <- as.numeric(stc$conc)
-              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+              NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
               simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
             }
           }
@@ -1325,11 +1407,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 }else{
                   idzAmt <- NA
                 }
-                stc  <- simNcaId(ifdf,as.character(idd[i]))
+                stcTI <- simNcaId(ifdf,as.character(idd[i]))
+                stc   <- stcTI$tc
+                iTI   <- stcTI$iTI
                 if(nrow(stc)==0) next
                 time <- as.numeric(stc$time)
                 conc <- as.numeric(stc$conc)
-                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
                 simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
               }
             }
@@ -1349,11 +1433,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   }else{
                     idzAmt <- NA
                   }
-                  stc  <- simNcaId(ifdf,as.character(idd[i]))
+                  stcTI <- simNcaId(ifdf,as.character(idd[i]))
+                  stc   <- stcTI$tc
+                  iTI   <- stcTI$iTI
                   if(nrow(stc)==0) next
                   time <- as.numeric(stc$time)
                   conc <- as.numeric(stc$conc)
-                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=TI,simFile=simFile,dset=dset) # calls est.nca function
+                  NCAprm <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset) # calls est.nca function
                   simData <- rbind(simData, data.frame(ID=as.character(idd[i]),STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
                 }
               }
@@ -1383,7 +1469,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
     
     dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
-    if (printOut==TRUE) write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
+    if (printOut) write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
     
     # Population histogram
     if (case == 1){
@@ -1396,14 +1482,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
         smedianData <- rbind(smeanData, medianPrm)
       }
-      if(noPlot==FALSE){
+      if(!noPlot){
         obsdata     <- subset(outData, select=param, ID!="")
         figlbl      <- NULL
         histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smedianData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
         gdr         <- histpopgrob$gdr
         mylegend    <- histpopgrob$legend
         lheight     <- histpopgrob$lheight
-        if(printOut==TRUE){
+        if(printOut){
           fl <- paste0(usrdir,"/popMean")
           eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
           suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1428,14 +1514,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
           smedianData <- rbind(smeanData, medianPrm)
         }
-        if(noPlot==FALSE){
+        if(!noPlot){
           obsdata     <- subset(outData, select=param, ID!="" & STRAT1==as.character(popStr1[s1]))
           figlbl      <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
           histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smedianData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
           gdr         <- histpopgrob$gdr
           mylegend    <- histpopgrob$legend
           lheight     <- histpopgrob$lheight
-          if (printOut==TRUE){
+          if (printOut){
             fl <- paste0(usrdir,"/popMean_",figlbl)
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
             suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1462,14 +1548,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
             smedianData <- rbind(smeanData, medianPrm)
           }
-          if(noPlot==FALSE){
+          if(!noPlot){
             obsdata     <- subset(outData, select=param, ID!="" & STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]))
             figlbl      <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
             histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smedianData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
             gdr         <- histpopgrob$gdr
             mylegend    <- histpopgrob$legend
             lheight     <- histpopgrob$lheight
-            if (printOut==TRUE){
+            if (printOut){
               fl <- paste0(usrdir,"/popMean_",figlbl)
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1498,14 +1584,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
               smedianData <- rbind(smeanData, medianPrm)
             }
-            if(noPlot==FALSE){
+            if(!noPlot){
               obsdata     <- subset(outData, select=param, ID!="" & STRAT1==as.character(popStr1[s1]) & STRAT2==as.character(popStr2[s2]) & STRAT3==as.character(popStr3[s3]))
               figlbl      <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
               histpopgrob <- histpop.plot(obsdata=obsdata,simdata=smedianData,figlbl=figlbl,param=param,cunit=cunit,tunit=tunit,spread=spread)
               gdr         <- histpopgrob$gdr
               mylegend    <- histpopgrob$legend
               lheight     <- histpopgrob$lheight
-              if (printOut==TRUE){
+              if (printOut){
                 fl <- paste0(usrdir,"/popMean_",figlbl)
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1551,11 +1637,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (pdeout$metric != ""){
           nout     <- nout + 1
           metric   <- paste(metric,pdeout$metric,sep=", ")
-          if(noPlot==FALSE){
+          if(!noPlot){
             gdr      <- pdeout$grob
             mylegend <- pdeout$legend
             lheight  <- pdeout$lheight
-            if (printOut==TRUE){
+            if (printOut){
               fl <- paste0(usrdir,"/Outlier_ID-",id[i])
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
               suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1585,11 +1671,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       if (nrow(plotdata) == 0) next
       figlbl <- "All data"
       # Deviation plot
-      if(noPlot==FALSE){
+      if(!noPlot){
         ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
         if (!is.null(ggdev)){
           suppressMessages(suppressWarnings(print(ggdev)))
-          if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+          if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
           devplot[[length(devplot)+1]] <- ggdev
         }
       }
@@ -1599,17 +1685,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       forestdata <- npdeout$forestdata
       forestdata$str <- figlbl
       fpval <- rbind(fpval, forestdata)
-      if(noPlot==FALSE){
+      if(!noPlot){
         npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
         suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
         
         histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
         suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
       }
       
-      if(noPlot==FALSE){
+      if(!noPlot){
         # Forest plot for NPDE
         fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
@@ -1629,7 +1715,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           #coord_cartesian(xlim=c(xlim1,xlim2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case==2){
       for (s1 in 1:npopStr1){
@@ -1649,11 +1735,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           if (pdeout$metric != ""){
             nout     <- nout + 1
             metric   <- paste(metric,pdeout$metric,sep=", ")
-            if(noPlot==FALSE){
+            if(!noPlot){
               gdr      <- pdeout$grob
               mylegend <- pdeout$legend
               lheight  <- pdeout$lheight
-              if (printOut==TRUE){
+              if (printOut){
                 fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
                 suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1684,11 +1770,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (nrow(plotdata) == 0) next
         figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]))
         # Deviation plot
-        if(noPlot==FALSE){
+        if(!noPlot){
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
-            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+            if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
             devplot[[length(devplot)+1]] <- ggdev
           }
         }
@@ -1698,18 +1784,18 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         forestdata <- npdeout$forestdata
         forestdata$str <- figlbl
         fpval <- rbind(fpval, forestdata)
-        if(noPlot==FALSE){
+        if(!noPlot){
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-          if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
           
           histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
           suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-          if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
         }
       }
       
-      if(noPlot==FALSE){
+      if(!noPlot){
         # Forest plot for NPDE
         fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
@@ -1729,7 +1815,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           #coord_cartesian(xlim=c(xlim1,xlim2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case == 3){
       for (s1 in 1:npopStr1){
@@ -1750,11 +1836,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(noPlot==FALSE){
+              if(!noPlot){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
-                if (printOut==TRUE){
+                if (printOut){
                   fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
                   eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
                   suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1787,11 +1873,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           if (nrow(plotdata) == 0) next
           figlbl <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]))
           # Deviation plot
-          if(noPlot==FALSE){
+          if(!noPlot){
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
-              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
               devplot[[length(devplot)+1]] <- ggdev
             }
           }
@@ -1801,19 +1887,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           forestdata <- npdeout$forestdata
           forestdata$str <- figlbl
           fpval <- rbind(fpval, forestdata)
-          if(noPlot==FALSE){
+          if(!noPlot){
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
             
             histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
             suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-            if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+            if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
           }
         }
       }
       
-      if(noPlot==FALSE){
+      if(!noPlot){
         # Forest plot for NPDE
         fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
@@ -1833,7 +1919,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           #coord_cartesian(xlim=c(xlim1,xlim2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
       }
     }else if (case == 4){
       for (s1 in 1:npopStr1){
@@ -1856,11 +1942,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if (pdeout$metric != ""){
                 nout     <- nout + 1
                 metric   <- paste(metric,pdeout$metric,sep=", ")
-                if(noPlot==FALSE){
+                if(!noPlot){
                   gdr      <- pdeout$grob
                   mylegend <- pdeout$legend
                   lheight  <- pdeout$lheight
-                  if (printOut==TRUE){
+                  if (printOut){
                     fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
                     eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=200)")))
                     suppressMessages(suppressWarnings(grid.arrange(gdr,mylegend, heights=unit.c(unit(1, "npc") - lheight, lheight))))
@@ -1895,11 +1981,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (nrow(plotdata) == 0) next
             figlbl  <- paste0(popStrNm1,"-",as.character(popStr1[s1]),"_",popStrNm2,"-",as.character(popStr2[s2]),"_",popStrNm3,"-",as.character(popStr3[s3]))
             # Deviation plot
-            if(noPlot==FALSE){
+            if(!noPlot){
               ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
               if (!is.null(ggdev)){
                 suppressMessages(suppressWarnings(print(ggdev)))
-                if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+                if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
                 devplot[[length(devplot)+1]] <- ggdev
               }
             }
@@ -1909,20 +1995,20 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             forestdata <- npdeout$forestdata
             forestdata$str <- figlbl
             fpval <- rbind(fpval, forestdata)
-            if(noPlot==FALSE){
+            if(!noPlot){
               npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
               suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
               
               histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
               suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-              if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/histNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=200)))
             }
           }
         }
       }
       
-      if(noPlot==FALSE){
+      if(!noPlot){
         # Forest plot for NPDE
         fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
         xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
@@ -1942,7 +2028,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           #coord_cartesian(xlim=c(xlim1,xlim2))
         suppressMessages(suppressWarnings(print(ggplt)))
         forestplot[[length(forestplot)+1]] <- ggplt
-        if (printOut==TRUE) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
+        if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/forestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=200)))
       }
     }
     
@@ -2080,7 +2166,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       simGrStat[,c(5:ncol(simGrStat))] <- as.data.frame(lapply(simGrStat[,c(5:ncol(simGrStat))], FUN=function(x) out.digits(x,dig=4)))
     }
     
-    if (printOut==TRUE) write.table(simGrStat, file=paste0(usrdir,"/SimStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
+    if (!printOut) write.table(simGrStat, file=paste0(usrdir,"/SimStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
     
     # Print output table
     # Raname ID and stratifier columns and format output table sigfig
@@ -2127,7 +2213,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if(exists("nmdf"))      assign("ncaSimData", nmdf,      envir=streamsEnv)
     if(exists("dasdf"))     assign("ncaSimEst",  dasdf,     envir=streamsEnv)
     
-    if (printOut==TRUE){
+    if(printOut){
       # Create HTML output
       simFileNm <- ifelse(is.data.frame(simFile), deparse(substitute(simFile)), simFile)
       txt <- paste(txt,paste0("Name of the NONMEM simulation output file: \"",simFileNm,"\""),sep="\n")
@@ -2140,7 +2226,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   setwd(usrdir)
   
-  if (printOut==TRUE){
+  if(printOut){
     misc <- system.file("misc", package = "ncappc")
     
     if(is.null(outFileNm)) outFileNm <- obsFileNm

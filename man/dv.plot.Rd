@@ -4,21 +4,48 @@
 \alias{dv.plot}
 \title{Plots drug plasma concentration vs time data}
 \usage{
-dv.plot(pdata, cunit = "[M].[L]^-3", tunit = "[T]")
+dv.plot(df, xvar = "Time", yvar = "Conc", obsLog = FALSE,
+  myXlab = "Time (T)", myYlab = "Concentration (M.L^-3)", color = NULL,
+  group = NULL, onlyLin = FALSE, onlyLog = FALSE, XYlog = FALSE,
+  STRATY = ".", STRATX = ".", myYBr = waiver(), myXBr = waiver(),
+  myYBrLog = waiver(), myXBrLog = waiver(), myYlim = NULL,
+  myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL)
 }
 \arguments{
-\item{pdata}{A data frame with three mandatory columns and one optional
-  column:
-\enumerate{
- \item Time: Time column (mandatory)
- \item Conc: DV column (mandatory)
- \item ID: Individual ID (mandatory)
- \item FCT: Dose identifier and/or population stratifier (optional)
-}}
+\item{df}{A data frame to be used for the plot}
 
-\item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
+\item{xvar}{is the independent variable, default is \strong{"TIME"}}
 
-\item{tunit}{Unit for time (\strong{"[T]"})}
+\item{yvar}{is the dependent variable, default is \strong{"DV"}}
+
+\item{obsLog}{is a logical variable (\code{TRUE}, \code{FALSE}). If
+\code{TRUE}, concentration in observed data is assumed to be in logarithmic
+scale. Default is \strong{\code{FALSE}}}
+
+\item{myXlab}{is the x-axis label, default is \strong{"Time (T)"}}
+
+\item{myYlab}{is the y-axis label, defaults is \strong{"Concentration 
+(M.L^-3)"}}
+
+\item{STRATY}{is the row stratification variable, default is \strong{"."}}
+
+\item{STRATX}{is the column stratification variable, default is \strong{"."}}
+
+\item{myYBr}{are the breaks for the Y-axis for the linear plot}
+
+\item{myXBr}{are the breaks for the X-axis for the linear plot}
+
+\item{myYBrLog}{are the breaks for the Y-axis for the log plot}
+
+\item{myXBrLog}{are the breaks for the X-axis for the log plot}
+
+\item{myYlim}{sets Y-axis limits for the linear plot}
+
+\item{myXlim}{sets X-axis limits for the linear plot}
+
+\item{myYlimLog}{sets the Y-axis limit for the log plot}
+
+\item{myXlimLog}{sets the X-axis limit for the log plot}
 }
 \value{
 returns a graphical object created by arrangeGrob function

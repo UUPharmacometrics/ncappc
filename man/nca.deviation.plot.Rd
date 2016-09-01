@@ -6,7 +6,7 @@
 data}
 \usage{
 nca.deviation.plot(plotdata, xvar = NULL, devcol = NULL, figlbl = NULL,
-  spread = "npi", cunit = "[M].[L]^-3", tunit = "[T]")
+  spread = "npi", cunit = "M.L^-3", tunit = "T")
 }
 \arguments{
 \item{plotdata}{A data frame containing the scaled deviation values of the
@@ -25,9 +25,9 @@ stratifier (\strong{NULL})}
 prediction interval) or npi (95\% nonparametric prediction interval))
 (\strong{"npi"})}
 
-\item{cunit}{Unit for concentration (\strong{"[M].[L]^-3"})}
+\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
 
-\item{tunit}{Unit for time (\strong{"[T]"})}
+\item{tunit}{Unit for time (\strong{"T"})}
 }
 \value{
 returns the data frame with the NPDE values based on the input data.

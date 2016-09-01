@@ -39,8 +39,8 @@
 #'   test. The allowed NCA metrics for this histograms are "AUClast", 
 #'   "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" 
 #'   and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})
-#' @param cunit Unit for concentration (\strong{"[M].[L]^-3"})
-#' @param tunit Unit for time (\strong{"[T]"})
+#' @param cunit Unit for concentration (\strong{"M.L^-3"})
+#' @param tunit Unit for time (\strong{"T"})
 #' @param noPlot Perform only NCA calculations without any plot generation
 #'   (TRUE, FALSE) (\strong{FALSE})
 #'
@@ -52,7 +52,17 @@
 #' @export
 #'
 
-nca.pde.deviation.outlier <- function(obsdata,simdata,idNm="ID",id=NULL,spread="npi",figlbl=NULL,calcparam=c("AUClast","Cmax"),diagparam=c("AUClast","Cmax"),cunit="[M].[L]^-3",tunit="[T]",noPlot=FALSE){
+nca.pde.deviation.outlier <- function(obsdata,
+                                      simdata,
+                                      idNm="ID",
+                                      id=NULL,
+                                      spread="npi",
+                                      figlbl=NULL,
+                                      calcparam=c("AUClast","Cmax"),
+                                      diagparam=c("AUClast","Cmax"),
+                                      cunit="M.L^-3",
+                                      tunit="T",
+                                      noPlot=FALSE){
   
   "type" <- "..density.." <- "oval" <- "mval" <- "mdval" <- "devl" <- "devu" <- "sval" <- "scale_color_manual" <- "scale_linetype_manual" <- "xlab" <- "ylab" <- "geom_histogram" <- "aes" <- "geom_vline" <- "facet_grid" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "ggplot" <- "labs" <- "coord_cartesian" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "sd" <- "quantile" <- "scale_y_continuous" <- "percent" <- "packageVersion" <- NULL
   rm(list=c("type","..density..","oval","mval","mdval","devl","devu","sval","scale_color_manual","scale_linetype_manual","xlab","ylab","geom_histogram","aes","geom_vline","facet_grid","theme","element_text","unit","element_rect","ggplot","labs","coord_cartesian","gtable_filter","ggplot_gtable","ggplot_build","arrangeGrob","textGrob","gpar","..count..","..PANEL..","sd","quantile","scale_y_continuous","percent","packageVersion"))
