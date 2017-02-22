@@ -10,11 +10,11 @@ ncappc(obsFile = "nca_original.npctab.dta",
   concUnit = NULL, timeUnit = NULL, doseUnit = NULL, obsLog = FALSE,
   simLog = FALSE, psnOut = TRUE, idNmObs = "ID", timeNmObs = "TIME",
   concNmObs = "DV", idNmSim = "ID", timeNmSim = "TIME",
-  concNmSim = "DV", AUCTimeRange = NULL, backExtrp = FALSE,
-  LambdaTimeRange = NULL, LambdaExclude = NULL, doseAmtNm = NULL,
-  adminType = "extravascular", doseType = "ns", doseTime = NULL,
-  Tau = NULL, TI = NULL, method = "linearup-logdown", blqNm = NULL,
-  blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE,
+  concNmSim = "DV", onlyNCA = FALSE, AUCTimeRange = NULL,
+  backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
+  doseAmtNm = NULL, adminType = "extravascular", doseType = "ns",
+  doseTime = NULL, Tau = NULL, TI = NULL, method = "linearup-logdown",
+  blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE,
   filterNm = NULL, filterExcl = NULL, negConcExcl = FALSE,
   param = c("AUClast", "Cmax"), timeFormat = "number", dateColNm = NULL,
   dateFormat = NULL, spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax",
@@ -52,17 +52,18 @@ be a compressed file as well. Default is
 \item{str3}{Stratification ID of the members within 3rd level stratification
 (e.g c(1,2)). Default is \strong{\code{NULL}}}
 
-\item{concUnit}{Unit of concentration (e.g. "ng/mL"). Default is
-\strong{"M.L^-3"}}
+\item{concUnit}{Unit of concentration (e.g. "ng/mL"). Default is 
+\strong{\code{NULL}}}
 
-\item{timeUnit}{Unit of time (e.g. "h"). Default is \strong{"T"}}
+\item{timeUnit}{Unit of time (e.g. "h"). Default is \strong{\code{NULL}}}
 
-\item{doseUnit}{Unit of dose amount (e.g. "ng"). Default is \strong{"M"}}
+\item{doseUnit}{Unit of dose amount (e.g. "ng"). Default is
+\strong{\code{NULL}}}
 
 \item{obsLog}{If \code{TRUE} concentration in observed data is in logarithmic
 scale. Default is \strong{\code{FALSE}}}
 
-\item{simLog}{If \code{TRUE} concentration in simulated data is in
+\item{simLog}{If \code{TRUE} concentration in simulated data is in 
 logarithmic scale. Default is \strong{\code{FALSE}}}
 
 \item{psnOut}{If \code{TRUE} observed data is an output from PsN or in NONMEM
@@ -83,6 +84,9 @@ output format. Default is \strong{\code{TRUE}}}
 
 \item{concNmSim}{Column name for concentration in simulated data. Default is
 \strong{"DV"}}
+
+\item{onlyNCA}{If \code{TRUE} only NCA is performed and ppc part is ignored
+although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 
 \item{AUCTimeRange}{User-defined window of time used to estimate AUC. Default
 is \strong{\code{NULL}}}
@@ -199,7 +203,7 @@ Default is \strong{\code{NULL}}}
 
 \item{outFileNm}{Additional tag to the name of the output html and pdf output
 file hyphenated to the standard ncappc report file name standard ncappc
-report file name. Default is the \strong{name of the observed data file}}
+report file name. Default is the \strong{\code{NULL}}}
 }
 \value{
 NCA results and diagnostic test results

@@ -5,8 +5,8 @@
 \title{Plots drug plasma concentration vs time data}
 \usage{
 dv.plot(df, xvar = "Time", yvar = "Conc", obsLog = FALSE,
-  myXlab = "Time (T)", myYlab = "Concentration (M.L^-3)", color = NULL,
-  group = NULL, onlyLin = FALSE, onlyLog = FALSE, XYlog = FALSE,
+  myXlab = "Time", myYlab = "Concentration", color = NULL, group = NULL,
+  guide = TRUE, onlyLin = FALSE, onlyLog = FALSE, XYlog = FALSE,
   STRATY = ".", STRATX = ".", myYBr = waiver(), myXBr = waiver(),
   myYBrLog = waiver(), myXBrLog = waiver(), myYlim = NULL,
   myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL)
@@ -22,10 +22,27 @@ dv.plot(df, xvar = "Time", yvar = "Conc", obsLog = FALSE,
 \code{TRUE}, concentration in observed data is assumed to be in logarithmic
 scale. Default is \strong{\code{FALSE}}}
 
-\item{myXlab}{is the x-axis label, default is \strong{"Time (T)"}}
+\item{myXlab}{is the x-axis label, default is \strong{"Time"}}
 
-\item{myYlab}{is the y-axis label, defaults is \strong{"Concentration 
-(M.L^-3)"}}
+\item{myYlab}{is the y-axis label, defaults is \strong{"Concentration"}}
+
+\item{color}{is the column name of the color stratification variable, e.g. 
+"DOSEF". Default is \strong{NULL}}
+
+\item{group}{is the column name of the variable used to group data, default
+is \strong{"ID}}
+
+\item{guide}{if \strong{TRUE}, show guide, default is \strong{TRUE}}
+
+\item{onlyLin}{if \strong{TRUE}, presents only the linear version of the
+plot, default is \strong{FALSE}}
+
+\item{onlyLog}{if \strong{TRUE}, presents only the log version of the plot,
+default is \strong{FALSE}}
+
+\item{XYlog}{if \strong{TRUE}, both X and Y axes of the log version of the
+plot is shown on the logarithmic scale; if \strong{FALSE}, only the Y-axis
+is shown on the logarithmic scale. Default is \strong{FALSE}.}
 
 \item{STRATY}{is the row stratification variable, default is \strong{"."}}
 

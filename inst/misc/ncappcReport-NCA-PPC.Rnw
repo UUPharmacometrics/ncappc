@@ -124,8 +124,7 @@ arglist  <- fnOut$arglist
 case     <- fnOut$case
 txt      <- fnOut$TXT
 pddf     <- fnOut$pddf
-prnTab1  <- fnOut$prnTab1
-prnTab2  <- fnOut$prnTab2
+prnTab   <- fnOut$prnTab
 nsim     <- fnOut$NSIM
 conc     <- fnOut$conc
 histobs  <- fnOut$histobs
@@ -186,7 +185,7 @@ The \textbf{\textit{ncappc}} functionality produces this table to report the est
 
 <<FinalTable, echo=FALSE, results='asis', fig.env="table", cache=FALSE>>==
 source("makeLatexRepresentativeDataTable.R")
-makeLatexRepresentativeDataTable(dataDir="",dataFile=prnTab2,iColWidth=7,iRowNums=50,strLabel="tab:repDataPK",strShortCaption="Representative portion of the ncaOutput.tsv file", strLongCaption="Representative portion of the ncaOutput.tsv file")
+makeLatexRepresentativeDataTable(dataDir="",dataFile=prnTab,iColWidth=7,iRowNums=50,strLabel="tab:repDataPK",strShortCaption="Representative portion of the ncaOutput.tsv file", strLongCaption="Representative portion of the ncaOutput.tsv file")
 @
 
 
@@ -209,7 +208,7 @@ Estimated NCA metrics for each individual using the simulated concentration-time
 \section{Description of the graphical output}
 
 \subsection{Figure 1. [Individual level] Concentration \textit{vs.} time profile}
-<<concplot, echo=FALSE, fig.pos="H", fig.height=6, fig.width=12, out.width='1\\textwidth', fig.align="center", cache=FALSE>>=
+<<concplot, echo=FALSE, fig.pos="H", fig.height=4, fig.width=7, out.width='0.7\\textwidth', fig.align="center", cache=FALSE>>=
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -217,11 +216,11 @@ if (length(conc)>0){
 }
 @
 
-Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
+Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the concentration data in linear scale, while the right panels represent the concentration data in semi-logarithmic scale. Each of the lines represents individual data.
 
 \newpage
 \subsection{Figure 2. [Population level] Histogram of the selected NCA metrics estimated from the observed data}
-<<histobsplot, echo=FALSE, fig.pos="H", fig.height=16, fig.width=14, out.width='1\\textwidth', fig.align='center', cache=FALSE>>=
+<<histobsplot, echo=FALSE, fig.pos="H", fig.height=8, fig.width=7, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(histobs)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -234,7 +233,7 @@ Histogram of four selected NCA metrics (AUClast, AUCINF\_obs, Cmax, Tmax) estima
 
 \newpage
 \subsection{Figure 3. [Population level] Histogram of the simulated population medians of the NCA metrics}
-<<popplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='1\\textwidth', fig.align='center', cache=FALSE>>=
+<<popplot, echo=FALSE, fig.pos="H", fig.height=hth+2, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(pop)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -247,7 +246,7 @@ Histogram of the population median of the NCA metrics obtained from the simulate
 
 \newpage
 \subsection{Figure 4. [Individual level] Deviation of the simulated NCA metrics from the observed value}
-<<devplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
+<<devplot, echo=FALSE, fig.pos="H", fig.height=hth+1, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(dev)>0){
   for (i in 1:length(dev)){suppressMessages(suppressWarnings(print(dev[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -259,7 +258,7 @@ Deviation of the median of the NCA metrics for each individual estimated from th
 
 \newpage
 \subsection{Figure 5. [Individual level] Distribution of the simulated NCA metrics for the outliers}
-<<outlierplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
+<<outlierplot, echo=FALSE, fig.pos="H", fig.height=hth+2, fig.width=wth, out.width='0.9\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(outlier)>0){
   suppressPackageStartupMessages(require(gridExtra))
   for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
@@ -273,7 +272,7 @@ Distribution of the NCA metrics obtained from the simulated data for the outlier
 
 \newpage
 \subsection{Figure 6. [Population level] Histogram of the NPDE values of the NCA metrics within a given population group}
-<<histnpdeplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
+<<histnpdeplot, echo=FALSE, fig.pos="H", fig.height=hth+1, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(histnpde)>0){
   for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -286,7 +285,7 @@ Histogram of the NPDE values of the NCA metrics for all individuals within a giv
 
 \newpage
 \subsection{Figure 7. [Population level] Forest plot for the NPDE type analysis}
-<<forestplot, echo=FALSE, fig.pos="H", fig.height=10, fig.width=15, out.width='1\\textwidth', fig.align='center', cache=FALSE>>=
+<<forestplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='1\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(forest)>0){
   for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
 }else{
@@ -299,7 +298,7 @@ Forest plot of the NPDE type analysis displaying the mean and standard deviation
 
 \newpage
 \subsection{Figure 8. [Individual level] NPDE values of the NCA metrics for each individual}
-<<npdeplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='0.8\\textwidth', fig.align='center', cache=FALSE>>=
+<<npdeplot, echo=FALSE, fig.pos="H", fig.height=hth, fig.width=wth, out.width='0.9\\textwidth', fig.align='center', cache=FALSE>>=
 if (length(npde)>0){
   for (i in 1:length(npde)){suppressMessages(suppressWarnings(print(npde[[i]]))); Sys.sleep(0.5)}
 }else{

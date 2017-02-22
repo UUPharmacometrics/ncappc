@@ -13,8 +13,7 @@ arglist <- fnOut$arglist
 case    <- fnOut$case
 txt     <- fnOut$TXT
 pddf    <- fnOut$pddf
-prnTab1 <- fnOut$prnTab1
-prnTab2 <- fnOut$prnTab2
+prnTab  <- fnOut$prnTab
 conc    <- fnOut$conc
 histobs <- fnOut$histobs
 
@@ -68,7 +67,7 @@ Description of the tabular output
 
 ```{r Final table, echo=FALSE, results='asis'}
 suppressPackageStartupMessages(require(xtable))
-print(xtable(prnTab1, align=rep("c",ncol(prnTab1)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html', size="\\fontsize{8pt}{8pt}\\selectfont")
+print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), include.rownames=FALSE, type = 'html', size="\\fontsize{8pt}{8pt}\\selectfont")
 ```
 
 -
@@ -84,7 +83,7 @@ Description of the graphical output
 -
 -
 
-```{r plot, echo=FALSE, fig.height=5, fig.width=9, fig.align='center', dpi=60}
+```{r plot, echo=FALSE, fig.height=4, fig.width=6, fig.align='center', dpi=90}
 if (length(conc)>0){
   for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -92,12 +91,12 @@ if (length(conc)>0){
 }
 ```
 
-**Figure 1.** [Individual level] Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the raw data, while the right panels represent the semi-logarithmic form of the concentration data. Each of the lines represents individual data.
+**Figure 1.** [Individual level] Concentration vs time profile for each individual stratified by dose or population group, if any, as obtained from the observed data. The left panels represent the concentration data in linear scale, while the right panels represent the concentration data in semi-logarithmic scale. Each of the lines represents individual data.
 
 -
 -
 
-```{r histobsplot, echo=FALSE, fig.height=14, fig.width=12, fig.align='center', dpi=45}
+```{r histobsplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
 if (length(histobs)>0){
   for (i in 1:length(histobs)){suppressMessages(suppressWarnings(grid.draw(histobs[[i]]))); Sys.sleep(0.5); grid.newpage()}
 }else{
@@ -106,4 +105,6 @@ if (length(histobs)>0){
 ```
 
 **Figure 2.** [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population median and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
+
+
 

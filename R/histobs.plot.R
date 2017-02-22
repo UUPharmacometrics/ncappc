@@ -13,14 +13,14 @@
 #' Tmax.
 #' 
 #' @param plotData A data frame with the estimated NCA metrics
-#' @param figlbl Figure label based on dose identifier and/or population
+#' @param figlbl Figure label based on dose identifier and/or population 
 #'   stratifier (\strong{NULL})
-#' @param param A character array of the NCA metrics. The allowed NCA metrics
-#'   for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
-#'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
+#' @param param A character array of the NCA metrics. The allowed NCA metrics 
+#'   for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs", 
+#'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
 #'   (\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})
-#' @param cunit Unit for concentration (\strong{"M.L^-3"})
-#' @param tunit Unit for time (\strong{"T"})
+#' @param cunit Unit for concentration (default is \strong{\code{NULL}})
+#' @param tunit Unit for time (defulat is \strong{\code{NULL}})
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric 
 #'   prediction interval) or npi (95\% nonparametric prediction interval)) 
 #'   (\strong{"npi"})
@@ -32,8 +32,8 @@
 histobs.plot <- function(plotData,
                          figlbl=NULL,
                          param=c("AUClast","AUCINF_obs","Cmax","Tmax"),
-                         cunit="M.L^-3",
-                         tunit="T",
+                         cunit=NULL,
+                         tunit=NULL,
                          spread="npi"){
   
   "..density.." <- "TYPE" <- "Obs" <- "arrangeGrob" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "melt" <- "ggplot" <- "coord_cartesian" <- "facet_grid" <- "labs" <- "gtable_filter" <- "ggplot_gtable" <- "ggplot_build" <- "textGrob" <- "gpar" <- "..count.." <- "..PANEL.." <- "scale_y_continuous" <- "percent" <- "sd" <- "quantile" <- "na.omit" <- "packageVersion" <- NULL
@@ -44,10 +44,14 @@ histobs.plot <- function(plotData,
                     xlab(""), ylab(""),
                     scale_y_continuous(labels = percent),
                     guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0))),
-                    theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1),
-                          axis.text.y = element_text(hjust=0),
+                    theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1,size=10),
+                          axis.text.y = element_text(hjust=0,size=10),
+                          strip.text.x = element_text(size=10),
+                          legend.text = element_text(size=12),
+                          title = element_text(size=14,face="bold"),
                           legend.position = "bottom", legend.direction = "horizontal",
-                          legend.background = element_rect()),
+                          legend.background = element_rect(),
+                          legend.key.height = unit(1,"cm")),
                     geom_vline(aes(xintercept=as.numeric(medianObs), color="median(obs)", linetype="median(obs)"), size=1, show.legend=T),
                     geom_vline(aes(xintercept=as.numeric(sprlow), color="+/-spread", linetype="+/-spread"), size=1),
                     geom_vline(aes(xintercept=as.numeric(sprhgh), color="+/-spread", linetype="+/-spread"), size=1))
@@ -59,15 +63,29 @@ histobs.plot <- function(plotData,
   if (!all(param%in%alwprm)){stop("Incorrect NCA metrics. Please select NCA metrics from \"AUClast\", \"AUClower_upper\", \"AUCINF_obs\", \"AUCINF_pred\", \"AUMClast\", \"Cmax\", \"Tmax\", \"HL_Lambda_z\".")}
   for (p in 1:npr){
     if (param[p] == "AUClast" | param[p] == "AUClower_upper" | param[p] == "AUCINF_obs" | param[p] == "AUCINF_pred"){
-      fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",cunit,"*",tunit,")",sep="")))
+      if(is.null(cunit) | is.null(tunit)){
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=param[p]))
+      }else{
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste0(param[p]," (",cunit,"*",tunit,")")))
+      }
     }else if (param[p] == "AUMClast"){
-      fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",cunit,"*",tunit,"^2)",sep="")))
+      if(is.null(cunit) | is.null(tunit)){
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=param[p]))
+      }else{
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste0(param[p]," (",cunit,"*",tunit,"^2)")))
+      }
     }else if (param[p] == "Cmax"){
-      fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",cunit,")",sep="")))
-    }else if (param[p] == "Tmax"){
-      fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",tunit,")",sep="")))
-    }else if (param[p] == "HL_Lambda_z"){
-      fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste(param[p]," (",tunit,")",sep="")))
+      if(is.null(cunit)){
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=param[p]))
+      }else{
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste0(param[p]," (",cunit,")")))
+      }
+    }else if (param[p] == "Tmax" | param[p] == "HL_Lambda_z"){
+      if(is.null(tunit)){
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=param[p]))
+      }else{
+        fctNm <- rbind(fctNm, data.frame(prmNm=param[p],prmUnit=paste0(param[p]," (",tunit,")")))
+      }
     }
   }
   
@@ -123,8 +141,8 @@ histobs.plot <- function(plotData,
     Label <- paste("Histogram of NCA metrics estimated from the observed data (",figlbl,")\n(spread = ",devtag,")\n\n",sep="")
   }
   
-  plot_args <- list(top = textGrob(Label,vjust=1,gp=gpar(cex = 1.5)),
-                    bottom = textGrob("Value\n\n",vjust=1,gp=gpar(cex = 1.5)),
+  plot_args <- list(top = textGrob(Label,vjust=1,gp=gpar(cex=0.8,fontface="bold")),
+                    bottom = textGrob("Value\n",vjust=1,gp=gpar(cex=1,fontface="bold")),
                     ncol=nc)
   if(packageVersion("gridExtra") < "0.9.2"){
     arg_names <- names(plot_args)

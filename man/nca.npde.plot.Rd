@@ -5,7 +5,7 @@
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
 nca.npde.plot(plotdata, xvar = NULL, npdecol = NULL, figlbl = NULL,
-  cunit = "M.L^-3", tunit = "T")
+  cunit = NULL, tunit = NULL)
 }
 \arguments{
 \item{plotdata}{Data frame with the values of the NPDE values of each
@@ -19,9 +19,9 @@ will be plotted}
 \item{figlbl}{Figure label based on dose identifier and/or population
 stratifier (\strong{NULL})}
 
-\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
+\item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (\strong{"T"})}
+\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
 }
 \value{
 returns a data frame with the mean and SD of population NPDE values

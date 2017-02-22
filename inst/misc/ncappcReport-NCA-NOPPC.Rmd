@@ -74,7 +74,7 @@ Description of the tabular output
 -
 -
 
-**Table 1 (ncaOutput.tsv).** The *ncappc* functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the median of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the median of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics. Below is an excerpt of selected columns of top 100 rows.
+**Table 1 (ncaOutput.tsv).** The *ncappc* functionality produces this table to report the estimated values of the NCA metrics described in the documentation for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional column for AUClast is simAUClast, where simAUClast for an individual represents the median of the estimated AUClast values obtained from the set of simulated data. Similar names are assigned to the additional columns for the other seven metrics. Below is an excerpt of selected columns of top 100 rows.
 
 
 ## Table 1. ncaOutput.tsv (selected columns of top 100 rows)
@@ -149,70 +149,4 @@ if (length(pop)>0){
 ```
 
 **Figure 3.** [Population level] Histogram of the population median of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population median of the NCA matric obtained from the observed data and the median of the population medians of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data.
-
--
--
-
-```{r devplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
-if (length(dev)>0){
-  for (i in 1:length(dev)){suppressMessages(suppressWarnings(print(dev[[i]]))); Sys.sleep(0.5)}
-}else{
-  print("No plot is available.")
-}
-```
-
-**Figure 4.** [Individual level] Deviation of the median of the NCA metrics for each individual estimated from the simulated data obtained from `r nsim` simulations (medianSim) from the corresponding values estimated from the observed data (Obs). The deviation is scaled by the boundary of the "spread" of the simulated data (`r sprtxt`) proximal to the observed value (** Deviation = (Obs - medianSim)/ spread **). The negative value of the deviation signifies over-prediction of the corresponding NCA matric, while a positive value of the deviation signifies under-prediction of the same.
-
--
--
-
-```{r outlierplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
-if (length(outlier)>0){
-  suppressPackageStartupMessages(require(gridExtra))
-  for (i in 1:length(outlier)){suppressMessages(suppressWarnings(grid.draw(outlier[[i]]))); Sys.sleep(0.5); grid.newpage()}
-}else{
-  print("No outlier plot is available as the number of outlier is 0!")
-}
-```
-
-**Figure 5.** [Individual level] Distribution of the NCA metrics obtained from the simulated data for the outlier individuals. The individuals are labeled as outliers because the absolute value of the scaled deviation for at least one of the NCA metrics used in diagnosis is larger than 1. The red and blue solid vertical lines represent the observed NCA matric value and the median of the simulated NCA matric values for that individual, respectively. The dashed blue vertical lines represent the "spread" (`r sprtxt`) of the simulated distribution.
-
--
--
-
-```{r histnpdeplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
-if (length(histnpde)>0){
-  for (i in 1:length(histnpde)){suppressMessages(suppressWarnings(print(histnpde[[i]]))); Sys.sleep(0.5)}
-}else{
-  print("No plot is available.")
-}
-```
-
-**Figure 6.** [Population level] Histogram of the NPDE values of the NCA metrics for all individuals within a given population group. The red solid vertical represents the mean of the ideal NPDE distribution, which is the theoretical normal distribution (mean=0, SD=1). The blue solid vertical lines represent the mean of the NPDE distribution for the corresponding population group. The dashed blue vertical lines represent the standard deviation of the distribution of the NPDE values within that population group.
-
--
--
-
-```{r forestplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
-if (length(forest)>0){
-  for (i in 1:length(forest)){suppressMessages(suppressWarnings(print(forest[[i]]))); Sys.sleep(0.5)}
-}else{
-  print("No plot is available.")
-}
-```
-
-**Figure 7.** [Population level] Forest plot of the NPDE type analysis displaying the mean and standard deviation of the NPDE vaues of the NCA metrics for different population groups. The red and green dots represent the mean and the standard deviation of the NPDE, respectively while the horizontal red and green lines represent the corresponding 95% confidence intervals.
-
--
--
-
-```{r npdeplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', dpi=80}
-if (length(npde)>0){
-  for (i in 1:length(npde)){suppressMessages(suppressWarnings(print(npde[[i]]))); Sys.sleep(0.5)}
-}else{
-  print("No plot is available.")
-}
-```
-
-**Figure 8.** [Individual level] NPDE values of the NCA metrics for each individual within a given population group calculated from the corresponding observed and simulated values of the NCA metrics. The negative value of the NPDE signifies over-prediction of the corresponding NCA matric, while a positive value of the NPDE signifies under-prediction of the same.
 

@@ -5,22 +5,22 @@
 \title{Plots histogram of selected set of NCA metrics.}
 \usage{
 histobs.plot(plotData, figlbl = NULL, param = c("AUClast", "AUCINF_obs",
-  "Cmax", "Tmax"), cunit = "M.L^-3", tunit = "T", spread = "npi")
+  "Cmax", "Tmax"), cunit = NULL, tunit = NULL, spread = "npi")
 }
 \arguments{
 \item{plotData}{A data frame with the estimated NCA metrics}
 
-\item{figlbl}{Figure label based on dose identifier and/or population
+\item{figlbl}{Figure label based on dose identifier and/or population 
 stratifier (\strong{NULL})}
 
-\item{param}{A character array of the NCA metrics. The allowed NCA metrics
-for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
-"AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z".
+\item{param}{A character array of the NCA metrics. The allowed NCA metrics 
+for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs", 
+"AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
 (\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})}
 
-\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
+\item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (\strong{"T"})}
+\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
 
 \item{spread}{Measure of the spread of simulated data (ppi (95\% parametric 
 prediction interval) or npi (95\% nonparametric prediction interval)) 

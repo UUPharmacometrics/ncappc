@@ -13,10 +13,9 @@
 #' @param obsLog is a logical variable (\code{TRUE}, \code{FALSE}). If
 #'   \code{TRUE}, concentration in observed data is assumed to be in logarithmic
 #'   scale. Default is \strong{\code{FALSE}}
-#' @param myXlab is the x-axis label, default is \strong{"Time (T)"}
-#' @param myYlab is the y-axis label, defaults is \strong{"Concentration 
-#'   (M.L^-3)"}
-#' @param color is the column name of the color stratification variable, e.g.
+#' @param myXlab is the x-axis label, default is \strong{"Time"}
+#' @param myYlab is the y-axis label, defaults is \strong{"Concentration"}
+#' @param color is the column name of the color stratification variable, e.g. 
 #'   "DOSEF". Default is \strong{NULL}
 #' @param group is the column name of the variable used to group data, default
 #'   is \strong{"ID}
@@ -47,8 +46,8 @@ dv.plot <- function(df,
                     xvar = "Time",
                     yvar = "Conc",
                     obsLog = FALSE,
-                    myXlab = "Time (T)",
-                    myYlab = "Concentration (M.L^-3)",
+                    myXlab = "Time",
+                    myYlab = "Concentration",
                     color = NULL,
                     group = NULL,
                     guide = TRUE,
@@ -92,7 +91,11 @@ dv.plot <- function(df,
   p01 <- p01 + geom_point()
   p01 <- p01 + xlab(myXlab)
   p01 <- p01 + ylab(myYlab)
-  p01 <- p01 + theme(legend.position = "none")
+  p01 <- p01 + theme(legend.position = "none",
+                     axis.text.x = element_text(size=10),
+                     axis.text.y = element_text(size=10),
+                     strip.text.x = element_text(size=10),
+                     title = element_text(size=10))
   
   facets <- paste(STRATY, '~',  STRATX)
   if (facets != '. ~ .') p01 <- p01 + facet_grid(facets, scales = "free")
@@ -134,9 +137,9 @@ dv.plot <- function(df,
     p02 <- p02 %+% xlab("") %+% ylab("")
     
     plot_args <- list(p01,p02,ncol=2,
-                      top=textGrob("Concentration vs. Time profile\n",vjust=1,gp=gpar(cex = 1.5)),
-                      left=textGrob(myYlab,gp=gpar(cex = 1.5),rot=90),
-                      bottom=textGrob(myXlab,gp=gpar(cex = 1.5)))
+                      top=textGrob("Concentration vs. Time profile\n",vjust=1,gp=gpar(cex=0.8,fontface="bold")),
+                      left=textGrob(myYlab,gp=gpar(cex=1,fontface="bold"),rot=90),
+                      bottom=textGrob(myXlab,gp=gpar(cex=1,fontface="bold")))
     
     if(packageVersion("gridExtra") < "0.9.2"){
       arg_names <- names(plot_args)

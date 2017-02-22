@@ -9,7 +9,8 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   doseType = "ns", adminType = "extravascular", doseAmt = NULL,
   method = "linearup-logdown", AUCTimeRange = NULL,
   LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
-  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs")
+  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs",
+  onlyNCA = FALSE)
 }
 \arguments{
 \item{time}{Numeric array for time}
@@ -58,6 +59,9 @@ data (\strong{\code{NULL}})}
 
 \item{dset}{Type, i.e., observed or simulated concentration-time data set
 ("obs" or "sim") (\strong{"obs"})}
+
+\item{onlyNCA}{If \code{TRUE} only NCA is performed and ppc part is ignored
+although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 }
 \value{
 An array of estimated NCA metrics

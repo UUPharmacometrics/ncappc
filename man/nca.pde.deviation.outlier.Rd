@@ -8,8 +8,8 @@ Identifies outlier to population PK model.}
 \usage{
 nca.pde.deviation.outlier(obsdata, simdata, idNm = "ID", id = NULL,
   spread = "npi", figlbl = NULL, calcparam = c("AUClast", "Cmax"),
-  diagparam = c("AUClast", "Cmax"), cunit = "M.L^-3", tunit = "T",
-  noPlot = FALSE)
+  diagparam = c("AUClast", "Cmax"), cunit = NULL, tunit = NULL,
+  noPlot = FALSE, onlyNCA = onlyNCA)
 }
 \arguments{
 \item{obsdata}{A data frame containing the NCA metrics values estimated from
@@ -35,16 +35,19 @@ of PDE and deviation. The allowed NCA metrics for this histograms are
 "Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
 
 \item{diagparam}{A character array of the NCA metrics used for diagnostic 
-test. The allowed NCA metrics for this histograms are "AUClast", 
-"AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast", "Cmax", "Tmax" 
-and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
+test to detect outliers. The allowed NCA metrics for this histograms are
+"AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast",
+"Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})}
 
-\item{cunit}{Unit for concentration (\strong{"M.L^-3"})}
+\item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (\strong{"T"})}
+\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
 
 \item{noPlot}{Perform only NCA calculations without any plot generation
 (TRUE, FALSE) (\strong{FALSE})}
+
+\item{onlyNCA}{If \code{TRUE} only NCA is performed and ppc part is ignored
+although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 }
 \value{
 returns the observed data frame with added distance and simulation

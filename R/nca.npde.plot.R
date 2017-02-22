@@ -15,8 +15,8 @@
 #' @param npdecol Column names or column numbers of containing the NPDE values
 #' @param figlbl Figure label based on dose identifier and/or population
 #'   stratifier (\strong{NULL})
-#' @param cunit Unit for concentration (\strong{"M.L^-3"})
-#' @param tunit Unit for time (\strong{"T"})
+#' @param cunit Unit for concentration (default is \strong{\code{NULL}})
+#' @param tunit Unit for time (defulat is \strong{\code{NULL}})
 #'
 #' @return returns a data frame with the mean and SD of population NPDE values
 #'   of each NCA metric and two graphical objects created by arrangeGrob
@@ -28,8 +28,8 @@ nca.npde.plot <- function(plotdata,
                           xvar=NULL,
                           npdecol=NULL,
                           figlbl=NULL,
-                          cunit="M.L^-3",
-                          tunit="T"){
+                          cunit=NULL,
+                          tunit=NULL){
   
   "npde" <- "type" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "..density.." <- "sdl" <- "XVAR" <- "melt" <- "xlab" <- "ylab" <- "theme" <- "element_text" <- "unit" <- "geom_point" <- "facet_wrap" <- "scale_linetype_manual" <- "scale_color_manual" <- "guides" <- "guide_legend" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "ggplot" <- "labs" <- "..count.." <- "..PANEL.." <- "na.omit" <- "sd" <- "qt" <- "qchisq" <- "scale_y_continuous" <- "percent" <- "sdcil" <- "sdciu" <- NULL
   rm(list=c("npde","type","mcil","mciu","sdu","sducil","sduciu","..density..","sdl","XVAR","melt","xlab","ylab","theme","element_text","unit","geom_point","facet_wrap","scale_linetype_manual","scale_color_manual","guides","guide_legend","element_rect","geom_histogram","aes","geom_vline","ggplot","labs","..count..","..PANEL..","na.omit","sd","qt","qchisq","scale_y_continuous","percent","sdcil","sdciu"))
@@ -75,7 +75,7 @@ nca.npde.plot <- function(plotdata,
     longdata$sduciu <- numeric(nrow(longdata))
     
     for (i in 1:length(npdecol)){
-      npdeval <- na.omit(as.numeric(longdata[longdata$type==npdecol[i] & longdata$npde!="NaN","npde"]))
+      npdeval <- na.omit(as.numeric(longdata[longdata$type==npdecol[i], "npde"]))
       longdata[longdata$type==npdecol[i],"mean"]   <- mean(npdeval)
       longdata[longdata$type==npdecol[i],"sd"]     <- sd(npdeval)
       longdata[longdata$type==npdecol[i],"length"] <- length(npdeval)
@@ -102,15 +102,29 @@ nca.npde.plot <- function(plotdata,
     nc    <- ifelse(npr<2, 1, ifelse(npr>=2 & npr<=6, 2, 3))
     for (p in 1:npr){
       if (npdecol[p] == "npdeAUClast" | npdecol[p] == "npdeAUClower_upper" | npdecol[p] == "npdeAUCINF_obs" | npdecol[p] == "npdeAUCINF_pred"){
-        fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste(gsub("^npde", "", npdecol)[p]," (",cunit,"*",tunit,")",sep="")))
+        if(is.null(cunit) | is.null(tunit)){
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=gsub("^npde", "", npdecol)[p]))
+        }else{
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste0(gsub("^npde", "", npdecol)[p]," (",cunit,"*",tunit,")")))
+        }
       }else if (npdecol[p] == "npdeAUMClast"){
-        fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste(gsub("^npde", "", npdecol)[p]," (",cunit,"*",tunit,"^2)",sep="")))
+        if(is.null(cunit) | is.null(tunit)){
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=gsub("^npde", "", npdecol)[p]))
+        }else{
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste0(gsub("^npde", "", npdecol)[p]," (",cunit,"*",tunit,"^2)")))
+        }
       }else if (npdecol[p] == "npdeCmax"){
-        fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste(gsub("^npde", "", npdecol)[p]," (",cunit,")",sep="")))
-      }else if (npdecol[p] == "npdeTmax"){
-        fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste(gsub("^npde", "", npdecol)[p]," (",tunit,")",sep="")))
-      }else if (npdecol[p] == "npdeHL_Lambda_z"){
-        fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste(gsub("^npde", "", npdecol)[p]," (",tunit,")",sep="")))
+        if(is.null(cunit)){
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=gsub("^npde", "", npdecol)[p]))
+        }else{
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste0(gsub("^npde", "", npdecol)[p]," (",cunit,")")))
+        }
+      }else if (npdecol[p] == "npdeTmax" | npdecol[p] == "npdeHL_Lambda_z"){
+        if(is.null(cunit)){
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=gsub("^npde", "", npdecol)[p]))
+        }else{
+          fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=paste0(gsub("^npde", "", npdecol)[p]," (",tunit,")")))
+        }
       }else{
         fctNm <- rbind(fctNm, data.frame(prmNm=npdecol[p],prmUnit=npdecol[p]))
       }
@@ -121,19 +135,29 @@ nca.npde.plot <- function(plotdata,
     # ggplot options for individual NPDE plots
     nc    <- ifelse(length(npdecol)<2, 1, ifelse(length(npdecol)>=2 & length(npdecol)<=6, 2, 3))
     ggOpt_npde <- list(xlab("\nID"), ylab("NPDE\n"),
-                       theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
-                             axis.text.y  = element_text(hjust=0)),
+                       theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1,size=10),
+                             axis.text.y = element_text(hjust=0,size=10),
+                             strip.text.x = element_text(size=10),
+                             legend.text = element_text(size=12),
+                             title = element_text(size=14,face="bold"),
+                             legend.position = "bottom", legend.direction = "horizontal",
+                             legend.background = element_rect(),
+                             legend.key.height = unit(1,"cm")),
                        geom_point(size=2), facet_wrap(~type, ncol=nc, scales="free"))
     
     # ggplot options for histogram of NPDE
     ggOpt_histnpde <- list(scale_linetype_manual(name="",values=c("meanNormal"="solid","meanNPDE"="solid","SD"="dashed")),
                            scale_color_manual(name="",values=c("meanNormal"="red","meanNPDE"="blue","SD"="blue")),
                            xlab("\nNPDE"), ylab(""),
-                           guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0 ))),
-                           theme(axis.text.x  = element_text(angle=45,vjust=1,hjust=1),
-                                 axis.text.y  = element_text(hjust=0),
+                           guides(fill = guide_legend(override.aes = list(linetype = 0 )), shape = guide_legend(override.aes = list(linetype = 0))),
+                           theme(axis.text.x = element_text(angle=45,vjust=1,hjust=1,size=10),
+                                 axis.text.y = element_text(hjust=0,size=10),
+                                 strip.text.x = element_text(size=10),
+                                 legend.text = element_text(size=12),
+                                 title = element_text(size=14,face="bold"),
+                                 legend.position = "bottom", legend.direction = "horizontal",
                                  legend.background = element_rect(),
-                                 legend.position = "bottom", legend.direction = "horizontal"),
+                                 legend.key.height = unit(1,"cm")),
                            scale_y_continuous(labels = percent),
                            geom_vline(aes(xintercept=0, color="meanNormal", lty="meanNormal"), size=1, show.legend=T),
                            geom_vline(aes(xintercept=as.numeric(mean), color="meanNPDE", lty="meanNPDE"), size=1),
@@ -142,16 +166,16 @@ nca.npde.plot <- function(plotdata,
                            facet_wrap(~FCT, ncol=nc, scales="free"))
     
     if (is.null(figlbl)){
-      ttl   <- paste("NPDE vs. ",xvar,"\n\n",sep="")
+      ttl   <- paste0("NPDE vs. ",xvar,"\n")
     }else{
-      ttl   <- paste("NPDE vs. ",xvar," (",figlbl,")\n\n",sep="")
+      ttl   <- paste0("NPDE vs. ",xvar," (",figlbl,")\n")
     }
     ggnpde <- ggplot(longdata,aes(as.numeric(as.character(XVAR)),as.numeric(as.character(npde)))) + ggOpt_npde + labs(title = ttl) + theme(plot.title = element_text(size = rel(0.85)))
     
     if (is.null(figlbl)){
-      ttl   <- paste("Histogram of NPDE\n\n",sep="")
+      ttl   <- paste0("Histogram of NPDE\n")
     }else{
-      ttl   <- paste("Histogram of NPDE (",figlbl,")\n\n",sep="")
+      ttl   <- paste0("Histogram of NPDE (",figlbl,")\n")
     }
     
     bw <- diff(range(as.numeric(longdata$npde)))/(2*IQR(as.numeric(longdata$npde)))/length(as.numeric(longdata$npde))^(1/3)
