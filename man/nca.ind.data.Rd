@@ -4,7 +4,7 @@
 \alias{nca.ind.data}
 \title{Prepare individual PK data}
 \usage{
-nca.ind.data(pkData, ID, obsLog = FALSE, dataType = "obs", idNm = "ID",
+nca.ind.data(pkData, ID, dvLog = FALSE, dataType = "obs", idNm = "ID",
   timeNm = "TIME", concNm = "DV", adminType = "extravascular",
   TI = NULL, dateColNm = NULL, dateFormat = NULL, timeFormat = "number")
 }
@@ -13,8 +13,8 @@ nca.ind.data(pkData, ID, obsLog = FALSE, dataType = "obs", idNm = "ID",
 
 \item{ID}{ID number of the individual.}
 
-\item{obsLog}{If \code{TRUE} concentration in observed data is in logarithmic
-scale. Default is \strong{\code{FALSE}}}
+\item{dvLog}{If \code{TRUE} concentration is in logarithmic scale. Default is
+\strong{\code{FALSE}}}
 
 \item{dataType}{Indicates if the data is observed ("obs") or simulated 
 ("sim"). Since the simulated data is assumed to be obtained from NONMEM 

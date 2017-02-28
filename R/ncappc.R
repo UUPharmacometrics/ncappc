@@ -236,10 +236,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Simulated data is not supplied
-  if(is.null(simFile)){
+  if (is.null(simFile)){
     print("Note: Simulated data file is not supplied. Only NCA module will be executed.")
   }else{
-    if(!is.data.frame(simFile) && !file_test("-f", simFile)){
+    if (!is.data.frame(simFile) && !file_test("-f", simFile)){
       print(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed."))
       simFile <- NULL
     }else{
@@ -292,27 +292,27 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # popStr1   = 1st level stratification ID names
   # npopStr1  = Number of 1st level stratification ID names
   
-  if(is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-0} # No stratification
+  if (is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-0} # No stratification
   
-  if(!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
-  if(is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
-  if(is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
+  if (!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
+  if (is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
+  if (is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
   
   # Str1 & Str2
-  if(!is.null(str1Nm) & !is.null(str2Nm) & is.null(str3Nm)){
+  if (!is.null(str1Nm) & !is.null(str2Nm) & is.null(str3Nm)){
     case<-3; cpopStrNm<-paste(str1Nm,str2Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStr1<-str1; popStr2<-str2; npopStr1<-length(str1); npopStr2<-length(str2)
   }
   # Str1 & Str3
-  if(!is.null(str1Nm) & is.null(str2Nm) & !is.null(str3Nm)){
+  if (!is.null(str1Nm) & is.null(str2Nm) & !is.null(str3Nm)){
     case<-3; cpopStrNm<-paste(str1Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str3Nm; popStr1<-str1; popStr2<-str3; npopStr1<-length(str1); npopStr2<-length(str3)
   }
   # Str2 & Str3
-  if(is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+  if (is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
     case<-3; cpopStrNm<-paste(str2Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str2Nm; popStrNm2<-str3Nm; popStr1<-str2; popStr2<-str3; npopStr1<-length(str2); npopStr2<-length(str3)
   }
   
   # Str1 & Str2 & Str3
-  if(!is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+  if (!is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
     case<-4; cpopStrNm<-paste(str1Nm,str2Nm,str3Nm,sep=", ")
     npopStr<-3
     popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStrNm3<-str3Nm
@@ -321,7 +321,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   
   
-  if(!is.null(studyName)){
+  if (!is.null(studyName)){
     txt <- paste0("Name of the study: \"",studyName,"\"")
     txt <- paste(txt,paste0("Name of the file with the observed data: \"",obsFileNm,"\""),sep="\n")
   }else{
@@ -334,14 +334,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     txt <- paste(txt,"Dose type: non-steady-state",sep="\n")
   }
   txt <- paste(txt,paste0("No. of population stratification level: ",npopStr),sep="\n")
-  if(case==2){
+  if (case==2){
     txt <- paste(txt,paste0("Population stratification column: ",cpopStrNm),sep="\n")
     txt <- paste(txt,paste0("Population stratification ID within ",popStrNm1,": ",paste(popStr1,collapse=", ")),sep="\n")
-  }else if(case==3){
+  }else if (case==3){
     txt <- paste(txt,paste0("Population stratification columns: ",cpopStrNm),sep="\n")
     txt <- paste(txt,paste0("1st level population stratification ID within ",popStrNm1,": ",paste(popStr1,collapse=", ")),sep="\n")
     txt <- paste(txt,paste0("2nd level population stratification ID within ",popStrNm2,": ",paste(popStr2,collapse=", ")),sep="\n")
-  }else if(case==4){
+  }else if (case==4){
     txt <- paste(txt,paste0("Population stratification columns: ",cpopStrNm),sep="\n")
     txt <- paste(txt,paste0("1st level population stratification ID within ",popStrNm1,": ",paste(popStr1,collapse=", ")),sep="\n")
     txt <- paste(txt,paste0("2nd level population stratification ID within ",popStrNm2,": ",paste(popStr2,collapse=", ")),sep="\n")
@@ -364,10 +364,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # Estimate NCA metrics for case = 1
   if (case == 1){
     ifdf <- indf
-    if(length(which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]==""),]}
-    if(nrow(ifdf) == 0){next}
-    idd <- unique(as.character(ifdf[,idNmObs]))
-    if(is.null(doseAmtNm)){
+    if (nrow(ifdf) == 0){next}
+    idd  <- unique(as.character(ifdf[,idNmObs]))
+    if (is.null(doseAmtNm)){
       doseAmount <- NA
     }else{
       doseData   <- as.numeric(as.character(refdf[,doseAmtNm]))
@@ -379,39 +378,38 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     pddf  <- rbind(pddf, data.frame(a=doseAmount, b=length(idd)))
     cdata <- data.frame()
     for (i in 1:length(idd)){
-      if (!is.null(doseAmtNm)){
+      if (is.null(doseAmtNm)){
+        idzAmt <- NA
+      }else{
         doseData <- as.numeric(as.character(refdf[refdf[,idNmObs]==idd[i], doseAmtNm]))
         doseData <- doseData[complete.cases(doseData) & doseData>0]
         idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
-      }else{
-        idzAmt <- NA
       }
-      tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
+      tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = obsLog, dataType=dset,
                            idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
                            adminType=adminType, TI=TI,
                            dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
       tc      <- tcTI$tc
       iTI     <- tcTI$iTI
-      if(nrow(tc)==0) next
+      if (nrow(tc)==0) next
       time    <- as.numeric(tc$time)
       conc    <- as.numeric(tc$conc)
       cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-      NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
-                         doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
-                         AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                         doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
+      NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
+                         doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
+                         LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
       outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
     }
     
-    if(!noPlot){
+    if (!noPlot){
       figlbl <- "All-data"
       gdr    <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
       ggr <- grid.grab()
       concplot[[length(concplot)+1]] <- ggr
-      if(printOut){
+      if (printOut){
         fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
-        if(figFormat=="tiff"){
+        if (figFormat=="tiff"){
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
         }else{
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
@@ -421,10 +419,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }
       
       # Obs hist plot
-      if(nrow(outData)>=5){
+      if (nrow(outData)>=5){
         plotData <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
-        if(length(numPrm[numPrm>=5]) == 0) next
+        if (length(numPrm[numPrm>=5]) == 0) next
         
         pltPrm      <- names(numPrm[numPrm>=5])
         figlbl      <- NULL
@@ -434,7 +432,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         lheight     <- histobsgrob$lheight
         if (printOut){
           fl <- paste0(usrdir,"/HistObs")
-          if(figFormat=="tiff"){
+          if (figFormat=="tiff"){
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
           }else{
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",res=120)")))
@@ -456,8 +454,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     for (s1 in 1:npopStr1){
       cdata <- data.frame()
       ifdf  <- indf[indf[,popStrNm1]==popStr1[s1],]
-      if(length(which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]==""),]}
-      if(nrow(ifdf) == 0){next}
+      if (nrow(ifdf) == 0){next}
       idd <- unique(as.character(ifdf[,idNmObs]))
       if (!is.null(doseAmtNm)){
         doseData   <- as.numeric(as.character(refdf[refdf[,popStrNm1]==popStr1[s1], doseAmtNm]))
@@ -476,13 +473,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }else{
           idzAmt <- NA
         }
-        tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
+        tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = obsLog, dataType=dset,
                              idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
                              adminType=adminType, TI=TI,
                              dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
         tc      <- tcTI$tc
         iTI     <- tcTI$iTI
-        if(nrow(tc)==0) next
+        if (nrow(tc)==0) next
         time    <- as.numeric(tc$time)
         conc    <- as.numeric(tc$conc)
         cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
@@ -493,7 +490,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
       
-      if(!noPlot){
+      if (!noPlot){
         figlbl <- paste0(popStrNm1,"-",popStr1[s1])
         gdr    <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -501,7 +498,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         concplot[[length(concplot)+1]] <- ggr
         if (printOut){
           fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
-          if(figFormat=="tiff"){
+          if (figFormat=="tiff"){
             eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
           }else{
             eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
@@ -514,7 +511,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         plotData <- subset(outData, STRAT1==popStr1[s1], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<5) next
         numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
-        if(length(numPrm[numPrm>=5]) == 0) next
+        if (length(numPrm[numPrm>=5]) == 0) next
         
         pltPrm      <- names(numPrm[numPrm>=5])
         figlbl      <- paste0(popStrNm1,"-",popStr1[s1])
@@ -524,7 +521,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         lheight     <- histobsgrob$lheight
         if (printOut){
           fl <- paste0(usrdir,"/HistObs_",figlbl)
-          if(figFormat=="tiff"){
+          if (figFormat=="tiff"){
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
           }else{
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",res=120)")))
@@ -547,7 +544,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       for (s2 in 1:npopStr2){
         cdata <- data.frame()
         ifdf <- indf[indf[,popStrNm1]==popStr1[s1] & indf[,popStrNm2]==popStr2[s2],]
-        if (length(which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]==""),]}
         if (nrow(ifdf) == 0){next}
         idd <- unique(as.character(ifdf[,idNmObs]))
         if (!is.null(doseAmtNm)){
@@ -567,13 +563,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }else{
             idzAmt <- NA
           }
-          tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
+          tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = obsLog, dataType=dset,
                                idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
                                adminType=adminType, TI=TI,
                                dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
           tc      <- tcTI$tc
           iTI     <- tcTI$iTI
-          if(nrow(tc)==0) next
+          if (nrow(tc)==0) next
           time    <- as.numeric(tc$time)
           conc    <- as.numeric(tc$conc)
           cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
@@ -584,16 +580,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
         
-        if(!noPlot){
+        if (!noPlot){
           figlbl <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2])
           gdr    <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
           ggr <- grid.grab()
           concplot[[length(concplot)+1]] <- ggr
           
-          if(printOut){
+          if (printOut){
             fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
-            if(figFormat=="tiff"){
+            if (figFormat=="tiff"){
               eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
             }else{
               eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
@@ -604,9 +600,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           
           # Obs hist plot
           plotData <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-          if(nrow(plotData)<5) next
+          if (nrow(plotData)<5) next
           numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
-          if(length(numPrm[numPrm>=5]) == 0) next
+          if (length(numPrm[numPrm>=5]) == 0) next
           
           pltPrm      <- names(numPrm[numPrm>=5])
           figlbl      <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2])
@@ -616,7 +612,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           lheight     <- histobsgrob$lheight
           if (printOut){
             fl <- paste0(usrdir,"/HistObs_",figlbl)
-            if(figFormat=="tiff"){
+            if (figFormat=="tiff"){
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
             }else{
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",res=120)")))
@@ -641,7 +637,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         for (s3 in 1:npopStr3){
           cdata <- data.frame()
           ifdf <- indf[(indf[,popStrNm1]==popStr1[s1] & indf[,popStrNm2]==popStr2[s2] & indf[,popStrNm3]==popStr3[s3]),]
-          if (length(which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmObs]) | ifdf[,concNmObs]==""),]}
           if (nrow(ifdf) == 0){next}
           idd <- unique(as.character(ifdf[,idNmObs]))
           if (!is.null(doseAmtNm)){
@@ -661,13 +656,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }else{
               idzAmt <- NA
             }
-            tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
+            tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = obsLog, dataType=dset,
                                  idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
                                  adminType=adminType, TI=TI,
                                  dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
             tc      <- tcTI$tc
             iTI     <- tcTI$iTI
-            if(nrow(tc)==0) next
+            if (nrow(tc)==0) next
             time    <- as.numeric(tc$time)
             conc    <- as.numeric(tc$conc)
             cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
@@ -678,7 +673,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
           
-          if(!noPlot){
+          if (!noPlot){
             figlbl <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2],"_",popStrNm3,"-",popStr3[s3])
             gdr    <- dv.plot(df=cdata,xvar="Time",yvar="Conc",myXlab=IDVleg,myYlab=DVleg,color="ID")
             suppressMessages(suppressWarnings(grid.arrange(gdr)))
@@ -686,7 +681,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             concplot[[length(concplot)+1]] <- ggr
             if (printOut){
               fl <- paste0(usrdir,"/TimeConc_",figlbl,".",figFormat)
-              if(figFormat=="tiff"){
+              if (figFormat=="tiff"){
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
               }else{
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
@@ -699,7 +694,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             plotData <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
             if (nrow(plotData)<5) next
             numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
-            if(length(numPrm[numPrm>=5]) == 0) next
+            if (length(numPrm[numPrm>=5]) == 0) next
             
             pltPrm      <- names(numPrm[numPrm>=5])
             figlbl      <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2],"_",popStrNm3,"-",popStr3[s3])
@@ -709,7 +704,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             lheight     <- histobsgrob$lheight
             if (printOut){
               fl <- paste0(usrdir,"/HistObs_",figlbl)
-              if(figFormat=="tiff"){
+              if (figFormat=="tiff"){
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",compression=\"lzw\",res=120)")))
               }else{
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=20,width=15,units=\"cm\",res=120)")))
@@ -733,24 +728,23 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   statPrm  <- c("N","Nunique","Min","Max","Mean","Median","SD","SE","CVp","CI95l","CI95u","geoMean","gCVp")
   ncaPrm   <- c("C0","Tmax","Cmax","Cmax_D","Tlast","Clast","AUClast","AUMClast","MRTlast","No_points_Lambda_z",
                 "AUC_pBack_Ext_obs","AUC_pBack_Ext_pred","AUClower_upper","Rsq","Rsq_adjusted","Corr_XY","Lambda_z",
-                "HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","Vz_obs","Cl_obs",
-                "AUCINF_pred","AUCINF_D_pred","AUC_pExtrap_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs",
-                "AUMCINF_pred","AUMC_pExtrap_pred","MRTINF_obs","MRTINF_pred","Vss_obs","Vss_pred","Tau","Tmin","Cmin",
-                "Cavg","p_Fluctuation","Accumulation_Index","Clss")
+                "HL_Lambda_z","AUCINF_obs","AUCINF_D_obs","AUC_pExtrap_obs","Vz_obs","Cl_obs","AUCINF_pred","AUCINF_D_pred",
+                "AUC_pExtrap_pred","Vz_pred","Cl_pred","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred",
+                "MRTINF_obs","MRTINF_pred","Vss_obs","Vss_pred","Tau","Tmin","Cmin","Cavg","p_Fluctuation","Accumulation_Index","Clss")
   
-  if(case == 1){
+  if (case == 1){
     tmpDF    <- outData[,ncaPrm]
     statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
     statData <- data.frame(statData)
-    if(nrow(statData) == 0) next
+    if (nrow(statData) == 0) next
     statData <- cbind(data.frame(Stat=statPrm), statData)
   }
-  if(case == 2){
+  if (case == 2){
     for (s1 in 1:npopStr1){
       tmpDF    <- outData[outData$STRAT1==popStr1[s1],ncaPrm]
       tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
       tmpStat  <- data.frame(tmpStat)
-      if(nrow(tmpStat) == 0) next
+      if (nrow(tmpStat) == 0) next
       tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
       statData <- rbind(statData, tmpStat)
     }
@@ -762,7 +756,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2],ncaPrm]
         tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
-        if(nrow(tmpStat) == 0) next
+        if (nrow(tmpStat) == 0) next
         tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
         statData <- rbind(statData, tmpStat)
       }
@@ -776,7 +770,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2] & outData$STRAT3==popStr3[s3],ncaPrm]
           tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
-          if(nrow(tmpStat) == 0) next
+          if (nrow(tmpStat) == 0) next
           tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)
           statData <- rbind(statData, tmpStat)
         }
@@ -785,8 +779,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     names(statData)[names(statData)%in%c("STRAT1","STRAT2","STRAT3")] <- c(popStrNm1,popStrNm2,popStrNm3)
   }
   
-  if(printOut){
-    if(is.null(outFileNm) || outFileNm==""){
+  if (printOut){
+    if (is.null(outFileNm) || outFileNm==""){
       write.table(statData, file=paste0(usrdir,"/ObsStat.tsv"), sep="\t", col.names=T, row.names=F, quote=F)
     }else{
       write.table(statData, file=paste0(usrdir,"/ObsStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
@@ -795,30 +789,30 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Print output files if simulated data does not exist
-  if(is.null(simFile)){
+  if (is.null(simFile)){
     # Raname ID and stratifier columns and format output table sigfig
-    if(case == 1){
+    if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
       outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 2){
+    if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
       outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 3){
+    if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
       outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 4){
+    if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
       outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     # Subset table to print in the report
-    if(case == 1) {prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50); names(prnTab)[1:2] <- names(outData)[1:2]}
-    if(case == 2) {prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50); names(prnTab)[1:3] <- names(outData)[1:3]}
-    if(case == 3) {prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50); names(prnTab)[1:4] <- names(outData)[1:4]}
-    if(case == 4) {prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50); names(prnTab)[1:5] <- names(outData)[1:5]}
+    if (case == 1) {prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50); names(prnTab)[1:2] <- names(outData)[1:2]}
+    if (case == 2) {prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50); names(prnTab)[1:3] <- names(outData)[1:3]}
+    if (case == 3) {prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50); names(prnTab)[1:4] <- names(outData)[1:4]}
+    if (case == 4) {prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50); names(prnTab)[1:5] <- names(outData)[1:5]}
     
     # Add unit to report table header
     tabUnit1 <- data.frame(NAME=c("Dose"))
@@ -827,13 +821,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     tabUnit <- rbind(tabUnit1,tabUnit2)
     
     streamsEnv <- parent.frame()
-    if(exists("outData"))     assign("ncaOutput", outData, envir=streamsEnv)
-    if(exists("statData"))    assign("ObsStat", statData, envir=streamsEnv)
-    if(exists("concplot"))    assign("concPlot", concplot, envir=streamsEnv)
-    if(exists("histobsplot")) assign("histobsPlot", histobsplot, envir=streamsEnv)
+    if (exists("outData"))     assign("ncaOutput", outData, envir=streamsEnv)
+    if (exists("statData"))    assign("ObsStat", statData, envir=streamsEnv)
+    if (exists("concplot"))    assign("concPlot", concplot, envir=streamsEnv)
+    if (exists("histobsplot")) assign("histobsPlot", histobsplot, envir=streamsEnv)
     
-    if(printOut){
-      if(is.null(outFileNm) || outFileNm==""){
+    if (printOut){
+      if (is.null(outFileNm) || outFileNm==""){
         write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
       }else{
         write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)
@@ -847,15 +841,15 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     simDir <- paste0(usrdir,"/SIMDATA")
     
     # Check status of SIMDATA
-    if(file.exists(simDir)){
-      if(is.null(overwrite_SIMDATA)){
+    if (file.exists(simDir)){
+      if (is.null(overwrite_SIMDATA)){
         dirTest <- readline("Directory \"SIMDATA\" already exists. Please choose one of the following options\n
                             Overwrite it? (type 1)\n
                             Rename the existing folder and create a new one? (type 2)\n
                             Use data from the existing folder? (type 3)\n")
-      }else if(overwrite_SIMDATA){
+      }else if (overwrite_SIMDATA){
         dirTest <- "1"
-      }else if(!overwrite_SIMDATA) {
+      }else if (!overwrite_SIMDATA) {
         dirTest <- "3"
       }
       
@@ -877,10 +871,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     # If SIMDATA is newly created, read NM output and perform NCA
     if (dirTest != 3){
-      if(is.data.frame(simFile)){
+      if (is.data.frame(simFile)){
         nmdf <- simFile
       }else{
-        if(new_data_method){
+        if (new_data_method){
           nmdf <- read_nm_table(simFile,sim_num = T,sim_name="NSUB")
           nmdf <- data.frame(nmdf)
         } else {
@@ -888,7 +882,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         }
       }
       if (printOut){
-        if(is.null(outFileNm) || outFileNm==""){
+        if (is.null(outFileNm) || outFileNm==""){
           write.table(nmdf, file=paste0(usrdir,"/ncaSimData.tsv"), row.names=F, quote=F, sep="\t")
         }else{
           write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
@@ -923,24 +917,24 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       # popStrNm1 = 1st level stratifying column name
       # popStr1   = 1st level stratification ID names
       # npopStr1  = Number of 1st level stratification ID names
-      if(!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
-      if(is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
-      if(is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
+      if (!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
+      if (is.null(str1Nm)  & !is.null(str2Nm) & is.null(str3Nm)) {case<-2; cpopStrNm<-str2Nm; npopStr<-1; popStrNm1<-str2Nm; popStr1<-str2; npopStr1<-length(str2)} # Str2
+      if (is.null(str1Nm)  & is.null(str2Nm)  & !is.null(str3Nm)){case<-2; cpopStrNm<-str3Nm; npopStr<-1; popStrNm1<-str3Nm; popStr1<-str3; npopStr1<-length(str3)} # Str3
       
       # Str1 & Str2
-      if(!is.null(str1Nm) & !is.null(str2Nm) & is.null(str3Nm)){
+      if (!is.null(str1Nm) & !is.null(str2Nm) & is.null(str3Nm)){
         case<-3; cpopStrNm<-paste(str1Nm,str2Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStr1<-str1; popStr2<-str2; npopStr1<-length(str1); npopStr2<-length(str2)
       }
       # Str1 & Str3
-      if(!is.null(str1Nm) & is.null(str2Nm) & !is.null(str3Nm)){
+      if (!is.null(str1Nm) & is.null(str2Nm) & !is.null(str3Nm)){
         case<-3; cpopStrNm<-paste(str1Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str1Nm; popStrNm2<-str3Nm; popStr1<-str1; popStr2<-str3; npopStr1<-length(str1); npopStr2<-length(str3)
       }
       # Str2 & Str3
-      if(is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+      if (is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
         case<-3; cpopStrNm<-paste(str2Nm,str3Nm,sep=", "); npopStr<-2; popStrNm1<-str2Nm; popStrNm2<-str3Nm; popStr1<-str2; popStr2<-str3; npopStr1<-length(str2); npopStr2<-length(str3)
       }
       # Str1 & Str2 & Str3
-      if(!is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
+      if (!is.null(str1Nm) & !is.null(str2Nm) & !is.null(str3Nm)){
         case<-4; cpopStrNm<-paste(str1Nm,str2Nm,str3Nm,sep=", ")
         npopStr<-3
         popStrNm1<-str1Nm; popStrNm2<-str2Nm; popStrNm3<-str3Nm
@@ -956,9 +950,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         # Calculate NCA parameters
         if (case == 1){
           ifdf <- smdf
-          if (length(which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]==""),]}
           if (nrow(ifdf) == 0){next}
-          idd <- unique(as.character(ifdf[,idNmSim]))
+          idd  <- unique(as.character(ifdf[,idNmSim]))
           for (i in 1:length(idd)){
             if (!is.null(doseAmtNm)){
               doseData <- as.numeric(as.character(srdf[srdf[,idNmSim]==idd[i], doseAmtNm]))
@@ -967,13 +960,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }else{
               idzAmt <- NA
             }
-            stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
-                                  idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
+            stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
+                                  idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
                                   adminType=adminType, TI=TI,
                                   dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
             stc     <- stcTI$tc
             iTI     <- stcTI$iTI
-            if(nrow(stc)==0) next
+            if (nrow(stc)==0) next
             time    <- as.numeric(stc$time)
             conc    <- as.numeric(stc$conc)
             NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
@@ -986,10 +979,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (case == 2){
           for (s1 in 1:npopStr1){
             ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1],]
-            if (length(which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]==""),]}
             if (nrow(ifdf) == 0){next}
             idd <- unique(as.character(ifdf[,idNmSim]))
-            if(is.data.frame(idd)) idd <- idd[[1]]
+            if (is.data.frame(idd)) idd <- idd[[1]]
             for (i in 1:length(idd)){
               if (!is.null(doseAmtNm)){
                 doseData <- as.numeric(as.character(srdf[srdf[,popStrNm1]==popStr1[s1] & srdf[,idNmSim]==idd[i], doseAmtNm]))
@@ -998,13 +990,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               }else{
                 idzAmt <- NA
               }
-              stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
-                                    idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
+              stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
+                                    idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
                                     adminType=adminType, TI=TI,
                                     dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
               stc     <- stcTI$tc
               iTI     <- stcTI$iTI
-              if(nrow(stc)==0) next
+              if (nrow(stc)==0) next
               time    <- as.numeric(stc$time)
               conc    <- as.numeric(stc$conc)
               NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
@@ -1019,7 +1011,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           for (s1 in 1:npopStr1){
             for (s2 in 1:npopStr2){
               ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1] & smdf[,popStrNm2]==popStr2[s2],]
-              if (length(which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]==""),]}
               if (nrow(ifdf) == 0){next}
               idd <- unique(as.character(ifdf[,idNmSim]))
               for (i in 1:length(idd)){
@@ -1030,13 +1021,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 }else{
                   idzAmt <- NA
                 }
-                stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
-                                      idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
+                stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
+                                      idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
                                       adminType=adminType, TI=TI,
                                       dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
                 stc     <- stcTI$tc
                 iTI     <- stcTI$iTI
-                if(nrow(stc)==0) next
+                if (nrow(stc)==0) next
                 time    <- as.numeric(stc$time)
                 conc    <- as.numeric(stc$conc)
                 NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
@@ -1053,7 +1044,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             for (s2 in 1:npopStr2){
               for (s3 in 1:npopStr3){
                 ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1] & smdf[,popStrNm2]==popStr2[s2] & smdf[,popStrNm3]==popStr3[s3],]
-                if (length(which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]=="")) != 0){ifdf <- ifdf[-which(is.na(ifdf[,concNmSim]) | ifdf[,concNmSim]==""),]}
                 if (nrow(ifdf) == 0){next}
                 idd <- unique(as.character(ifdf[,idNmSim]))
                 for (i in 1:length(idd)){
@@ -1064,13 +1054,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                   }else{
                     idzAmt <- NA
                   }
-                  stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dataType=dset,
-                                        idNm=idNmObs, timeNm=timeNmObs, concNm=concNmObs,
+                  stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
+                                        idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
                                         adminType=adminType, TI=TI,
                                         dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
                   stc     <- stcTI$tc
                   iTI     <- stcTI$iTI
-                  if(nrow(stc)==0) next
+                  if (nrow(stc)==0) next
                   time    <- as.numeric(stc$time)
                   conc    <- as.numeric(stc$conc)
                   NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
@@ -1095,14 +1085,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
     
     # Rename the ID and stratification column names to ID, STRAT1, STRAT2 and/STRAT3
-    if(case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim),names(x))] <- c("ID"); return(x)})
-    if(case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1),names(x))] <- c("ID","STRAT1"); return(x)})
-    if(case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2),names(x))] <- c("ID","STRAT1","STRAT2"); return(x)})
-    if(case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
+    if (case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim),names(x))] <- c("ID"); return(x)})
+    if (case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1),names(x))] <- c("ID","STRAT1"); return(x)})
+    if (case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2),names(x))] <- c("ID","STRAT1","STRAT2"); return(x)})
+    if (case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
     
     
-    if(printOut){
-      if(is.null(outFileNm) || outFileNm==""){
+    if (printOut){
+      if (is.null(outFileNm) || outFileNm==""){
         write.table(dasdf, file=paste0(usrdir,"/ncaSimEst.tsv"), row.names=F, quote=F, sep="\t")
       }else{
         write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
@@ -1112,17 +1102,17 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Set plot output dimensions
     if (npr<=2){
       hth<-14; wth<-15; phth<-7; pwth<-6
-    }else if(npr>2 & npr<=4){
+    }else if (npr>2 & npr<=4){
       hth<-20; wth<-16; phth<-8; pwth<-7
-    }else if(npr>4 & npr<=6){
+    }else if (npr>4 & npr<=6){
       hth<-26; wth<-16; phth<-9; pwth<-8
-    }else if(npr>6){
+    }else if (npr>6){
       hth<-26; wth<-22; phth<-9; pwth<-10
     }
     
     
     # Plot population histogram
-    if(!noPlot){
+    if (!noPlot){
       # Population histogram (case=1)
       if (case == 1){
         smeanData   <- data.frame()
@@ -1140,9 +1130,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         gdr         <- histpopgrob$gdr
         mylegend    <- histpopgrob$legend
         lheight     <- histpopgrob$lheight
-        if(printOut){
+        if (printOut){
           fl <- paste0(usrdir,"/PopMean")
-          if(figFormat=="tiff"){
+          if (figFormat=="tiff"){
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
           }else{
             eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1176,7 +1166,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           lheight     <- histpopgrob$lheight
           if (printOut){
             fl <- paste0(usrdir,"/PopMean_",figlbl)
-            if(figFormat=="tiff"){
+            if (figFormat=="tiff"){
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
             }else{
               eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1212,7 +1202,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             lheight     <- histpopgrob$lheight
             if (printOut){
               fl <- paste0(usrdir,"/PopMean_",figlbl)
-              if(figFormat=="tiff"){
+              if (figFormat=="tiff"){
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
               }else{
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1250,7 +1240,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               lheight     <- histpopgrob$lheight
               if (printOut){
                 fl <- paste0(usrdir,"/PopMean_",figlbl)
-                if(figFormat=="tiff"){
+                if (figFormat=="tiff"){
                   eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
                 }else{
                   eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1269,12 +1259,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     
     # Perform ppc; sensitive to onlyNCA
-    if(!onlyNCA){
+    if (!onlyNCA){
       devcol  <- paste0("d",param)
       npdecol <- paste0("npde",param)
       
       # ggplot options for the forest plot
-      ggOpt_forest <- list(scale_color_manual(name="",values=c("mean"="red","SD"="darkgreen")),
+      ggOpt_forest <- list(xlab("\nNPDE"),ylab(""),
+                           labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n"),
+                           scale_color_manual(name="",values=c("mean"="red","SD"="darkgreen")),
                            theme(axis.text.x = element_text(vjust=1,hjust=1,size=10),
                                  axis.text.y = element_text(hjust=0,size=10),
                                  strip.text.x = element_text(size=10),
@@ -1303,16 +1295,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noPlot=noPlot,onlyNCA=onlyNCA)
         pde     <- rbind(pde, cbind(data.frame(ID=id[i]), pdeout$pde))
         outData[outData$ID==id[i],] <- pdeout$obsdata
-        if(!onlyNCA && pdeout$metric != ""){
+        if (!onlyNCA && pdeout$metric != ""){
           nout   <- nout + 1
           metric <- paste(metric,pdeout$metric,sep=", ")
-          if(!noPlot){
+          if (!noPlot){
             gdr      <- pdeout$grob
             mylegend <- pdeout$legend
             lheight  <- pdeout$lheight
             if (printOut){
               fl <- paste0(usrdir,"/Outlier_ID-",id[i])
-              if(figFormat=="tiff"){
+              if (figFormat=="tiff"){
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
               }else{
                 eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1326,7 +1318,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }
         }
       }
-      if(!onlyNCA){
+      if (!onlyNCA){
         if (metric != "") metric <- gsub("^, ", "", metric)
         OTL  <- rbind(OTL, data.frame(No_of_outlier=nout,ID_metric=metric))
         npde <- rbind(npde,pde)
@@ -1344,11 +1336,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         if (nrow(plotdata) == 0) next
         figlbl <- "All data"
         # Deviation plot
-        if(!noPlot){
+        if (!noPlot){
           ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
           if (!is.null(ggdev)){
             suppressMessages(suppressWarnings(print(ggdev)))
-            if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+            if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
             devplot[[length(devplot)+1]] <- ggdev
           }
         }
@@ -1358,7 +1350,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         forestdata <- npdeout$forestdata
         forestdata$str <- figlbl
         fpval <- rbind(fpval, forestdata)
-        if(!noPlot){
+        if (!noPlot){
           npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
           suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
           if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
@@ -1366,13 +1358,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
           if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/HistNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
         }
-        if(!noPlot){
+        if (!noPlot){
           # Forest plot for NPDE
           fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
-            xlab("\nNPDE") + ylab("") +
-            labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n") +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
             geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
@@ -1403,16 +1393,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noPlot=noPlot,onlyNCA=onlyNCA)
           pde     <- rbind(pde, cbind(data.frame(ID=id[i],STRAT1=popStr1[s1]), pdeout$pde))
           outData[(outData$ID==id[i] & outData$STRAT1==popStr1[s1]),] <- pdeout$obsdata
-          if(!onlyNCA && pdeout$metric != ""){
+          if (!onlyNCA && pdeout$metric != ""){
             nout     <- nout + 1
             metric   <- paste(metric,pdeout$metric,sep=", ")
-            if(!noPlot){
+            if (!noPlot){
               gdr      <- pdeout$grob
               mylegend <- pdeout$legend
               lheight  <- pdeout$lheight
               if (printOut){
                 fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
-                if(figFormat=="tiff"){
+                if (figFormat=="tiff"){
                   eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
                 }else{
                   eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1427,13 +1417,13 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }
           }
         }
-        if(!onlyNCA){
+        if (!onlyNCA){
           if (metric != "") metric <- gsub("^, ", "", metric)
           OTL  <- rbind(OTL, data.frame(No_of_outlier=nout,ID_metric=metric))
           npde <- rbind(npde,pde)
         }
       }
-      if(!onlyNCA){
+      if (!onlyNCA){
         npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
         npdeNm <- paste0("npde",alwprm)
         for (r in 1:nrow(outData)){
@@ -1448,11 +1438,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           if (nrow(plotdata) == 0) next
           figlbl <- paste0(popStrNm1,"-",popStr1[s1])
           # Deviation plot
-          if(!noPlot){
+          if (!noPlot){
             ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
             if (!is.null(ggdev)){
               suppressMessages(suppressWarnings(print(ggdev)))
-              if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
               devplot[[length(devplot)+1]] <- ggdev
             }
           }
@@ -1462,7 +1452,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           forestdata <- npdeout$forestdata
           forestdata$str <- figlbl
           fpval <- rbind(fpval, forestdata)
-          if(!noPlot){
+          if (!noPlot){
             npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
             suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
             if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
@@ -1471,13 +1461,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/HistNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
           }
         }
-        if(!noPlot){
+        if (!noPlot){
           # Forest plot for NPDE
           fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
-            xlab("\nNPDE") + ylab("") +
-            labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
             geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
@@ -1509,16 +1497,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noPlot=noPlot,onlyNCA=onlyNCA)
             pde     <- rbind(pde, cbind(data.frame(ID=id[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2]), pdeout$pde))
             outData[(outData$ID==id[i] & outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2]),] <- pdeout$obsdata
-            if(!onlyNCA && pdeout$metric != ""){
+            if (!onlyNCA && pdeout$metric != ""){
               nout     <- nout + 1
               metric   <- paste(metric,pdeout$metric,sep=", ")
-              if(!noPlot){
+              if (!noPlot){
                 gdr      <- pdeout$grob
                 mylegend <- pdeout$legend
                 lheight  <- pdeout$lheight
                 if (printOut){
                   fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
-                  if(figFormat=="tiff"){
+                  if (figFormat=="tiff"){
                     eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
                   }else{
                     eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1532,14 +1520,14 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               }
             }
           }
-          if(!onlyNCA){
+          if (!onlyNCA){
             if (metric != "") metric <- gsub("^, ", "", metric)
             OTL  <- rbind(OTL, data.frame(No_of_outlier=nout,ID_metric=metric))
             npde <- rbind(npde,pde)
           }
         }
       }
-      if(!onlyNCA){
+      if (!onlyNCA){
         npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
         npdeNm <- paste0("npde",alwprm)
         for (r in 1:nrow(outData)){
@@ -1555,7 +1543,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (nrow(plotdata) == 0) next
             figlbl <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2])
             # Deviation plot
-            if(!noPlot){
+            if (!noPlot){
               ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
               if (!is.null(ggdev)){
                 suppressMessages(suppressWarnings(print(ggdev)))
@@ -1569,7 +1557,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             forestdata <- npdeout$forestdata
             forestdata$str <- figlbl
             fpval <- rbind(fpval, forestdata)
-            if(!noPlot){
+            if (!noPlot){
               npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
               suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
               if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
@@ -1579,13 +1567,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }
           }
         }
-        if(!noPlot){
+        if (!noPlot){
           # Forest plot for NPDE
           fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
-            xlab("\nNPDE") + ylab("") +
-            labs(title = "Forest plot of NPDE\nErrorbar = 95% CI\n") +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
             geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
@@ -1598,7 +1584,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             geom_text(aes(label=out.digits(sdciu,dig=2),x=sdciu,y=str,color="SD",vjust=2.5),size=4,show.legend=F)
           suppressMessages(suppressWarnings(print(ggplt)))
           forestplot[[length(forestplot)+1]] <- ggplt
-          if(printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/ForestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/ForestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=120)))
         }
       }
     }else if (case == 4){
@@ -1614,21 +1600,21 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             for (i in 1:length(id)){
               obsdata <- subset(outData, ID==id[i] & STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3])
               simdata <- subset(tdasdf, ID==id[i])
-              if(nrow(obsdata)==0 | nrow(simdata)==0) next
+              if (nrow(obsdata)==0 | nrow(simdata)==0) next
               figlbl  <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2],"_",popStrNm3,"-",popStr3[s3])
               pdeout  <- nca.pde.deviation.outlier(obsdata=obsdata,simdata=simdata,idNm="ID",id=id[i],spread=spread,figlbl=figlbl,calcparam=alwprm,diagparam=param,cunit=cunit,tunit=tunit,noPlot=noPlot,onlyNCA=onlyNCA)
               pde     <- rbind(pde, cbind(data.frame(ID=id[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3]), pdeout$pde))
               outData[(outData$ID==id[i] & outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2] & outData$STRAT3==popStr3[s3]),] <- pdeout$obsdata
-              if(!onlyNCA && pdeout$metric != ""){
+              if (!onlyNCA && pdeout$metric != ""){
                 nout     <- nout + 1
                 metric   <- paste(metric,pdeout$metric,sep=", ")
-                if(!noPlot){
+                if (!noPlot){
                   gdr      <- pdeout$grob
                   mylegend <- pdeout$legend
                   lheight  <- pdeout$lheight
                   if (printOut){
                     fl <- paste0(usrdir,"/Outlier_ID-",id[i],"_",figlbl)
-                    if(figFormat=="tiff"){
+                    if (figFormat=="tiff"){
                       eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",compression=\"lzw\",res=120)")))
                     }else{
                       eval(parse(text=paste0(figFormat,"(file=\"",fl,".",figFormat,"\",height=",hth,",width=",wth,",units=\"cm\",res=120)")))
@@ -1642,7 +1628,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                 }
               }
             }
-            if(!onlyNCA){
+            if (!onlyNCA){
               if (metric != "") metric <- gsub("^, ", "", metric)
               OTL  <- rbind(OTL, data.frame(No_of_outlier=nout,ID_metric=metric))
               npde <- rbind(npde,pde)
@@ -1650,7 +1636,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }
         }
       }
-      if(!onlyNCA){
+      if (!onlyNCA){
         npde   <- nca.npde(pdedata=npde,pdecol=alwprm)
         npdeNm <- paste0("npde",alwprm)
         for (r in 1:nrow(outData)){
@@ -1667,7 +1653,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if (nrow(plotdata) == 0) next
               figlbl  <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2],"_",popStrNm3,"-",popStr3[s3])
               # Deviation plot
-              if(!noPlot){
+              if (!noPlot){
                 ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
                 if (!is.null(ggdev)){
                   suppressMessages(suppressWarnings(print(ggdev)))
@@ -1681,7 +1667,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               forestdata <- npdeout$forestdata
               forestdata$str <- figlbl
               fpval <- rbind(fpval, forestdata)
-              if(!noPlot){
+              if (!noPlot){
                 npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
                 suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
                 if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
@@ -1692,13 +1678,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             }
           }
         }
-        if(!noPlot){
+        if (!noPlot){
           # Forest plot for NPDE
           fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
-            xlab("\nNPDE") + ylab("") +
-            labs(title = "Forest plot of NPDE\nErrorbar = 95% confidence interval\n\n") +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
             geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
@@ -1722,19 +1706,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     statPrm     <- c("N","Nunique","Min","Max","Mean","Median","SD","SE","CVp","CI95l","CI95u","geoMean","gCVp")
     ncaPrm <- c("Tmax","Cmax","AUClast","AUClower_upper","AUCINF_obs","AUC_pExtrap_obs","AUCINF_pred","AUC_pExtrap_pred","AUMClast","AUMCINF_obs","AUMC_pExtrap_obs","AUMCINF_pred","AUMC_pExtrap_pred","HL_Lambda_z","Rsq","Rsq_adjusted","No_points_Lambda_z")
     
-    if(case == 1){
+    if (case == 1){
       tmpDF       <- dasdf[,ncaPrm]
       statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
       statDataSim <- data.frame(statDataSim)
-      if(nrow(statDataSim) == 0) next
+      if (nrow(statDataSim) == 0) next
       statDataSim <- cbind(data.frame(Stat=statPrm), statDataSim)
     }
-    if(case == 2){
+    if (case == 2){
       for (s1 in 1:npopStr1){
         tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1],ncaPrm]
         tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
-        if(nrow(tmpStat) == 0) next
+        if (nrow(tmpStat) == 0) next
         tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
         statDataSim <- rbind(statDataSim, tmpStat)
       }
@@ -1746,7 +1730,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2],ncaPrm]
           tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
-          if(nrow(tmpStat) == 0) next
+          if (nrow(tmpStat) == 0) next
           tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
           statDataSim <- rbind(statDataSim, tmpStat)
         }
@@ -1760,7 +1744,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2] & dasdf$STRAT3==popStr3[s3],ncaPrm]
             tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
             tmpStat  <- data.frame(tmpStat)
-            if(nrow(tmpStat) == 0) next
+            if (nrow(tmpStat) == 0) next
             tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)
             statDataSim <- rbind(statDataSim, tmpStat)
           }
@@ -1770,8 +1754,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
     
     
-    if(!printOut){
-      if(is.null(outFileNm) || outFileNm==""){
+    if (!printOut){
+      if (is.null(outFileNm) || outFileNm==""){
         write.table(statDataSim, file=paste0(usrdir,"/SimStat.tsv"), sep="\t", col.names=T, row.names=F, quote=F)
       }else{
         write.table(statDataSim, file=paste0(usrdir,"/SimStat-",outFileNm,".tsv"), sep="\t", col.names=T, row.names=F, quote=F)
@@ -1780,61 +1764,61 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     # Print output table
     # Raname ID and stratifier columns and format output table sigfig
-    if(case == 1){
+    if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
       outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 2){
+    if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
       outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 3){
+    if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
       outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
-    if(case == 4){
+    if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
       outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     
     # Subset table to print in the report
-    if(case == 1) prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50)
-    if(case == 2) prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50)
-    if(case == 3) prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50)
-    if(case == 4) prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50)
+    if (case == 1) prnTab <- head(cbind(outData[,1:2], subset(outData, select = tabCol)),50)
+    if (case == 2) prnTab <- head(cbind(outData[,1:3], subset(outData, select = tabCol)),50)
+    if (case == 3) prnTab <- head(cbind(outData[,1:4], subset(outData, select = tabCol)),50)
+    if (case == 4) prnTab <- head(cbind(outData[,1:5], subset(outData, select = tabCol)),50)
     
     streamsEnv <- parent.frame()
-    if(exists("outData"))      assign("ncaOutput", outData, envir=streamsEnv)
-    if(exists("statData"))     assign("ObsStat", statData, envir=streamsEnv)
-    if(exists("statDataSim"))  assign("SimStat", statDataSim, envir=streamsEnv)
-    if(exists("nmdf"))         assign("ncaSimData", nmdf, envir=streamsEnv)
-    if(exists("dasdf"))        assign("ncaSimEst", dasdf, envir=streamsEnv)
-    if(exists("concplot"))     assign("concPlot", concplot, envir=streamsEnv)
-    if(exists("histobsplot"))  assign("histobsPlot", histobsplot, envir=streamsEnv)
-    if(exists("popplot"))      assign("popPlot", popplot, envir=streamsEnv)
+    if (exists("outData"))      assign("ncaOutput", outData, envir=streamsEnv)
+    if (exists("statData"))     assign("ObsStat", statData, envir=streamsEnv)
+    if (exists("statDataSim"))  assign("SimStat", statDataSim, envir=streamsEnv)
+    if (exists("nmdf"))         assign("ncaSimData", nmdf, envir=streamsEnv)
+    if (exists("dasdf"))        assign("ncaSimEst", dasdf, envir=streamsEnv)
+    if (exists("concplot"))     assign("concPlot", concplot, envir=streamsEnv)
+    if (exists("histobsplot"))  assign("histobsPlot", histobsplot, envir=streamsEnv)
+    if (exists("popplot"))      assign("popPlot", popplot, envir=streamsEnv)
     
-    if(!onlyNCA){
-      if(exists("devplot"))      assign("devPlot", devplot, envir=streamsEnv)
-      if(exists("outlierplot"))  assign("outlierPlot", outlierplot, envir=streamsEnv)
-      if(exists("forestplot"))   assign("forestPlot", forestplot, envir=streamsEnv)
-      if(exists("npdeplot"))     assign("npdePlot", npdeplot, envir=streamsEnv)
-      if(exists("histnpdeplot")) assign("histnpdePlot", histnpdeplot, envir=streamsEnv)
+    if (!onlyNCA){
+      if (exists("devplot"))      assign("devPlot", devplot, envir=streamsEnv)
+      if (exists("outlierplot"))  assign("outlierPlot", outlierplot, envir=streamsEnv)
+      if (exists("forestplot"))   assign("forestPlot", forestplot, envir=streamsEnv)
+      if (exists("npdeplot"))     assign("npdePlot", npdeplot, envir=streamsEnv)
+      if (exists("histnpdeplot")) assign("histnpdePlot", histnpdeplot, envir=streamsEnv)
     }
     
-    if(printOut){
+    if (printOut){
       # Create HTML output
       simFileNm <- ifelse(is.data.frame(simFile), deparse(substitute(simFile)), simFile)
       txt <- paste(txt,paste0("Name of the NONMEM simulation output file: \"",simFileNm,"\""),sep="\n")
       txt <- paste(txt,paste0("Number of simulations performed: ",nsim),sep="\n")
       
-      if(is.null(outFileNm) || outFileNm==""){
+      if (is.null(outFileNm) || outFileNm==""){
         write.table(outData, file=paste0(usrdir,"/ncaOutput.tsv"), sep="\t", row.names=F, col.names=T, quote=F)
       }else{
         write.table(outData, file=paste0(usrdir,"/ncaOutput-",outFileNm,".tsv"), sep="\t", row.names=F, col.names=T, quote=F)
       }
       
-      if(!onlyNCA){
+      if (!onlyNCA){
         pddf <- cbind(pddf,OTL); names(pddf)[c((ncol(pddf)-1),ncol(pddf))] <- c("No. of outlier","Selected outliers ID and NCA metrics")
         fnOut <- list(arglist=match.call(), case=case, TXT=txt, pddf=pddf, prnTab=prnTab, NSIM=nsim, spread=spread, conc=concplot, histobs=histobsplot, pop=popplot, dev=devplot, outlier=outlierplot, forest=forestplot, npde=npdeplot, histnpde=histnpdeplot, phth=phth, pwth=pwth)
       }else{
@@ -1844,22 +1828,22 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }
   #setwd(usrdir)
   
-  if(printOut){
+  if (printOut){
     misc <- system.file("misc", package = "ncappc")
     
     if (is.null(simFile)){
       mdFile <- paste(misc,"ncappcReport-NCA.Rmd",sep="/")
       nwFile <- paste(misc,"ncappcReport-NCA.Rnw",sep="/")
-      if(is.null(outFileNm) || outFileNm==""){
+      if (is.null(outFileNm) || outFileNm==""){
         outNm <- paste0("ncappcReport-NCA.tex")
       }else{
         outNm <- paste0("ncappcReport-NCA-",outFileNm,".tex")
       }
     }else{
-      if(!onlyNCA){
+      if (!onlyNCA){
         mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
         nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
-        if(is.null(outFileNm) || outFileNm==""){
+        if (is.null(outFileNm) || outFileNm==""){
           outNm <- paste0("ncappcReport-NCA-PPC.tex")
         }else{
           outNm <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
@@ -1867,7 +1851,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }else{
         mdFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rmd",sep="/")
         nwFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rnw",sep="/")
-        if(is.null(outFileNm) || outFileNm==""){
+        if (is.null(outFileNm) || outFileNm==""){
           outNm <- paste0("ncappcReport-NCA-NOPPC.tex")
         }else{
           outNm <- paste0("ncappcReport-NCA-NOPPC-",outFileNm,".tex")

@@ -10,8 +10,8 @@
 #' 
 #' @param pkData PK concentration-time data.
 #' @param ID ID number of the individual.
-#' @param obsLog If \code{TRUE} concentration in observed data is in logarithmic
-#'   scale. Default is \strong{\code{FALSE}}
+#' @param dvLog If \code{TRUE} concentration is in logarithmic scale. Default is
+#'   \strong{\code{FALSE}}
 #' @param dataType Indicates if the data is observed ("obs") or simulated 
 #'   ("sim"). Since the simulated data is assumed to be obtained from NONMEM 
 #'   output, DATE and clock time (\code{dateColNm}, \code{dateFormat}, 
@@ -39,7 +39,7 @@
 #' @export
 #'
 
-nca.ind.data <- function(pkData, ID, obsLog = FALSE,
+nca.ind.data <- function(pkData, ID, dvLog = FALSE,
                          dataType = "obs",
                          idNm="ID", timeNm="TIME", concNm="DV",
                          adminType="extravascular", TI=NULL,
@@ -98,7 +98,7 @@ nca.ind.data <- function(pkData, ID, obsLog = FALSE,
     conc <- conc[-zidx]
   }
   
-  if(obsLog) conc <- sapply(conc, function(x) ifelse(x==0, 0, exp(x)))
+  if(dvLog) conc <- sapply(conc, function(x) ifelse(x==0, 0, exp(x)))
   
   tc <- data.frame(time,conc)
   if(nrow(tc)>0) tc <- tc[order(tc$time),]

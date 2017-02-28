@@ -9,7 +9,7 @@
 #' 
 #' \pkg{nca.check.sim} Checks simulated data for compatibility with ncappc.
 #' 
-#' @param obsData Simulated concentration-time data.
+#' @param simData Simulated concentration-time data.
 #' @param idNmSim Column name for ID in simulated data. Default is \strong{"ID"}
 #' @param timeNmSim Column name for time in simulated data. Default is 
 #'   \strong{"TIME"}
@@ -55,14 +55,19 @@
 #'
 
 nca.check.sim <- function(simData,
-                          idNmSim="ID",timeNmSim="TIME",concNmSim="DV",
-                          filterNm=NULL,filterExcl=NULL,
-                          str1Nm=NULL,str1=NULL,
-                          str2Nm=NULL,str2=NULL,
-                          str3Nm=NULL,str3=NULL,
-                          adminType="extravascular",TI=NULL,doseAmtNm=NULL,
-                          blqNm=NULL,blqExcl=1,
-                          evid=TRUE,evidIncl=0,mdv=FALSE){
+                          idNmSim="ID",
+                          timeNmSim="TIME",
+                          concNmSim="DV",
+                          filterNm=NULL, filterExcl=NULL,
+                          str1Nm=NULL, str1=NULL,
+                          str2Nm=NULL, str2=NULL,
+                          str3Nm=NULL, str3=NULL,
+                          adminType="extravascular",
+                          TI=NULL,
+                          doseAmtNm=NULL,
+                          blqNm=NULL, blqExcl=1,
+                          evid=TRUE,evidIncl=0,
+                          mdv=FALSE){
   
   # Remove duplicated rows and columns
   simData <- simData[!duplicated(simData),]         # Remove duplicated rows
@@ -178,6 +183,15 @@ nca.check.sim <- function(simData,
     }else{
       print("Note: MDV column is not present. MDV will not be used to process the simulated data.\n")
     }
+  }
+  
+  
+  # Remove rows with NA or empty observation/time
+  if(length(which(is.na(simData[,concNmSim]) | simData[,concNmSim]=="")) != 0){
+    simData <- simData[-which(is.na(simData[,concNmSim]) | simData[,concNmSim]==""),]
+  }
+  if(length(which(is.na(simData[,timeNmSim]) | simData[,timeNmSim]=="")) != 0){
+    simData <- simData[-which(is.na(simData[,timeNmSim]) | simData[,timeNmSim]==""),]
   }
   
   return(list(simData=simData,simRefData=srdf,str1=str1,str2=str2,str3=str3,doseAmtNm=doseAmtNm))

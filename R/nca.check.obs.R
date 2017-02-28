@@ -290,6 +290,14 @@ nca.check.obs <- function(obsData,
   
   if(!exists("TInum")) TInum <- NA
   
+  # Remove rows with NA or empty observation/time
+  if(length(which(is.na(obsData[,concNmObs]) | obsData[,concNmObs]=="")) != 0){
+    obsData <- obsData[-which(is.na(obsData[,concNmObs]) | obsData[,concNmObs]==""),]
+  }
+  if(length(which(is.na(obsData[,timeNmObs]) | obsData[,timeNmObs]=="")) != 0){
+    obsData <- obsData[-which(is.na(obsData[,timeNmObs]) | obsData[,timeNmObs]==""),]
+  }
+  
   return(list(obsData=obsData,refdf=refdf,str1=str1,str2=str2,str3=str3,TI=TI,TInum=TInum,
               dateFormat=dateFormat,timeFormat=timeFormat,dunit=dunit,tunit=tunit,cunit=cunit,
               aucunit=aucunit,aumcunit=aumcunit,clunit=clunit,vlunit=vlunit,doseAmtNm=doseAmtNm))

@@ -11,6 +11,8 @@ nca.check.sim(simData, idNmSim = "ID", timeNmSim = "TIME",
   blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE)
 }
 \arguments{
+\item{simData}{Simulated concentration-time data.}
+
 \item{idNmSim}{Column name for ID in simulated data. Default is \strong{"ID"}}
 
 \item{timeNmSim}{Column name for time in simulated data. Default is 
@@ -68,8 +70,6 @@ not \code{NULL}. Default is \strong{"1"}}
 
 \item{mdv}{If \code{TRUE} MDV is used to include data when MDV=0. Default is
 \strong{\code{FALSE}}}
-
-\item{obsData}{Simulated concentration-time data.}
 }
 \value{
 A list of objects
