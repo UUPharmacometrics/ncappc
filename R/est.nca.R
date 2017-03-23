@@ -572,8 +572,8 @@ est.nca <- function(time,
             MRTINF_obs <- (AUMCtau+Tau*(AUCINF_obs-AUCtau))/AUCtau
             MRTINF_pred <- (AUMCtau+Tau*(AUCINF_pred-AUCtau))/AUCtau
           }
-          Vss_obs  <- MRTINF_obs*Clss
-          Vss_pred <- MRTINF_pred*Clss
+          if(exists("MRTINF_obs"))  Vss_obs  <- MRTINF_obs*Clss
+          if(exists("MRTINF_pred")) Vss_pred <- MRTINF_pred*Clss
         }
       }
     }
