@@ -11,6 +11,7 @@ install.packages("devtools")
 
 library(devtools)
 
-devtools::install_github("cacha0227/ncappc",build_vignettes=TRUE)
+devtools::install_github("UUPharmacometrics/ncappc",build_vignettes=TRUE)
 
 library(ncappc)
+
