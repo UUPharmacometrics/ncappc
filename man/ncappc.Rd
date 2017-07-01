@@ -250,4 +250,3 @@ ncappc(obsFile=system.file("extdata","pkdata.csv",package="ncappc"),
 psnOut=FALSE,noPlot=TRUE,printOut=FALSE)
 
 }
-

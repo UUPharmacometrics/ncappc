@@ -122,4 +122,3 @@ processes the data with various filtering criteria.
 \details{
 \pkg{nca.check.obs} Checks observed data for compatibility with ncappc.
 }
-

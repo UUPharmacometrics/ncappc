@@ -21,11 +21,12 @@ Imports:
     knitr,
     xtable,
     reshape2,
-    testthat,
     dplyr,
     readr (>= 0.2.2),
     lazyeval
+Suggests:
+    testthat
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

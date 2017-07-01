@@ -36,4 +36,3 @@ values within a population group
 \pkg{nca.npde.plot} individual NPDE values and histogram of the NPDE
 values of NCA metrics within a population group.
 }
-

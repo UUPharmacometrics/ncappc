@@ -28,4 +28,3 @@ each estimated NCA metrics is scaled by the "spread" of the simulated values.
 By default, this function calculates the NPDE values of all columns of the
 input data frame.
 }
-

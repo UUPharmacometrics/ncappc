@@ -40,4 +40,3 @@ allowed NCA metrics for this histograms are "AUClast", "AUClower_upper",
 default, this function produces histogram of AUClast, AUCINF_obs, Cmax and 
 Tmax.
 }
-

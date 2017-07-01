@@ -46,4 +46,3 @@ observed data. The allowed NCA metrics for this histograms are "AUClast",
 "HL_Lambda_z". By default, this function produces histogram of AUClast and 
 Cmax.
 }
-

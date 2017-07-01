@@ -34,4 +34,3 @@ The calculated statistics are
  \item gCVp = Geometric percent coefficient of variation of the array
 }
 }
-

@@ -23,4 +23,3 @@ A list of objects
 \details{
 \pkg{nca.read.sim} Reads NONMEM simulation output file.
 }
-

@@ -73,4 +73,3 @@ returns a graphical object created by arrangeGrob function
 \details{
 \pkg{dv.plot} plots DV vs Time data
 }
-

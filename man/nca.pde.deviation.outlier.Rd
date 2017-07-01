@@ -74,4 +74,3 @@ diagnostic tests are "AUClast", "AUClower_upper", "AUCINF_obs",
 "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". By default, this
 function uses AUClast and Cmax metrics for the comparison.
 }
-

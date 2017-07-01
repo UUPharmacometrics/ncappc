@@ -45,4 +45,3 @@ the observed and simulated data are scaled by the "spread" of the simulated
 metrics values. The "spead" of the simulated data is measured either by the
 standard deviation or the 95% nonparametric interval.
 }
-

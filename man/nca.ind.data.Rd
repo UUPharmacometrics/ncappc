@@ -56,4 +56,3 @@ A list of objects with time-conc data and individual infusion
 \details{
 \pkg{nca.ind.data} Extracts time-conc data for a given individual.
 }
-

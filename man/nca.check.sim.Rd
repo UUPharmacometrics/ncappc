@@ -81,4 +81,3 @@ processes the data with various filtering criteria.
 \details{
 \pkg{nca.check.sim} Checks simulated data for compatibility with ncappc.
 }
-

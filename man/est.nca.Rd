@@ -174,4 +174,3 @@ below.
  \item \strong{Accumulation_Index} is \eqn{1/(1-e^(-\lambda_z*\tau))}
 }
 }
-

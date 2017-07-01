@@ -49,4 +49,3 @@ and uses that to identify multiple simulations. The function expects at least
 one header line  (\code{NOHEADER} option is not allowed in NONMEM table 
 files).
 }
-
