@@ -2,8 +2,14 @@ context("Check ncappc")
 
 test_that("Check if ncappc is available",{
   expect_true(exists("ncappc"), TRUE)
-  source("ncappcexamples/example1.R")
+  ncappc.db <- data.frame(TIME=c(0:10),CONC=c(0,1,2,3.5,3.6,3.2,2.4,1.6,1.3,1.1,0.8))
+  
+  TIME <- ncappc.db$TIME
+  CONC <- ncappc.db$CONC
+  TIME.positive <- ncappc.db[ncappc.db$TIME >= 0,"TIME"]
+  CONC.positive <- ncappc.db[ncappc.db$CONC >= 0,"CONC"]
+  
   expect_equal(sum(TIME),sum(TIME.positive))
   expect_equal(sum(CONC),sum(CONC.positive))
-})
 
+})

@@ -1,4 +1,4 @@
 library(testthat)
-#library(ncappc)
+library(ncappc)
 
 test_check(ncappc)
