@@ -173,6 +173,7 @@
 #' @import scales
 #' @import gtable
 #' @import knitr
+#' @import Cairo
 #' @import xtable
 #' @import reshape2
 #' @import testthat
@@ -787,7 +788,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Print output files if simulated data does not exist
-  if (is.null(simFile)){
+  if (is.null(simFile) || onlyNCA){
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
@@ -1096,6 +1097,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
       }
     }
+    
+    if (case==1) names(dasdf)[match(c(idNmSim),names(dasdf))] <- c("ID")
+    if (case==2) names(dasdf)[match(c(idNmSim,popStrNm1),names(dasdf))] <- c("ID","STRAT1")
+    if (case==3) names(dasdf)[match(c(idNmSim,popStrNm1,popStrNm2),names(dasdf))] <- c("ID","STRAT1","STRAT2")
+    if (case==4) names(dasdf)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(dasdf))] <- c("ID","STRAT1","STRAT2","STRAT3")
+    
     
     # Set plot output dimensions
     if (npr<=2){
@@ -1829,7 +1836,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (printOut){
     misc <- system.file("misc", package = "ncappc")
     
-    if (is.null(simFile)){
+    if (is.null(simFile) || onlyNCA){
       mdFile <- paste(misc,"ncappcReport-NCA.Rmd",sep="/")
       nwFile <- paste(misc,"ncappcReport-NCA.Rnw",sep="/")
       if (is.null(outFileNm) || outFileNm==""){
@@ -1838,26 +1845,26 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         outNm <- paste0("ncappcReport-NCA-",outFileNm,".tex")
       }
     }else{
-      if (!onlyNCA){
-        mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
-        nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
-        if (is.null(outFileNm) || outFileNm==""){
-          outNm <- paste0("ncappcReport-NCA-PPC.tex")
-        }else{
-          outNm <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
-        }
+      #if (!onlyNCA){
+      mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
+      nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
+      if (is.null(outFileNm) || outFileNm==""){
+        outNm <- paste0("ncappcReport-NCA-PPC.tex")
       }else{
-        mdFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rmd",sep="/")
-        nwFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rnw",sep="/")
-        if (is.null(outFileNm) || outFileNm==""){
-          outNm <- paste0("ncappcReport-NCA-NOPPC.tex")
-        }else{
-          outNm <- paste0("ncappcReport-NCA-NOPPC-",outFileNm,".tex")
-        }
+        outNm <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
       }
+      # }else{
+      #   mdFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rmd",sep="/")
+      #   nwFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rnw",sep="/")
+      #   if (is.null(outFileNm) || outFileNm==""){
+      #     outNm <- paste0("ncappcReport-NCA-NOPPC.tex")
+      #   }else{
+      #     outNm <- paste0("ncappcReport-NCA-NOPPC-",outFileNm,".tex")
+      #   }
+      # }
     }
-    
     knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"))#, force_v1 = TRUE)
+    #rmarkdown::render(mdFile)
     knit(input=nwFile, output=outNm)#, force_v1 = TRUE)
     if (.Platform$OS.type == "unix"){
       texcomp <- system('which texi2pdf')
