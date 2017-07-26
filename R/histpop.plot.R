@@ -46,6 +46,19 @@ histpop.plot <- function(obsdata=outData,
   
   outData <- obsdata; smedianData <- simdata
   
+  if(!all(param %in% names(obsdata))){
+    stop("One or more of the param variables not present in the obsdata.\n")
+  }else{
+    obsdata <- subset(obsdata, select = param)
+  }
+  
+  if(!all(param %in% names(simdata))){
+    stop("One or more of the param variables not present in the simdata.\n")
+  }else{
+    simdata <- subset(simdata, select = param)
+  }
+  
+  
   alwprm <- c("AUClast","AUClower_upper","AUCINF_obs","AUCINF_pred","AUMClast","Cmax","Tmax","HL_Lambda_z")
   npr    <- length(param)
   fctNm  <- data.frame()

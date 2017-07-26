@@ -180,32 +180,32 @@ est.nca <- function(time,
   nconc <- as.numeric(conc)  # Save conc to nconc
   
   # Exclude zero or negative concentration from calculations
-  if (negConcExcl){
+  if(negConcExcl){
     zid <- which (nconc < 0)
-    if (length(zid) > 0){ntime  <- ntime[-zid]; nconc  <- nconc[-zid]}
+    if(length(zid) > 0){ntime  <- ntime[-zid]; nconc  <- nconc[-zid]}
   }
   
   # Check if the number of observations is at least 3, otherwise skip the operation
-  if (length(nconc) >= 2){
+  if(length(nconc) >= 2){
     
     # Steady state data
-    if (doseType == "ss"){
+    if(doseType == "ss"){
       if(is.null(doseTime)){
-        ssIdx1 <- min(which(nconc>0))               # Index for the first observation with non-zero conc
-        sc1 <- nconc[ssIdx1]; st1 <- ntime[ssIdx1]  # Steady state 1st observation time and conc
-        ssIdx2 <- which.min(abs(ntime-(st1+Tau)))   # Index for the last ss time (Tau added to first time and find the nearest time to that number)
-        sc2 <- nconc[ssIdx2]; st2 <- ntime[ssIdx2]  # Steady state last observation time and conc
+        ssIdx1 <- min(which(nconc>0))                          # Index for the first observation with non-zero conc
       }else{
         ssIdx1 <- min(which(abs(round(ntime,0)-doseTime)==0))  # Index for the first observation within the steady state interval
-        sc1 <- nconc[ssIdx1]; st1 <- ntime[ssIdx1]             # Steady state 1st observation time and conc
-        ssIdx2 <- which.min(abs(ntime-(st1+Tau)))              # Index for the last ss time (Tau added to first time and find the nearest time to that number)
-        sc2 <- nconc[ssIdx2]; st2 <- ntime[ssIdx2]             # Steady state last observation time and conc
       }
+      sc1    <- nconc[ssIdx1]                        # Steady state 1st observed conc
+      st1    <- ntime[ssIdx1]                        # Steady state 1st observed time
+      ssIdx2 <- which.min(abs(ntime-(st1+Tau)))      # Index for the last ss time (Tau added to first time and find the nearest time to that number)
+      sc2    <- nconc[ssIdx2]                        # Steady state last observed conc
+      st2    <- ntime[ssIdx2]                        # Steady state last observed time
+      
       # steady state observations
       nconc <- nconc[which(ntime>=st1 & ntime<=st2)]
       ntime <- ntime[which(ntime>=st1 & ntime<=st2)]
       ssnPt <- length(ntime)
-      if (ssnPt != 0){
+      if(ssnPt != 0){
         mIdx    <- which(nconc == min(nconc[nconc!=0]))[1]
         Tmin    <- ntime[mIdx]
         Cmin    <- nconc[mIdx]
@@ -216,29 +216,41 @@ est.nca <- function(time,
     
     # Calculation of C0
     noBackTime <- TRUE
-    if (backExtrp==TRUE){
-      if (ntime[1]==0){
+    if(backExtrp){
+      if(ntime[1]==0){
         C0 <- as.numeric(nconc[1])
       }else{
-        if (adminType=="extravascular" | adminType=="iv-infusion"){
-          if (doseType=="ss" && ssnPt!=0){
-            C0 <- as.numeric(min(nconc))  # Min obsreved for SS data
+        if(adminType=="extravascular" | adminType=="iv-infusion"){
+          if(doseType=="ss" && ssnPt!=0){
+            C0         <- as.numeric(min(nconc))  # Min obsreved for SS data
           }else{
-            C0 <- 0     # C0 is set to 0 for single dose data
-            nconc <- c(C0, nconc)
-            ntime <- c(0, ntime)
+            C0         <- 0                       # C0 is set to 0 for single dose data
+            nconc      <- c(C0, nconc)
+            ntime      <- c(0, ntime)
             noBackTime <- FALSE
           }
-        }else if (adminType == "iv-bolus"){
+        }else if(adminType == "iv-bolus"){
           slope <- (nconc[2]-nconc[1])/(ntime[2]-ntime[1])
-          if (nconc[1]==0 | nconc[2]==0){
-            C0 <- as.numeric(nconc[nconc>0][1])
-          }else if (slope >= 0){
-            C0 <- as.numeric(nconc[1])
+          tconc <- nconc[1:2]
+          ttime <- ttime[1:2]
+          lmEx  <- FALSE
+          if(!is.null(LambdaExclude)){
+            for(i in 1:length(LambdaExclude)){
+              if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", LambdaExclude[i])){
+                # Check if the LambdaExclude is numeric
+                if(any(ttime%in%LambdaExclude[i])) lmEx <- TRUE
+              }else{
+                # Check if the LambdaExclude is logical
+                if(any(eval(parse(text=paste0("ttime",LambdaExclude[i]))))) lmEx <- TRUE
+              }
+            }
+          }
+          if(slope >= 0 | nconc[1]==0 | nconc[2]==0 | lmEx){
+            C0         <- as.numeric(nconc[nconc>0][1])
           }else{
-            C0 <- as.numeric(exp((ntime[1]*log(nconc[2])-ntime[2]*log(nconc[1]))/(ntime[1]-ntime[2])))
-            nconc <- c(C0, nconc) # extrapolation via log-linear regression
-            ntime <- c(0, ntime)
+            C0         <- as.numeric(exp((ntime[1]*log(nconc[2])-ntime[2]*log(nconc[1]))/(ntime[1]-ntime[2])))
+            nconc      <- c(C0, nconc) # extrapolation via log-linear regression
+            ntime      <- c(0, ntime)
             noBackTime <- FALSE
           }
         }
@@ -253,8 +265,9 @@ est.nca <- function(time,
     mxId   <- tail(which(nconc == Cmax),1)
     Tmax   <- ntime[mxId]
     Cmax_D <- ifelse(!is.null(doseAmt), nconc[mxId]/doseAmt, NA)
-    lIdx   <- max(which(nconc == tail(nconc[nconc>0],1))) # Index for last positive concentration
-    Tlast  <- ntime[lIdx]; Clast <- nconc[lIdx]
+    lIdx   <- max(which(nconc == tail(nconc[nconc>0],1)))  # Index for last positive concentration
+    Tlast  <- ntime[lIdx]
+    Clast  <- nconc[lIdx]
     
     
     ###### Prepare for extrapolation for the terminal elimination ######
@@ -268,7 +281,7 @@ est.nca <- function(time,
     
     # exclude points with zero or negative concentration
     zid <- which(lconc <= 0)
-    if (length(zid) > 0){
+    if(length(zid) > 0){
       lconc <- lconc[-zid]
       ltime <- ltime[-zid]
     }
@@ -277,11 +290,11 @@ est.nca <- function(time,
     if(!is.null(LambdaTimeRange)){
       Lambda_z_lower <- sort(LambdaTimeRange)[1]
       Lambda_z_upper <- sort(LambdaTimeRange)[2]
-      if (length(ltime[ltime>=Lambda_z_lower & ltime<=Lambda_z_upper]) >= 3){
+      if(length(ltime[ltime>=Lambda_z_lower & ltime<=Lambda_z_upper]) >= 3){
         llower <- head(which(ltime >= Lambda_z_lower),1)
         lupper <- tail(which(ltime <= Lambda_z_upper),1)
-        lconc  <- nconc[llower:lupper]
-        ltime  <- ntime[llower:lupper]
+        lconc  <- lconc[llower:lupper]
+        ltime  <- ltime[llower:lupper]
       }else{
         lconc <- 0
         print("Note: LambdaTimeRange does not include 3 or more elimination phase observations; hence, extrapolation for the elimination phase will not be performed.\n")
@@ -304,33 +317,35 @@ est.nca <- function(time,
     }
     
     # Determine the log-linear regression coefficients to calculate Lambda
-    if (length(lconc) >= 3){
+    if(length(lconc) >= 3){
       lconc <- log(lconc)
       lnPt  <- length(lconc)
       infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
       
       for (r in 1:(lnPt-2)){
         mlr  <- lm(lconc[r:lnPt]~ltime[r:lnPt])
-        if (is.na(coef(mlr)[2])) next
-        if (coef(mlr)[2] >= 0) next
+        if(is.na(coef(mlr)[2])) next
+        if(coef(mlr)[2] >= 0) next
         n    <- (lnPt-r)+1
         rsq  <- summary(mlr)$r.squared
         trsq <- 1-((1-rsq)*(n-1)/(n-2))  # adjusted r^2
         tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]))
         infd <- rbind(infd,tmp)
       }
-      if (nrow(infd) != 0){
-        infd <- infd[order(infd$arsq,decreasing=T),]
-        Rsq                <- infd$rsq[1]
-        Rsq_adjusted       <- infd$arsq[1]
-        No_points_Lambda_z <- infd$np[1]
-        slope              <- infd$m[1]
-        intercept          <- infd$inpt[1]
-        if (nrow(infd) > 1){
-          for (r in 2:nrow(infd)){
-            tarsq <- infd$arsq[r]; tDPt <- infd$np[r]
-            if (Rsq_adjusted - tarsq > 0.0001) break
-            if (No_points_Lambda_z > tDPt) next
+      if(nrow(infd) != 0){
+        infd <- dplyr::arrange(infd, -arsq)
+        for (r in 1:nrow(infd)){
+          if(r == 1){
+            Rsq                <- infd$rsq[r]
+            Rsq_adjusted       <- infd$arsq[r]
+            No_points_Lambda_z <- infd$np[r]
+            slope              <- infd$m[r]
+            intercept          <- infd$inpt[r]
+          }else{
+            tarsq <- infd$arsq[r]
+            tDPt  <- infd$np[r]
+            if(Rsq_adjusted - tarsq > 0.0001) break
+            if(No_points_Lambda_z > tDPt) next
             Rsq                <- infd$rsq[r]
             Rsq_adjusted       <- tarsq
             No_points_Lambda_z <- tDPt
@@ -347,17 +362,22 @@ est.nca <- function(time,
     
     
     # Interpolation for AUClower_upper, if needed
+    # Intpol11 = TRUE if start time within observed data but does not coincide
+    # Intpol12 = TRUE if start time outside observed data
+    # Intpol21 = TRUE if end time within observed data but does not coincide
+    # Intpol22 = TRUE if end time outside observed data
     Intpol11 <- Intpol12 <- Intpol21 <- Intpol22 <- FALSE
     if(!is.null(AUCTimeRange)){
-      TR1 <- sort(AUCTimeRange)[1]
-      TR2 <- sort(AUCTimeRange)[2]
+      TR1 <- sort(AUCTimeRange)[1]  # lower bound of the time range
+      TR2 <- sort(AUCTimeRange)[2]  # upper bound of the time range
       if(!TR1%in%ntime){
         if(TR1<=Tlast & length(ntime[ntime<TR1])!=0 & length(ntime[ntime>TR1])!=0){
+          # If the start time falls within the range of the data but does not coincide with an observed data point
           Intpol11 <- TRUE
-          ind1 <- tail(which(ntime==max(ntime[ntime<TR1])),1)
-          ind2 <- head(which(ntime==min(ntime[ntime>TR1])),1)
-          c1 <- nconc[ind1]; t1 <- ntime[ind1]  # conc and time just below time interpolation point
-          c2 <- nconc[ind2]; t2 <- ntime[ind2]  # conc and time just above time interpolation point
+          ind1 <- tail(which(ntime==max(ntime[ntime<TR1])),1) # index just below time interpolation point
+          ind2 <- head(which(ntime==min(ntime[ntime>TR1])),1) # index just above time interpolation point
+          c1   <- nconc[ind1]; t1 <- ntime[ind1]              # conc and time just below time interpolation point
+          c2   <- nconc[ind2]; t2 <- ntime[ind2]              # conc and time just above time interpolation point
           if(method=="linear" | (method=="linearup-logdown" & c2>=c1)) CR1 <- c1 + abs((TR1-t1)/(t2-t1)) * (c2-c1)
           if(method=="log" | (method=="linearup-logdown" & c2<c1))     CR1 <- exp(log(c1) + abs((TR1-t1)/(t2-t1)) * log(c2/c1))
           nconc <- c(nconc, CR1)
@@ -366,15 +386,18 @@ est.nca <- function(time,
           Intpol12 <- TRUE
           CR1 <- lastPt * exp(-Lambda_z * (TR1-Tlast))
           CR1 <- ifelse(CR1==0, 0.0001, CR1)
+          nconc <- c(nconc, CR1)
+          ntime <- c(ntime, TR1)
         }
       }
       if(!TR2%in%ntime){
         if(TR2<=Tlast & length(ntime[ntime<TR2])!=0 & length(ntime[ntime>TR2])!=0){
+          # If the end time falls within the range of the data but does not coincide with an observed data point
           Intpol21 <- TRUE
-          ind1 <- tail(which(ntime==max(ntime[ntime<TR2])),1)
-          ind2 <- head(which(ntime==min(ntime[ntime>TR2])),1)
-          c1 <- nconc[ind1]; t1 <- ntime[ind1]  # conc and time just below time interpolation point
-          c2 <- nconc[ind2]; t2 <- ntime[ind2]  # conc and time just above time interpolation point
+          ind1 <- tail(which(ntime==max(ntime[ntime<TR2])),1)  # index just below time interpolation point
+          ind2 <- head(which(ntime==min(ntime[ntime>TR2])),1)  # index just above time interpolation point
+          c1 <- nconc[ind1]; t1 <- ntime[ind1]                 # conc and time just below time interpolation point
+          c2 <- nconc[ind2]; t2 <- ntime[ind2]                 # conc and time just above time interpolation point
           if(method=="linear" | (method=="linearup-logdown" & c2>=c1)) CR2 <- c1 + abs((TR2-t1)/(t2-t1)) * (c2-c1)
           if(method=="log" | (method=="linearup-logdown" & c2<c1))     CR2 <- exp(log(c1) + abs((TR2-t1)/(t2-t1)) * log(c2/c1))
           nconc <- c(nconc, CR2)
@@ -383,6 +406,8 @@ est.nca <- function(time,
           Intpol22 <- TRUE
           CR2 <- lastPt * exp(-Lambda_z * (TR2-Tlast))
           CR2 <- ifelse(CR2==0, 0.0001, CR2)
+          nconc <- c(nconc, CR1)
+          ntime <- c(ntime, TR1)
         }
       }
     }
@@ -390,17 +415,18 @@ est.nca <- function(time,
     # If interpolation is executed, redefine time and conc data
     if(Intpol11 | Intpol21){
       pkData <- data.frame(time=ntime, conc=nconc)
-      pkData <- pkData[order(pkData$time),]
+      pkData <- dplyr::arrange(pkData, time)
       nconc  <- pkData$conc
       ntime  <- pkData$time
-      otime  <- ntime - min(ntime)   # Time is off-set to zero for estimation of the 1st moment
-      nPt    <- length(nconc)   # No. of data points
+      otime  <- ntime - min(ntime) # Time is off-set to zero for estimation of the 1st moment
+      nPt    <- length(nconc)      # No. of data points
       Cmax   <- max(nconc)
       mxId   <- which(nconc == Cmax)[length(which(nconc == Cmax))]
       Tmax   <- ntime[mxId]
       Cmax_D <- ifelse(!is.null(doseAmt), nconc[mxId]/doseAmt, NA)
       lIdx   <- max(which(nconc == tail(nconc[nconc>0],1))) # Index for last positive concentration
-      Tlast  <- ntime[lIdx]; Clast <- nconc[lIdx]
+      Tlast  <- ntime[lIdx]
+      Clast  <- nconc[lIdx]
     }
     
     
@@ -409,53 +435,53 @@ est.nca <- function(time,
     AUClast <- AUMClast <- AUCnoC0 <- AUClower_upper <- 0.
     
     for(r in 1:(nPt-1)){
-      if (method == "linear"){
+      if(method == "linear"){
         delauc   <- 0.5*(nconc[r:(r+1)])*(ntime[r+1]-ntime[r])
         delaumc  <- 0.5*((nconc[r+1]*otime[r+1])+(nconc[r]*otime[r]))*(otime[r+1]-otime[r])
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (backExtrp == TRUE){
-          if (noBackTime == TRUE){
+        if(backExtrp){
+          if(noBackTime){
             AUCnoC0 <- sum(AUCnoC0, delauc)
-          }else if (noBackTime == FALSE & r>1){
+          }else if(!noBackTime & r>1){
             AUCnoC0 <- sum(AUCnoC0, delauc)
           }
         }
-        if (!is.null(AUCTimeRange)){if (ntime[r] >= TR1 & ntime[r+1] <=TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
-        if (doseType == "ss" && ssnPt != 0){
+        if(!is.null(AUCTimeRange)){if(ntime[r] >= TR1 & ntime[r+1] <=TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
+        if(doseType == "ss" && ssnPt != 0){
           AUCtau  <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
         }
-      }else if (method == "log"){
+      }else if(method == "log"){
         delauc   <- (nconc[r+1]-nconc[r])*(ntime[r+1]-ntime[r])/log(nconc[r+1]/nconc[r])
         delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
-        if (backExtrp == TRUE){
-          if (noBackTime == TRUE){
+        if(backExtrp){
+          if(noBackTime){
             AUCnoC0 <- sum(AUCnoC0, delauc)
-          }else if (noBackTime == FALSE & r>1){
+          }else if(!noBackTime & r>1){
             AUCnoC0 <- sum(AUCnoC0, delauc)
           }
         }
-        if (!is.null(AUCTimeRange)){if (ntime[r] >= TR1 & ntime[r+1] <= TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
-        if (doseType == "ss" && ssnPt != 0){
+        if(!is.null(AUCTimeRange)){if(ntime[r] >= TR1 & ntime[r+1] <= TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
+        if(doseType == "ss" && ssnPt != 0){
           AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
         }
-      }else if (method == "linearup-logdown"){
-        if (nconc[r+1]>=nconc[r] | nconc[r+1]<=0 | nconc[r]<=0){
+      }else if(method == "linearup-logdown"){
+        if(nconc[r+1]>=nconc[r] | nconc[r+1]<=0 | nconc[r]<=0){
           delauc   <- mean(nconc[r:(r+1)])*(ntime[r+1]-ntime[r])
           delaumc  <- 0.5*((nconc[r+1]*otime[r+1])+(nconc[r]*otime[r]))*(otime[r+1]-otime[r])
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (backExtrp == TRUE){
-            if (noBackTime == TRUE){
+          if(backExtrp){
+            if(noBackTime){
               AUCnoC0 <- sum(AUCnoC0, delauc)
-            }else if (noBackTime == FALSE & r>1){
+            }else if(!noBackTime & r>1){
               AUCnoC0 <- sum(AUCnoC0, delauc)
             }
           }
-          if (!is.null(AUCTimeRange)){if (ntime[r] >= TR1 & ntime[r+1] <= TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
-          if (doseType == "ss" && ssnPt != 0){
+          if(!is.null(AUCTimeRange)){if(ntime[r] >= TR1 & ntime[r+1] <= TR2){AUClower_upper <- sum(AUClower_upper, delauc)}}
+          if(doseType == "ss" && ssnPt != 0){
             AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
           }
         }else{
@@ -463,28 +489,28 @@ est.nca <- function(time,
           delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
-          if (backExtrp == TRUE){
-            if (noBackTime == TRUE){
+          if(backExtrp){
+            if(noBackTime){
               AUCnoC0 <- sum(AUCnoC0, delauc)
-            }else if (noBackTime == FALSE & r>1){
+            }else if(!noBackTime & r>1){
               AUCnoC0 <- sum(AUCnoC0, delauc)
             }
           }
-          if (!is.null(AUCTimeRange)){if (ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
-          if (doseType == "ss" && ssnPt != 0){
+          if(!is.null(AUCTimeRange)){if(ntime[r] >= min(AUCTimeRange) & ntime[r+1] <= max(AUCTimeRange)){AUClower_upper <- sum(AUClower_upper, delauc)}}
+          if(doseType == "ss" && ssnPt != 0){
             AUCtau <- sum(AUCtau, delauc); AUMCtau <- sum(AUMCtau, delaumc)
           }
         }
       }
     }
-    if (is.null(AUCTimeRange)){AUClower_upper <- AUClast}
-    if (backExtrp == TRUE){
+    if(is.null(AUCTimeRange)){AUClower_upper <- AUClast}
+    if(backExtrp){
       AUC_pBack_Ext_obs <- 100*(AUClast-AUCnoC0)/AUClast
       AUC_pBack_Ext_pred <- AUC_pBack_Ext_obs
     }
     
     # MRTlast
-    if (adminType != "iv-infusion"){
+    if(adminType != "iv-infusion"){
       MRTlast <- ifelse(doseType != "ss", AUMClast/AUClast, AUMCtau/AUCtau)
     }else{
       MRTlast <- (AUMClast/AUClast)-(TI/2)
@@ -510,7 +536,7 @@ est.nca <- function(time,
       }
       
       # Calculate AUCtau and AUMCtau if Tau is greater than Tlast
-      if (doseType == "ss" && (Tau > max(ltime) & AUCtau != 0)){
+      if(doseType == "ss" && (Tau > max(ltime) & AUCtau != 0)){
         uptime  <- Tau
         lowtime <- max(ltime)
         upconc  <- ifelse(exp(slope*uptime+intercept)==0, 0.0001, exp(slope*uptime+intercept))
@@ -521,7 +547,7 @@ est.nca <- function(time,
         AUMCtau <- sum(AUMCtau, delaumc)
       }
       
-      if (AUClast != 0 & AUCINF_obs != 0){
+      if(AUClast != 0 & AUCINF_obs != 0){
         AUCINF_obs  <- AUClast+AUCINF_obs;  AUCINF_D_obs  <- ifelse(!is.null(doseAmt),AUCINF_obs/doseAmt,NA);  AUC_pExtrap_obs  <- 100*(AUCINF_obs-AUClast)/AUCINF_obs
         AUCINF_pred <- AUClast+AUCINF_pred; AUCINF_D_pred <- ifelse(!is.null(doseAmt),AUCINF_pred/doseAmt,NA); AUC_pExtrap_pred <- 100*(AUCINF_pred-AUClast)/AUCINF_pred
         if(doseType=="ns"){
@@ -543,11 +569,11 @@ est.nca <- function(time,
         AUMC_pExtrap_pred <- 100*(AUMCINF_pred-AUMClast)/AUMCINF_pred
       }
       
-      if (AUCINF_obs != 0 & AUMCINF_obs != 0){
+      if(AUCINF_obs != 0 & AUMCINF_obs != 0){
         MRTINF_obs  <- ifelse(adminType!="iv-infusion", AUMCINF_obs/AUCINF_obs, ((AUMCINF_obs/AUCINF_obs)-(TI/2)))
       }
       
-      if (AUCINF_pred != 0 & AUMCINF_pred != 0){
+      if(AUCINF_pred != 0 & AUMCINF_pred != 0){
         MRTINF_pred <- ifelse(adminType!="iv-infusion", AUMCINF_pred/AUCINF_pred, ((AUMCINF_pred/AUCINF_pred)-(TI/2)))
       }
       
@@ -556,20 +582,20 @@ est.nca <- function(time,
         if(exists("MRTINF_pred")) Vss_pred <- MRTINF_pred*Cl_pred
       }
       
-      if (doseType == "ss" && ssnPt != 0){
+      if(doseType == "ss" && ssnPt != 0){
         Cavg <- AUCtau/Tau
         Clss <- ifelse(!is.null(doseAmt),doseAmt/AUCtau,NA)
         Cmax <- max(nconc)
         p_Fluctuation <- 100*(Cmax-Cmin)/Cavg
-        if(complete.cases(Lambda_z)) {Accumulation_Index <- 1/(1-exp(-Lambda_z*Tau))}
+        if(complete.cases(Lambda_z)) Accumulation_Index <- 1/(1-exp(-Lambda_z*Tau))
         
         # re-define MRTINF for steady state and calculate Vss
-        if (complete.cases(AUCINF_obs) & complete.cases(AUMCINF_obs) & AUCtau != 0){
-          if (adminType == "iv-infusion"){
-            MRTINF_obs <- ((AUMCtau+Tau*(AUCINF_obs-AUCtau))/(AUCtau)-(TI/2))
+        if(complete.cases(AUCINF_obs) & complete.cases(AUMCINF_obs) & AUCtau != 0){
+          if(adminType == "iv-infusion"){
+            MRTINF_obs  <- ((AUMCtau+Tau*(AUCINF_obs-AUCtau))/(AUCtau)-(TI/2))
             MRTINF_pred <- ((AUMCtau+Tau*(AUCINF_pred-AUCtau))/(AUCtau)-(TI/2))
           }else{
-            MRTINF_obs <- (AUMCtau+Tau*(AUCINF_obs-AUCtau))/AUCtau
+            MRTINF_obs  <- (AUMCtau+Tau*(AUCINF_obs-AUCtau))/AUCtau
             MRTINF_pred <- (AUMCtau+Tau*(AUCINF_pred-AUCtau))/AUCtau
           }
           if(exists("MRTINF_obs"))  Vss_obs  <- MRTINF_obs*Clss
@@ -626,7 +652,7 @@ est.nca <- function(time,
   if(!exists("p_Fluctuation")) p_Fluctuation <- NA
   if(!exists("Accumulation_Index")) Accumulation_Index <- NA
   
-  if (!is.null(simFile) & dset == "obs"){
+  if(!is.null(simFile) & dset == "obs"){
     if(!onlyNCA){
       NCAprm <- as.numeric(c(C0,Tmax,0,0,0,Cmax,0,0,0,Cmax_D,Tlast,Clast,AUClast,0,0,0,AUMClast,0,0,0,MRTlast,No_points_Lambda_z,AUClower_upper,0,0,0,Rsq,Rsq_adjusted,Corr_XY,Lambda_z,Lambda_z_lower,Lambda_z_upper,HL_Lambda_z,0,0,0,AUCINF_obs,0,0,0,AUCINF_D_obs,AUC_pExtrap_obs,AUC_pBack_Ext_obs,Vz_obs,Cl_obs,AUCINF_pred,0,0,0,AUCINF_D_pred,AUC_pExtrap_pred,AUC_pBack_Ext_pred,Vz_pred,Cl_pred,AUMCINF_obs,AUMC_pExtrap_obs,AUMCINF_pred,AUMC_pExtrap_pred,MRTINF_obs,MRTINF_pred,Tau,Tmin,Cmin,Cavg,AUCtau,AUMCtau,Clss,Vss_obs,Vss_pred,p_Fluctuation,Accumulation_Index))
       

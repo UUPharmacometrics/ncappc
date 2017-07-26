@@ -1,6 +1,6 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
-Version: 0.2.1.4
+Version: 0.2.1.5
 Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email = "chayan.acharya@pharmetheus.com"),
              person("Andrew C.", "Hooker", role = "aut"),
              person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),
@@ -12,19 +12,21 @@ Description: A flexible tool is presented here that can perform
     pharmacokinetic (PK) model using NCA metrics.
 Depends:
     R (>= 2.15.3),
-    ggplot2 (>= 2.0.0),
-    grid,
-    gridExtra (>= 2.0.0)
+    dplyr,
+    reshape2,
+    ggplot2 (>= 2.0.0)
 Imports:
-    scales,
+    grid,
+    gridExtra (>= 2.0.0),
     gtable,
     knitr,
-    xtable,
-    reshape2,
-    testthat,
-    dplyr,
     readr (>= 0.2.2),
+    scales,
+    tidyr,
+    xtable,
     lazyeval
+Suggests:
+    testthat
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr

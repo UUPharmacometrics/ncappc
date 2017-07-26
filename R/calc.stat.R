@@ -56,7 +56,7 @@ calc.stat <- function(x){
     exp(mean(log(x), na.rm = na.rm))
   }
   
-  gm_cv_p = function(x, na.rm=TRUE){
+  gm_cv_p = function(x, na.rm = TRUE){
     if(any(x <= 0, na.rm = TRUE)){
       return(NaN)
     }
