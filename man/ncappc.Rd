@@ -5,7 +5,7 @@
 \title{Performs NCA calculations and population PK model diagnosis.}
 \usage{
 ncappc(obsFile = "nca_original.npctab.dta",
-  simFile = "nca_simulation.1.npctab.dta", str1Nm = NULL, str1 = NULL,
+  simFile = "nca_simulation.1.npctab.dta.zip", str1Nm = NULL, str1 = NULL,
   str2Nm = NULL, str2 = NULL, str3Nm = NULL, str3 = NULL,
   concUnit = NULL, timeUnit = NULL, doseUnit = NULL, obsLog = FALSE,
   simLog = FALSE, psnOut = TRUE, idNmObs = "ID", timeNmObs = "TIME",
@@ -24,15 +24,13 @@ ncappc(obsFile = "nca_original.npctab.dta",
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
-or an external table with comma, tab or space as separators. Default is
-\strong{"nca_original.npctab.dta"}}
+or an external table with comma, tab or space as separators.}
 
 \item{simFile}{NONMEM simulation output with the simulated concentration-time
 data from an internal data frame or an external table. \code{NULL} produces
 just the NCA output, a filename or data frame prduces the NCA output as
 well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can
-be a compressed file as well. Default is
-\strong{"nca_simulation.1.npctab.dta"}.}
+be a compressed file as well.}
 
 \item{str1Nm}{Column name for 1st level population stratifier. Default is
 \strong{\code{NULL}}}

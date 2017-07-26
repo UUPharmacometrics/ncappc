@@ -40,14 +40,12 @@
 #' section.
 #'
 #' @param obsFile Observed concentration-time data from an internal data frame
-#'   or an external table with comma, tab or space as separators. Default is
-#'   \strong{"nca_original.npctab.dta"}
+#'   or an external table with comma, tab or space as separators.
 #' @param simFile NONMEM simulation output with the simulated concentration-time
 #'   data from an internal data frame or an external table. \code{NULL} produces
 #'   just the NCA output, a filename or data frame prduces the NCA output as
 #'   well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can
-#'   be a compressed file as well. Default is
-#'   \strong{"nca_simulation.1.npctab.dta"}.
+#'   be a compressed file as well.
 #' @param str1Nm Column name for 1st level population stratifier. Default is
 #'   \strong{\code{NULL}}
 #' @param str1 Stratification ID of the members within 1st level stratification
@@ -169,16 +167,15 @@
 #'   file hyphenated to the standard ncappc report file name standard ncappc
 #'   report file name. Default is the \strong{\code{NULL}}
 #' 
-#' @import dplyr
 #' @import ggplot2
 #' @import grid
 #' @import gridExtra
+#' @import scales
 #' @import gtable
 #' @import knitr
-#' @import scales
-#' @import tidyr
+#' @import Cairo
 #' @import xtable
-#' @import testthat
+#' @import reshape2
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -188,7 +185,7 @@
 #'
 
 ncappc <- function(obsFile="nca_original.npctab.dta",
-                   simFile="nca_simulation.1.npctab.dta",
+                   simFile="nca_simulation.1.npctab.dta.zip",
                    str1Nm=NULL,str1=NULL,
                    str2Nm=NULL,str2=NULL,
                    str3Nm=NULL,str3=NULL,
@@ -791,7 +788,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Print output files if simulated data does not exist
-  if (is.null(simFile)){
+  if (is.null(simFile) || onlyNCA){
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
@@ -1100,6 +1097,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
       }
     }
+    
+    if (case==1) names(dasdf)[match(c(idNmSim),names(dasdf))] <- c("ID")
+    if (case==2) names(dasdf)[match(c(idNmSim,popStrNm1),names(dasdf))] <- c("ID","STRAT1")
+    if (case==3) names(dasdf)[match(c(idNmSim,popStrNm1,popStrNm2),names(dasdf))] <- c("ID","STRAT1","STRAT2")
+    if (case==4) names(dasdf)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(dasdf))] <- c("ID","STRAT1","STRAT2","STRAT3")
     
     # Set plot output dimensions
     if (npr<=2){
@@ -1833,7 +1835,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (printOut){
     misc <- system.file("misc", package = "ncappc")
     
-    if (is.null(simFile)){
+    if (is.null(simFile) || onlyNCA){
       mdFile <- paste(misc,"ncappcReport-NCA.Rmd",sep="/")
       nwFile <- paste(misc,"ncappcReport-NCA.Rnw",sep="/")
       if (is.null(outFileNm) || outFileNm==""){
@@ -1842,23 +1844,23 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         outNm <- paste0("ncappcReport-NCA-",outFileNm,".tex")
       }
     }else{
-      if (!onlyNCA){
-        mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
-        nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
-        if (is.null(outFileNm) || outFileNm==""){
-          outNm <- paste0("ncappcReport-NCA-PPC.tex")
-        }else{
-          outNm <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
-        }
+      #if (!onlyNCA){
+      mdFile <- paste(misc,"ncappcReport-NCA-PPC.Rmd",sep="/")
+      nwFile <- paste(misc,"ncappcReport-NCA-PPC.Rnw",sep="/")
+      if (is.null(outFileNm) || outFileNm==""){
+        outNm <- paste0("ncappcReport-NCA-PPC.tex")
       }else{
-        mdFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rmd",sep="/")
-        nwFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rnw",sep="/")
-        if (is.null(outFileNm) || outFileNm==""){
-          outNm <- paste0("ncappcReport-NCA-NOPPC.tex")
-        }else{
-          outNm <- paste0("ncappcReport-NCA-NOPPC-",outFileNm,".tex")
-        }
+        outNm <- paste0("ncappcReport-NCA-PPC-",outFileNm,".tex")
       }
+      # }else{
+      #   mdFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rmd",sep="/")
+      #   nwFile <- paste(misc,"ncappcReport-NCA-NOPPC.Rnw",sep="/")
+      #   if (is.null(outFileNm) || outFileNm==""){
+      #     outNm <- paste0("ncappcReport-NCA-NOPPC.tex")
+      #   }else{
+      #     outNm <- paste0("ncappcReport-NCA-NOPPC-",outFileNm,".tex")
+      #   }
+      # }
     }
     
     knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"))#, force_v1 = TRUE)

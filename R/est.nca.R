@@ -170,8 +170,8 @@ est.nca <- function(time,
                     dset="obs",
                     onlyNCA=FALSE){
 
-  "tail" <- "head" <- "lm" <- "coef" <- NULL
-  rm(list=c("tail","head","lm","coef"))
+  "tail" <- "head" <- "lm" <- "coef" <- "arsq" <- NULL
+  rm(list=c("tail","head","lm","coef","arsq"))
   
   # Set Tau to NA for non steady-state data
   Tau <- ifelse(doseType=="ns", NA, Tau)
@@ -232,7 +232,7 @@ est.nca <- function(time,
         }else if(adminType == "iv-bolus"){
           slope <- (nconc[2]-nconc[1])/(ntime[2]-ntime[1])
           tconc <- nconc[1:2]
-          ttime <- ttime[1:2]
+          ttime <- ntime[1:2]
           lmEx  <- FALSE
           if(!is.null(LambdaExclude)){
             for(i in 1:length(LambdaExclude)){
