@@ -10,5 +10,10 @@
 \fancyfoot[C]{\textcolor{gray}{\thepage}}
 \futurelet\TMPheadrule\def\headrule{{\color{gray}\TMPheadrule}}
 
+\makeatletter
+  \providecommand*\setfloatlocations[2]{\@namedef{fps@#1}{#2}}
+\makeatother
+\setfloatlocations{table}{H}
+
 
 
