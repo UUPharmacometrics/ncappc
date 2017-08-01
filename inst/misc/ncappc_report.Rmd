@@ -10,11 +10,10 @@ output:
   bookdown::html_document2:
     number_sections: yes
     toc: yes
-    css: custom.css
 ---
 
 <!-- toc: yes -->
-
+<!-- css: custom.css -->
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -53,20 +52,18 @@ if(fnOut$spread=="ppi"){
 
 # Results Summary
 
-## Arguments passed to the *ncappc* function: {-}
+**Arguments passed to the *ncappc* function:**
 
 ```{r cmd, results='asis'}
 print(arglist)
 ```
 
-## Data and settings: {-}
+**Data, settings and results:**
 
 ```{r txt}
 cat("Main directory: ", getwd(),"\n")
 cat(txt)
 ```
-
-## Summary of NCA metrics: {-}
 
 ```{r popplot3,fig.align="center",fig.show='asis',out.width='80%',fig.cap=x,eval.after='fig.cap',fig.pos='H'}
 x <- NULL
@@ -87,13 +84,15 @@ if(exists("pop_hist_list")){
 }
 ```
 
-## Outlying individuals: {-}
-
-Outlying individuals for a given NCA metric are defined as individuals where the NCA metric computed from the observed data does not fall within the 95\% nonparametric confidence interval of that metric based on the simulated datasets.
 
 ```{r table, echo=FALSE}
+if(onlyNCA){
+  cap <- "Dataset summary"
+} else {
+  cap <- "Dataset summary and outlying individuals. Outlying individuals for a given NCA metric are defined as individuals where the NCA metric computed from the observed data does not fall within the 95% nonparametric confidence interval of that metric based on the simulated datasets."
+}
 kable(pddf, align='c',booktabs = TRUE,longtable = TRUE,
-      caption = 'Outlying individuals')
+      caption = cap)
 ```
 
 
@@ -101,12 +100,20 @@ kable(pddf, align='c',booktabs = TRUE,longtable = TRUE,
 
 A number of tables are produced from the *ncappc* tool and are found in the same directory as this report.  Descriptions of these tables are below.  All tables are produced as tab separated value (tsv) files, *i.e.*, the columns in the tables are separated by tabs.
 
-## ncaOutput.tsv {-} 
-The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.  "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the NCA metrics that can be used for diagnostics. sim[metric_name] represents the median of the metric obtained from the set of simulated data. d[metric_name] represents the deviation of the median of the simulated metrics from the metric obtained from the observed data, scaled by the "spread" of the simulated distribution (as defined in the "spread" argument of the ncappc function). npde[metric_name] represents the NPDE value of the metric estimated from the simulated data with respect to the observed data. 
+
+```{r ncaOutput cond text, echo=FALSE, results='asis'}
+if(onlyNCA){
+  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.  "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.')
+} else {
+  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.  "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the NCA metrics that can be used for diagnostics. sim[metric_name] represents the median of the metric obtained from the set of simulated data. d[metric_name] represents the deviation of the median of the simulated metrics from the metric obtained from the observed data, scaled by the "spread" of the simulated distribution (as defined in the "spread" argument of the ncappc function). npde[metric_name] represents the NPDE value of the metric estimated from the simulated data with respect to the observed data.')
+}
+```
+
 
 ```{r ncaOutput, echo=FALSE}
+cap <- 'A representative portion of the table ncaOutput.tsv.'
 kable(prnTab, align='c',booktabs = TRUE,longtable = TRUE,
-      caption = 'Representative portion of the ncaOutput.tsv file')
+      caption = cap)
 ```
 
 
@@ -115,22 +122,75 @@ kable(prnTab, align='c',booktabs = TRUE,longtable = TRUE,
 <!-- print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), include.rownames=FALSE, type = 'latex') -->
 <!-- ``` -->
 
-## ObsStat.tsv {-}
-A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *observed data*: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot** = Total number of data points, **Nunique** = number of unique data points, **Min** = minimum value, **Max** = maximum value, **Mean** = mean/average value, **SD** = standard deviation, **SE** = standard error, **CVp** = coefficient of variation %, **a95CIu** = upper limit of 95% arithmetic confidence interval, **a95CIl** = lower limit of 95% arithmetic confidence interval, **gMean** = geometric mean, **gCVp** = geometric coefficient of variation %.
+**ObsStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *observed data*: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted, No_points_Lambda_z obtained from the observed data. Brief description of the calculated statistical parameters: **Ntot:** Total number of data points, **Nunique:**  number of unique data points, **Min:** minimum value, **Max:** maximum value, **Mean:**  mean/average value, **SD:**  standard deviation, **SE:** standard error, **CVp:**  coefficient of variation in percent, **a95CIu:** upper limit of 95% arithmetic confidence interval, **a95CIl:** lower limit of 95% arithmetic confidence interval, **gMean:** geometric mean, **gCVp:** geometric coefficient of variation in percent. 
+  
+```{r ObsStat, echo=FALSE}
+tmp_data <- statData[,1:9]
+if(nrow(tmp_data)>20) tmp_data <- tmp_data[1:20,]
+kable(tmp_data, align='c',booktabs = TRUE,longtable = TRUE,
+      caption = 'A representative portion of the table ObsStat.tsv.')
+```
 
-## SimStat.tsv {-} 
-A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *simulated data*. The table is structured to as "ObsStat.tsv".
 
-## ncaSimData.tsv {-} 
-Simulated concentration-time profiles for each individual obtained from each simulation. "NSUB" column denotes the simulation number.
+```{r SimStat cond text, echo=FALSE, results='asis'}
+if(!onlyNCA){
+  cat('**SimStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *simulated data*. The table is structured as "ObsStat.tsv".')
+} 
+```
 
-## ncaSimEst.tsv {-} 
-Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. "NSUB" column denotes the simulation number.
+```{r SimStat, echo=FALSE}
+if(!onlyNCA){
+  cap <- ' A representative portion of the table SimStat.tsv. '
+  
+  tmp_data <- statDataSim[,1:9]
+  if(nrow(tmp_data)>20) tmp_data <- tmp_data[1:20,]
+  kable(tmp_data, align='c',booktabs = TRUE,longtable = TRUE,
+        caption = cap)
+}
+```
 
+```{r ncaSimData cond text, echo=FALSE, results='asis'}
+if(!onlyNCA){
+  cat('**ncaSimData.tsv:** Simulated concentration-time profiles for each individual obtained from each simulation. "NSUB" column denotes the simulation number.')
+} 
+```
+
+```{r ncaSimData, echo=FALSE}
+if(!onlyNCA){
+  cap <- 'A representative portion of the table ncaSimData.tsv. '
+  
+  if(exists("nmdf")){
+    tmp_table <- nmdf[1:20,]
+  } else {
+    tmp_table <- read.table(file=paste0(usrdir,"/ncaSimData.tsv"), sep="\t",nrows=20,
+                            header = T)
+  }
+
+  if(ncol(tmp_data)>10) tmp_data <- tmp_data[,1:10]
+
+  kable(tmp_table, align='c',booktabs = TRUE,longtable = TRUE,
+        caption = cap)
+}
+```
+
+```{r ncaSimEst cond text, echo=FALSE, results='asis'}
+if(!onlyNCA){
+  cat('**ncaSimEst.tsv:** Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. "NSUB" column denotes the simulation number.')
+} 
+```
+
+```{r ncaSimEst, echo=FALSE}
+if(!onlyNCA){
+  cap <- 'A representative portion of the table ncaSimEst.tsv. '
+  
+  tmp_data <- dasdf[,1:9]
+  if(nrow(tmp_data)>20) tmp_data <- tmp_data[1:20,]
+  kable(tmp_data, align='c',booktabs = TRUE,longtable = TRUE,
+        caption = cap)
+}
+```
 
 # Graphical output
-
-
 
 ```{r concplot, echo=FALSE, fig.height=4, fig.width=6, fig.align='center', fig.cap="[Individual level] Concentration vs. time profile for each individual stratified by dose or population group, if any. The left panels represent the concentration data in linear scale, while the right panels represent the concentration data in semi-logarithmic scale."}
 if (length(conc)>0){
@@ -149,16 +209,17 @@ if (length(histobs)>0){
 (ref:cap-popplot) [Population level] Histogram of the population median of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population median of the NCA matric obtained from the observed data and the median of the population medians of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data.
 
 
-```{r popplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', fig.cap='(ref:cap-popplot)'}
-if (length(pop)>0){
-  suppressPackageStartupMessages(require(gridExtra))
-  for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()}
-}
-```
+<!-- ```{r popplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', fig.cap='(ref:cap-popplot)'} -->
+<!-- if (length(pop)>0){ -->
+<!--   suppressPackageStartupMessages(require(gridExtra)) -->
+<!--   for (i in 1:length(pop)){suppressMessages(suppressWarnings(grid.draw(pop[[i]]))); Sys.sleep(0.5); grid.newpage()} -->
+<!-- } -->
+<!-- ``` -->
 
 
 
 ```{r popplot2,fig.align="center",fig.show='asis',out.width='80%',fig.cap=x,eval.after='fig.cap'}
+x <- NULL
 if(exists("pop_hist_list")){
   if (length(pop_hist_list)>0){
     x <- c()
