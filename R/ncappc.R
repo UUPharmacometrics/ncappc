@@ -1907,6 +1907,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       rmarkdown::render("ncappc_report.Rmd",output_format = "all")
     }
     
+    if(out_format == "first"){
+      rmarkdown::render("ncappc_report.Rmd")
+    }
+    
     # knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"))#, force_v1 = TRUE)
     
     # knit(input=nwFile, output=outNm)#, force_v1 = TRUE)
