@@ -1000,9 +1000,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }
       if (printOut){
         if (is.null(outFileNm) || outFileNm==""){
-          write.table(nmdf, file=paste0(usrdir,"/ncaSimData.tsv"), row.names=F, quote=F, sep="\t")
+          #write.table(nmdf, file=paste0(usrdir,"/ncaSimData.tsv"), row.names=F, quote=F, sep="\t")
+          readr::write_delim(nmdf, file.path(usrdir,"ncaSimData.tsv.gz"), delim = "\t")
         }else{
-          write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
+          #write.table(nmdf, file=paste0(usrdir,"/ncaSimData-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
+          readr::write_delim(nmdf, file.path(usrdir,paste0("ncaSimData-",outFileNm,".tsv.gz")), delim = "\t")
         }
       }
       
@@ -1196,6 +1198,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }
     }
     
+    
     # read all simulated NCA parameters to a list
     lasdf <- lapply(list.files(path = simDir, pattern="sim_[0-9]*.csv",full.names=T),function(i){read.csv(i, header=T)})
     nsim  <- length(lasdf)
@@ -1241,12 +1244,15 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       if (case == 1){
         smeanData   <- data.frame()
         smedianData <- data.frame()
+        svarData <- data.frame()
         for (i in 1:length(lasdf)){
           tmdf        <- subset(data.frame(lasdf[[i]]), select=param)
           meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
           smeanData   <- rbind(smeanData, meanPrm)
           medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
           smedianData <- rbind(smedianData, medianPrm)
+          varPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) var(as.numeric(x[!is.na(x)]))))
+          svarData <- rbind(svarData, varPrm)
         }
         obsdata     <- subset(outData, select=param, ID!="")
         figlbl      <- NULL
@@ -1326,12 +1332,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             if (nrow(dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2],]) == 0) next
             smeanData   <- data.frame()
             smedianData <- data.frame()
+            svarData <- data.frame()
+            
             for (i in 1:length(lasdf)){
               tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2])
               meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
               smeanData   <- rbind(smeanData, meanPrm)
               medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
               smedianData <- rbind(smedianData, medianPrm)
+              varPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) var(as.numeric(x[!is.na(x)]))))
+              svarData <- rbind(svarData, varPrm)
             }
             obsdata     <- subset(outData, select=param, ID!="" & STRAT1==popStr1[s1] & STRAT2==popStr2[s2])
             figlbl      <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2])
@@ -1369,12 +1379,16 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               if (nrow(dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2] & dasdf$STRAT3==popStr3[s3],]) == 0) next
               smeanData   <- data.frame()
               smedianData <- data.frame()
+              svarData <- data.frame()
+              
               for (i in 1:length(lasdf)){
                 tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3])
                 meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
                 smeanData   <- rbind(smeanData, meanPrm)
                 medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
                 smedianData <- rbind(smedianData, medianPrm)
+                varPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) var(as.numeric(x[!is.na(x)]))))
+                svarData <- rbind(svarData, varPrm)
               }
               obsdata     <- subset(outData, select=param, ID!="" & STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3])
               figlbl      <- paste0(popStrNm1,"-",popStr1[s1],"_",popStrNm2,"-",popStr2[s2],"_",popStrNm3,"-",popStr3[s3])
