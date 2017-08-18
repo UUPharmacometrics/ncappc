@@ -166,7 +166,7 @@
 #' @param outFileNm Additional tag to the name of the output html and pdf output
 #'   file hyphenated to the standard ncappc report file name standard ncappc
 #'   report file name. Default is the \strong{\code{NULL}}
-#'
+#' 
 #' @import ggplot2
 #' @import grid
 #' @import gridExtra
@@ -176,7 +176,6 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
-#' @import testthat
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -219,9 +218,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Observed data
-  if (is.null(obsFile)){stop("Name of the file with observed data is required.\n")}
+  if (is.null(obsFile)){stop("Name of the file with observed data is required.")}
   if (!is.data.frame(obsFile)){
-    if (!file_test("-f", obsFile)){stop("File for the observed data does not exist\n")}
+    if (!file_test("-f", obsFile)){stop("File for the observed data does not exist.")}
     # read observed data file
     if (!psnOut){
       extn <- tail(unlist(strsplit(obsFile, ".", fixed=T)), n=1)
@@ -264,23 +263,24 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                            concUnit=concUnit, timeUnit=timeUnit, doseUnit=doseUnit,
                            blqNm=blqNm, blqExcl=blqExcl,evid=evid, evidIncl=evidIncl, mdv=mdv)
   
-  indf       <- obsList$obsData
-  refdf      <- obsList$refdf
-  str1       <- obsList$str1
-  str2       <- obsList$str2
-  str3       <- obsList$str3
-  TI         <- obsList$TI
-  TInum      <- obsList$TInum
-  dateFormat <- obsList$dateFormat
-  timeFormat <- obsList$timeFormat
-  dunit      <- obsList$dunit
-  tunit      <- obsList$tunit
-  cunit      <- obsList$cunit
-  aucunit    <- obsList$aucunit
-  aumcunit   <- obsList$aumcunit
-  clunit     <- obsList$clunit
-  vlunit     <- obsList$vlunit
-  doseAmtNm  <- obsList$doseAmtNm
+  indf            <- obsList$obsData
+  refdf           <- obsList$refdf
+  str1            <- obsList$str1
+  str2            <- obsList$str2
+  str3            <- obsList$str3
+  LambdaTimeRange <- obsList$LambdaTimeRange
+  TI              <- obsList$TI
+  TInum           <- obsList$TInum
+  dateFormat      <- obsList$dateFormat
+  timeFormat      <- obsList$timeFormat
+  dunit           <- obsList$dunit
+  tunit           <- obsList$tunit
+  cunit           <- obsList$cunit
+  aucunit         <- obsList$aucunit
+  aumcunit        <- obsList$aumcunit
+  clunit          <- obsList$clunit
+  vlunit          <- obsList$vlunit
+  doseAmtNm       <- obsList$doseAmtNm
   rm(obsList)
   
   npr       <- length(param)

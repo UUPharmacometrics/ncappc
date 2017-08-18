@@ -74,7 +74,7 @@ nca.check.sim <- function(simData,
   simData <- simData[,!duplicated(names(simData))]  # Remove duplicated columns
   
   if ((!idNmSim%in%colnames(simData)) | (!timeNmSim%in%colnames(simData)) | (!concNmSim%in%colnames(simData))){
-    stop("Incorrect column names of ID, TIME and/or DV in simulation output\n")
+    stop("Incorrect column names of ID, TIME and/or DV in simulation output.")
   }
   
   # Values in filterExcl will be excluded from the analysis
@@ -90,7 +90,7 @@ nca.check.sim <- function(simData,
         }
       }
     }else{
-      print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the simulated data.\n")
+      print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the simulated data.")
     }
   }
   
@@ -99,19 +99,19 @@ nca.check.sim <- function(simData,
   
   # 1st level population stratification
   if (!is.null(str1Nm)){
-    if (!str1Nm%in%colnames(srdf)){stop("Incorrect name for the 1st level stratification column in simulation output\n")}
+    if (!str1Nm%in%colnames(srdf)){stop("Incorrect name for the 1st level stratification column in simulation output.")}
     if (is.null(str1)) str1 <- unique(sort(srdf[,str1Nm]))
   }
   
   # 2nd level population stratification
   if (!is.null(str2Nm)){
-    if (!str2Nm%in%colnames(srdf)){stop("Incorrect name for the 2nd level stratification column in simulation output\n")}
+    if (!str2Nm%in%colnames(srdf)){stop("Incorrect name for the 2nd level stratification column in simulation output.")}
     if (is.null(str2)) str2 <- unique(sort(srdf[,str2Nm]))
   }
   
   # 3rd level population stratification
   if (!is.null(str3Nm)){
-    if (!str3Nm%in%colnames(srdf)){stop("Incorrect name for the 3rd level stratification column in simulation output\n")}
+    if (!str3Nm%in%colnames(srdf)){stop("Incorrect name for the 3rd level stratification column in simulation output.")}
     if (is.null(str3)) str3 <- unique(sort(srdf[,str3Nm]))
   }
   
@@ -120,11 +120,11 @@ nca.check.sim <- function(simData,
   if(adminType == "iv-infusion"){
     if(is.null(TI)){
       if((!"AMT"%in%names(srdf)) | (!"RATE"%in%names(srdf))){
-        stop("Duration of the infusion time is needed if AMT and RATE are absent in the simulated data\n")
+        stop("Duration of the infusion time is needed if AMT and RATE are absent in the simulated data.")
       }
     }else{
       if(!TI%in%names(srdf)){
-        stop("Incorrect TI information for simulated data. TI has to be either a single numeric value or a column name.\n")
+        stop("Incorrect TI information for simulated data. TI has to be either a single numeric value or a column name.")
       }
     }
   }
@@ -138,7 +138,7 @@ nca.check.sim <- function(simData,
       doseAmtNm <- "AMT"
     }else{
       doseAmtNm <- NULL
-      print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the simulated data file. Dose related NCA metrics will not be estimated for the simulated data.\n")
+      print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the simulated data file. Dose related NCA metrics will not be estimated for the simulated data.")
     }
   }else{
     if("AMT"%in%colnames(srdf)) doseAmtNm <- "AMT"
@@ -158,7 +158,7 @@ nca.check.sim <- function(simData,
         }
       }
     }else{
-      print("Note: Incorrect BLQ column name. BLQ will not be used to process the simulated data.\n")
+      print("Note: Incorrect BLQ column name. BLQ will not be used to process the simulated data.")
     }
   }
   
@@ -172,7 +172,7 @@ nca.check.sim <- function(simData,
       uevid <- unique(as.numeric(as.character(srdf$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
       if(length(ievid) != 0) simData <- simData[!simData$EVID%in%ievid,]
     }else{
-      print("Note: EVID column is not present. EVID will not be used to process the simulated data.\n")
+      print("Note: EVID column is not present. EVID will not be used to process the simulated data.")
     }
   }
   
@@ -181,7 +181,7 @@ nca.check.sim <- function(simData,
     if("MDV"%in%colnames(simData)){
       simData <- simData[simData$MDV == 0,]
     }else{
-      print("Note: MDV column is not present. MDV will not be used to process the simulated data.\n")
+      print("Note: MDV column is not present. MDV will not be used to process the simulated data.")
     }
   }
   

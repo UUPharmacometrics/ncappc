@@ -77,7 +77,7 @@ nca.ind.data <- function(pkData, ID, dvLog = FALSE,
     }else{
       tm <- pkData[pkData[,idNm]==ID, timeNm]
     }
-    for (j in 1:length(tm)){
+    for(j in 1:length(tm)){
       time[j] <- ifelse ((is.null(dateColNm)), as.numeric(difftime(strptime(tm[j], format=timeFormat), strptime(tm[1], format=timeFormat), units='hours')), as.numeric(difftime(strptime(tm[j], format="%Y-%m-%d %H:%M:%S"), strptime(tm[1], format="%Y-%m-%d %H:%M:%S"), units='hours')))
     }
   }else{

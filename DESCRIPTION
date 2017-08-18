@@ -1,8 +1,8 @@
 Package: ncappc
 Title: NCA Calculation and Population PK Model Diagnosis
-Version: 0.2.1.9005
-Authors@R: c(person("Chayan", "Acharya", role = c("aut", "cre"), email = "chayan.acharya@pharmetheus.com"),
-             person("Andrew C.", "Hooker", role = "aut"),
+Version: 0.2.1.9006
+Authors@R: c(person("Chayan", "Acharya", role = "aut"),
+             person("Andrew C.", "Hooker", role = c("aut", "cre"), email = "andrew.hooker@farmbio.uu.se"),
              person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),
              person("Siv", "Jonsson", role = "aut"),
              person("Mats O.", "Karlsson", role = "aut"))
@@ -22,6 +22,7 @@ Imports:
     xtable,
     reshape2,
     dplyr,
+    Cairo,
     readr (>= 0.2.2),
     lazyeval
 Suggests:

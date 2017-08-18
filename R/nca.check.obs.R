@@ -101,13 +101,13 @@ nca.check.obs <- function(obsData,
   
   # Check for column names
   if ((!idNmObs%in%names(obsData)) | (!timeNmObs%in%names(obsData)) | (!concNmObs%in%names(obsData))){
-    stop("Incorrect column names of ID, TIME and/or DV\n")
+    stop("Incorrect column names of ID, TIME and/or DV.")
   }
   
   # Check steady state dosing interval
   if (doseType == "ss"){
-    if(is.null(Tau)){stop("Time for dosing interval is required for steady-state data\n")}
-    if(is.null(doseTime)){print("Note: Dose time prior to the first observation for steady-state data is missing. Steady state observation period will be estimated based on the first non-zero obverved concentration and Tau.\n")}
+    if(is.null(Tau)){stop("Time for dosing interval is required for steady-state data.")}
+    if(is.null(doseTime)){print("Note: Dose time prior to the first observation for steady-state data is missing. Steady state observation period will be estimated based on the first non-zero obverved concentration and Tau.")}
   }
   
   # exclude data based on specific values on filter column (optional)
@@ -124,7 +124,7 @@ nca.check.obs <- function(obsData,
         }
       }
     }else{
-      print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the observed data.\n")
+      print("Note: Incorrect filterNm or filterExcl specification. filterNm will not be used to process the observed data.")
     }
   }
   
@@ -133,48 +133,49 @@ nca.check.obs <- function(obsData,
   
   # 1st level population stratification
   if (!is.null(str1Nm)){
-    if (!str1Nm%in%names(obsData)){stop("Incorrect name for the 1st level stratification column\n")}
+    if (!str1Nm%in%names(obsData)){stop("Incorrect name for the 1st level stratification column.")}
     if (is.null(str1)) str1 <- unique(sort(as.character(obsData[,str1Nm])))
   }
   
   # 2nd level population stratification
   if (!is.null(str2Nm)){
-    if (!str2Nm%in%names(obsData)){stop("Incorrect name for the 2nd level stratification column\n")}
+    if (!str2Nm%in%names(obsData)){stop("Incorrect name for the 2nd level stratification column.")}
     if (is.null(str2)) str2 <- unique(sort(as.character(obsData[,str2Nm])))
   }
   
   # 3rd level population stratification
   if (!is.null(str3Nm)){
-    if (!str3Nm%in%names(obsData)){stop("Incorrect name for the 3rd level stratification column\n")}
+    if (!str3Nm%in%names(obsData)){stop("Incorrect name for the 3rd level stratification column.")}
     if (is.null(str3)) str3 <- unique(sort(as.character(obsData[,str3Nm])))
   }
   
   # check time range, if any
   if ((!is.null(AUCTimeRange)) && (length(AUCTimeRange) != 2 | class(AUCTimeRange) != "numeric")){
-    print("Note: Incorrect time range for AUC calculation. AUCTimeRange will not be used.\n")
+    print("Note: Incorrect time range for AUC calculation. AUCTimeRange will not be used.")
   }
   
   if ((!is.null(LambdaTimeRange)) && (length(LambdaTimeRange) != 2 | class(LambdaTimeRange) != "numeric")){
-    print("Note: Incorrect time range for Lambda calculation. LambdaTimeRange will not be used.\n")
+    print("Note: Incorrect time range for Lambda calculation. LambdaTimeRange will not be used.")
+    LambdaTimeRange <- NULL
   }
   
   # check requirements for infusion data
   if(adminType == "iv-infusion"){
     if(is.null(TI)){
       if((!"AMT"%in%names(obsData)) | (!"RATE"%in%names(obsData))){
-         stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data\n")
+         stop("Duration of the infusion time is needed if AMT and RATE are absent in the input data.")
       }
       TInum <- NULL
     }else{
       if(length(TI)!=1){
-         stop("Incorrect TI information. TI has to be either a single numeric value or a column name.\n")
+         stop("Incorrect TI information. TI has to be either a single numeric value or a column name.")
       }else{
         if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", TI)){
           TI    <- as.numeric(TI)
           TInum <- TRUE
         }else{
           if(!TI%in%names(obsData)){
-             stop("Incorrect TI information. TI has to be either a single numeric value or a column name.\n")
+             stop("Incorrect TI information. TI has to be either a single numeric value or a column name.")
           }else{
             TInum <- FALSE
           }
@@ -191,7 +192,7 @@ nca.check.obs <- function(obsData,
       doseAmtNm <- "AMT"
     }else{
       doseAmtNm <- NULL
-      print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the observed data file. Dose related NCA metrics will not be estimated for the observed data.\n")
+      print("Note: Dose amount column name provided in doseAmtNm or AMT column does not exist in the observed data file. Dose related NCA metrics will not be estimated for the observed data.")
     }
   }else{
     if("AMT"%in%names(obsData)) doseAmtNm <- "AMT"
@@ -200,7 +201,7 @@ nca.check.obs <- function(obsData,
   
   # Appropriate date format
   if (!is.null(dateColNm)){
-    if (!dateColNm%in%names(obsData)){stop("Incorrect name for the date column\n")}
+    if (!dateColNm%in%names(obsData)){stop("Incorrect name for the date column.")}
     if (dateFormat == "D-M-Y"){
       dateFormat <- "%d-%m-%Y"
     }else if (dateFormat == "D-Y-M"){
@@ -225,7 +226,7 @@ nca.check.obs <- function(obsData,
       dateFormat <- "%Y/%m/%d"
     }else if (dateFormat == "Y/D/M"){
       dateFormat <- "%Y/%d/%m"
-    }else{stop("Incorrect date format. Currently allowed date formats are \"D-M-Y\", \"D/M/Y\", or any combination of D, M and Y separated by either - or /\n")}
+    }else{stop("Incorrect date format. Currently allowed date formats are \"D-M-Y\", \"D/M/Y\", or any combination of D, M and Y separated by either - or /.")}
   }
   
   # Appropriate time format
@@ -234,7 +235,7 @@ nca.check.obs <- function(obsData,
       timeFormat <- "%H:%M"
     }else if(timeFormat == "H:M:S"){
       timeFormat <- "%H:%M:%S"
-    }else{stop("Incorrect time format. Currently allowed date formats are \"number\", \"H:M\", \"H:M:S\"\n")}
+    }else{stop("Incorrect time format. Currently allowed date formats are \"number\", \"H:M\", \"H:M:S\".")}
   }
   
   
@@ -261,7 +262,7 @@ nca.check.obs <- function(obsData,
         }
       }
     }else{
-      print("Note: Incorrect BLQ column name. BLQ will not be used to process the observed data.\n")
+      print("Note: Incorrect BLQ column name. BLQ will not be used to process the observed data.")
     }
   }
   
@@ -275,7 +276,7 @@ nca.check.obs <- function(obsData,
       uevid <- unique(as.numeric(as.character(obsData$EVID))); ievid <- setdiff(uevid, as.numeric(evidIncl))
       if (length(ievid) != 0) obsData <- obsData[!obsData$EVID%in%ievid,]
     }else{
-      print("Note: EVID column is not present. EVID will not be used to process the observed data.\n")
+      print("Note: EVID column is not present. EVID will not be used to process the observed data.")
     }
   }
   
@@ -284,7 +285,7 @@ nca.check.obs <- function(obsData,
     if("MDV"%in%names(obsData)){
       obsData <- obsData[obsData$MDV == 0,]
     }else{
-      print("Note: MDV column is not present. MDV will not be used to process the observed data.\n")
+      print("Note: MDV column is not present. MDV will not be used to process the observed data.")
     }
   }
   
@@ -298,8 +299,8 @@ nca.check.obs <- function(obsData,
     obsData <- obsData[-which(is.na(obsData[,timeNmObs]) | obsData[,timeNmObs]==""),]
   }
   
-  return(list(obsData=obsData,refdf=refdf,str1=str1,str2=str2,str3=str3,TI=TI,TInum=TInum,
-              dateFormat=dateFormat,timeFormat=timeFormat,dunit=dunit,tunit=tunit,cunit=cunit,
+  return(list(obsData=obsData,refdf=refdf,str1=str1,str2=str2,str3=str3,LambdaTimeRange=LambdaTimeRange,
+              TI=TI,TInum=TInum,dateFormat=dateFormat,timeFormat=timeFormat,dunit=dunit,tunit=tunit,cunit=cunit,
               aucunit=aucunit,aumcunit=aumcunit,clunit=clunit,vlunit=vlunit,doseAmtNm=doseAmtNm))
   
 }
