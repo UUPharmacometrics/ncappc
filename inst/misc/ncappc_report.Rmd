@@ -162,8 +162,9 @@ if(!onlyNCA){
   if(exists("nmdf")){
     tmp_table <- nmdf[1:20,]
   } else {
-    tmp_table <- read.table(file=paste0(usrdir,"/ncaSimData.tsv"), sep="\t",nrows=20,
-                            header = T)
+    #tmp_table <- read.table(file=paste0(usrdir,"/ncaSimData.tsv"), sep="\t",nrows=20,
+    #                        header = T)
+    tmp_table <- suppressMessages(readr::read_delim(file.path(usrdir,"ncaSimData.tsv.gz"),delim = "\t",n_max=20))
   }
 
   if(ncol(tmp_data)>10) tmp_data <- tmp_data[,1:10]

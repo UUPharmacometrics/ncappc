@@ -163,9 +163,13 @@
 #'   SIMDATA directory. If \code{FALSE} the information in the SIMDATA directory
 #'   is used. If \code{NULL} a dialog will come up to ask the user what to do.
 #'   Default is \strong{\code{NULL}}
+#' @param overwrite_sim_est_file If \code{TRUE} The NCA metrics are created again based
+#' on the simulation data.  If \code{FALSE} the information in the ncaSimEst file
+#'   is used. If \code{NULL} a dialog will come up to ask the user what to do.
+#'   Default is \strong{\code{NULL}}
 #' @param outFileNm Additional tag to the name of the output html and pdf output
 #'   file hyphenated to the standard ncappc report file name standard ncappc
-#'   report file name. Default is the \strong{\code{NULL}}
+#'   report file name. Default is \strong{\code{NULL}}
 #' 
 #' @import ggplot2
 #' @import grid
@@ -176,6 +180,7 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
+#' @import dplyr 
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -204,7 +209,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    dateColNm=NULL,dateFormat=NULL,spread="npi",
                    tabCol=c("AUClast","Cmax","Tmax","AUCINF_obs","Vz_obs","Cl_obs","HL_Lambda_z"),
                    figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,new_data_method=TRUE,
-                   overwrite_SIMDATA=NULL,outFileNm=NULL,
+                   overwrite_SIMDATA=NULL,overwrite_sim_est_file=NULL,outFileNm=NULL,
                    out_format = "html"){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NULL
@@ -949,9 +954,41 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     ############## Analyze the simulated data if exists ####################
     ########################################################################
     simDir <- paste0(usrdir,"/SIMDATA")
+
+    extra_name <- paste0("-",outFileNm)
+    if (is.null(outFileNm) || outFileNm=="") extra_name <- ""
+    sim_est_file <- paste0("ncaSimEst",extra_name,".tsv.gz")
     
-    # Check status of SIMDATA
-    if (file.exists(simDir)){
+    # Check status of ncaSimEst
+    if (file.exists(sim_est_file)){
+      if (is.null(overwrite_sim_est_file)){
+        if(interactive()){
+          cat(paste0("\nThe file ", sim_est_file, " already exists.\n")) 
+          cat("Please choose one of the following options:\n")
+          dirTest <- menu(c("Overwrite it",
+                            "Rename and create a new one",
+                            "Use as it is."))
+        } else {
+          dirTest <- "1"
+        }
+      }else if (overwrite_sim_est_file){
+        dirTest <- "1"
+      }else if (!overwrite_sim_est_file) {
+        dirTest <- "3"
+      }
+      
+      if (dirTest == "1"){
+        unlink(sim_est_file)
+      }else if (dirTest == "2"){
+        print(paste0("\nRenaming ", sim_est_file, " to ", sim_est_file,"_previous\n"))
+        file.rename(from=sim_est_file, to=paste0(sim_est_file,"_previous"))
+      }else if (dirTest == "3"){
+        #file_list <- list.files(path="./SIMDATA/", pattern="sim_[0-9]*.csv", full.names=T)
+      }else{
+        setwd(usrdir);stop("Don't know what to do with ",sim_est_file," \n")
+        #setwd(usrdir);stop("Bad choice!!! Please choose either 1 or 2 or 3\n")
+      }
+    }else if (file.exists(simDir)){     # Check status of SIMDATA
       if (is.null(overwrite_SIMDATA)){
         if(interactive()){
           cat("\nDirectory \"SIMDATA\" already exists.\n") 
@@ -982,7 +1019,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         #setwd(usrdir);stop("Bad choice!!! Please choose either 1 or 2 or 3\n")
       }
     }else{
-      dir.create(simDir)
+      #dir.create(simDir)
       dirTest <- "0"
     }
     
@@ -1063,6 +1100,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       
       # Calculate AUC parameters for the simulation output
+      simData_tot <- data.frame()
+      
       for (s in 1:nsim){
         simData <- data.frame()
         smdf    <- nmdf[nmdf$NSUB == simID[s],]
@@ -1190,35 +1229,55 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }
         }
         
-        if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
-        if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
-        if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
-        if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
-        write.csv(simData, file=paste(simDir,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        # if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
+        # if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
+        # if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
+        # if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
+        #write.csv(simData, file=paste(simDir,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        
+        simData_tot <- dplyr::bind_rows(simData_tot,simData)
       }
+ 
+      if (case == 1) names(simData_tot)[names(simData_tot)%in%c("ID")] <- c(idNmSim)
+      if (case == 2) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
+      if (case == 3) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
+      if (case == 4) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
+      
+      readr::write_delim(simData_tot, file.path(usrdir,sim_est_file), delim = "\t")
+    
+    } else {
+      if (file.exists(sim_est_file)){
+        simData_tot <- suppressMessages(readr::read_delim(file.path(usrdir,sim_est_file),delim = "\t"))
+        nsim <- max(simData_tot$NSIM)
+        simData_tot <- as.data.frame(simData_tot)
+      } else if(file.exists(simDir)){
+        # read all simulated NCA parameters to a list
+        lasdf <- lapply(list.files(path = simDir, pattern="sim_[0-9]*.csv",full.names=T),function(i){read.csv(i, header=T)})
+        nsim  <- length(lasdf)
+        simData_tot <- do.call(rbind, lapply(lasdf, as.data.frame))
+        rm(lasdf)
+      }
+      
     }
     
+    dasdf <- simData_tot
+    rm(simData_tot)
     
-    # read all simulated NCA parameters to a list
-    lasdf <- lapply(list.files(path = simDir, pattern="sim_[0-9]*.csv",full.names=T),function(i){read.csv(i, header=T)})
-    nsim  <- length(lasdf)
-    dasdf <- do.call(rbind, lapply(lasdf, as.data.frame))
-    
-    # Rename the ID and stratification column names to ID, STRAT1, STRAT2 and/STRAT3
-    if (case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim),names(x))] <- c("ID"); return(x)})
-    if (case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1),names(x))] <- c("ID","STRAT1"); return(x)})
-    if (case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2),names(x))] <- c("ID","STRAT1","STRAT2"); return(x)})
-    if (case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
-    
-    
-    if (printOut){
-      if (is.null(outFileNm) || outFileNm==""){
-        write.table(dasdf, file=paste0(usrdir,"/ncaSimEst.tsv"), row.names=F, quote=F, sep="\t")
-      }else{
-        write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
-      }
-    }
-    
+    # # Rename the ID and stratification column names to ID, STRAT1, STRAT2 and/STRAT3
+    # if (case==1) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim),names(x))] <- c("ID"); return(x)})
+    # if (case==2) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1),names(x))] <- c("ID","STRAT1"); return(x)})
+    # if (case==3) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2),names(x))] <- c("ID","STRAT1","STRAT2"); return(x)})
+    # if (case==4) lasdf <- lapply(seq(lasdf), function(i){x <- data.frame(lasdf[[i]]); names(x)[match(c(idNmSim,popStrNm1,popStrNm2,popStrNm3),names(x))] <- c("ID","STRAT1","STRAT2","STRAT3"); return(x)})
+    # 
+    # 
+    # if (printOut){
+    #   if (is.null(outFileNm) || outFileNm==""){
+    #     write.table(dasdf, file=paste0(usrdir,"/ncaSimEst.tsv"), row.names=F, quote=F, sep="\t")
+    #   }else{
+    #     write.table(dasdf, file=paste0(usrdir,"/ncaSimEst-",outFileNm,".tsv"), row.names=F, quote=F, sep="\t")
+    #   }
+    # }
+    # 
     if (case==1) names(dasdf)[match(c(idNmSim),names(dasdf))] <- c("ID")
     if (case==2) names(dasdf)[match(c(idNmSim,popStrNm1),names(dasdf))] <- c("ID","STRAT1")
     if (case==3) names(dasdf)[match(c(idNmSim,popStrNm1,popStrNm2),names(dasdf))] <- c("ID","STRAT1","STRAT2")
@@ -1236,7 +1295,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       hth<-26; wth<-22; phth<-9; pwth<-10
     }
     
-    
     # Plot population histogram
     pop_hist_list <- list()
     if (!noPlot){
@@ -1245,8 +1303,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         smeanData   <- data.frame()
         smedianData <- data.frame()
         svarData <- data.frame()
-        for (i in 1:length(lasdf)){
-          tmdf        <- subset(data.frame(lasdf[[i]]), select=param)
+        #for (i in 1:length(lasdf)){
+        for (i in 1:nsim){
+          #tmdf        <- subset(data.frame(lasdf[[i]]), select=param)
+          tmdf <- dasdf %>% dplyr::filter(NSIM==i) %>% dplyr::select(param)
           meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
           smeanData   <- rbind(smeanData, meanPrm)
           medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
@@ -1288,9 +1348,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           smeanData   <- data.frame()
           smedianData <- data.frame()
           svarData <- data.frame()
-          
-          for (i in 1:length(lasdf)){
-            tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1])
+          for (i in 1:nsim){
+          #for (i in 1:length(lasdf)){
+            #tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1])
+            tmdf <- dasdf %>% dplyr::filter(NSIM==i,STRAT1==popStr1[s1]) %>% dplyr::select(param)
             meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
             smeanData   <- rbind(smeanData, meanPrm)
             medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
@@ -1333,9 +1394,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
             smeanData   <- data.frame()
             smedianData <- data.frame()
             svarData <- data.frame()
-            
-            for (i in 1:length(lasdf)){
-              tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2])
+            for (i in 1:nsim){
+            #for (i in 1:length(lasdf)){
+              #tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2])
+              tmdf <- dasdf %>% dplyr::filter(NSIM==i,STRAT1==popStr1[s1],STRAT2==popStr2[s2]) %>% dplyr::select(param)
               meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
               smeanData   <- rbind(smeanData, meanPrm)
               medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
@@ -1380,9 +1442,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               smeanData   <- data.frame()
               smedianData <- data.frame()
               svarData <- data.frame()
-              
-              for (i in 1:length(lasdf)){
-                tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3])
+              for (i in 1:nsim){
+              # for (i in 1:length(lasdf)){
+                #tmdf        <- subset(data.frame(lasdf[[i]]), select=param, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3])
+                tmdf <- dasdf %>% dplyr::filter(NSIM==i,STRAT1==popStr1[s1],STRAT2==popStr2[s2],STRAT3==popStr3[s3]) %>% dplyr::select(param)
                 meanPrm     <- as.data.frame(lapply(tmdf, FUN=function(x) mean(as.numeric(x[!is.na(x)]))))
                 smeanData   <- rbind(smeanData, meanPrm)
                 medianPrm   <- as.data.frame(lapply(tmdf, FUN=function(x) median(as.numeric(x[!is.na(x)]))))
