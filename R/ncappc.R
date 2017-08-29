@@ -180,7 +180,7 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
-#' @import dplyr 
+#' @importFrom dplyr "%>%" 
 #' 
 #' @return NCA results and diagnostic test results
 #' @export

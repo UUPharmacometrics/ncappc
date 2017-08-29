@@ -8,7 +8,7 @@ ncappc(obsFile = "nca_original.npctab.dta",
   simFile = "nca_simulation.1.npctab.dta.zip", str1Nm = NULL, str1 = NULL,
   str2Nm = NULL, str2 = NULL, str3Nm = NULL, str3 = NULL,
   concUnit = NULL, timeUnit = NULL, doseUnit = NULL, obsLog = FALSE,
-  simLog = FALSE, psnOut = TRUE, idNmObs = "ID", timeNmObs = "TIME",
+  simLog = obsLog, psnOut = TRUE, idNmObs = "ID", timeNmObs = "TIME",
   concNmObs = "DV", idNmSim = "ID", timeNmSim = "TIME",
   concNmSim = "DV", onlyNCA = FALSE, AUCTimeRange = NULL,
   backExtrp = FALSE, LambdaTimeRange = NULL, LambdaExclude = NULL,
@@ -20,7 +20,8 @@ ncappc(obsFile = "nca_original.npctab.dta",
   dateFormat = NULL, spread = "npi", tabCol = c("AUClast", "Cmax", "Tmax",
   "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff",
   noPlot = FALSE, printOut = TRUE, studyName = NULL,
-  new_data_method = TRUE, overwrite_SIMDATA = NULL, outFileNm = NULL)
+  new_data_method = TRUE, overwrite_SIMDATA = NULL,
+  overwrite_sim_est_file = NULL, outFileNm = NULL, out_format = "html")
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -199,9 +200,14 @@ SIMDATA directory. If \code{FALSE} the information in the SIMDATA directory
 is used. If \code{NULL} a dialog will come up to ask the user what to do.
 Default is \strong{\code{NULL}}}
 
+\item{overwrite_sim_est_file}{If \code{TRUE} The NCA metrics are created again based
+on the simulation data.  If \code{FALSE} the information in the ncaSimEst file
+  is used. If \code{NULL} a dialog will come up to ask the user what to do.
+  Default is \strong{\code{NULL}}}
+
 \item{outFileNm}{Additional tag to the name of the output html and pdf output
 file hyphenated to the standard ncappc report file name standard ncappc
-report file name. Default is the \strong{\code{NULL}}}
+report file name. Default is \strong{\code{NULL}}}
 }
 \value{
 NCA results and diagnostic test results
