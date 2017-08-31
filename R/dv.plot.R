@@ -63,7 +63,8 @@ dv.plot <- function(df,
                     myYlim = NULL,
                     myXlim = NULL,
                     myYlimLog = NULL,
-                    myXlimLog = NULL){
+                    myXlimLog = NULL,
+                    title=NULL){
   
   "ID" <- "Time" <- "Conc" <- "theme" <- "unit" <- "element_text" <- "xlab" <- "ylab" <- "geom_line" <- "aes_string" <- "geom_point" <- "ggplot" <- "facet_wrap" <- "scale_y_log10" <- "arrangeGrob" <- "textGrob" <- "gpar" <- "packageVersion" <- NULL
   rm(list=c("ID","Time","Conc","theme","unit","element_text","xlab","ylab","geom_line","aes_string","geom_point","ggplot","facet_wrap","scale_y_log10","arrangeGrob","textGrob","gpar","packageVersion"))
@@ -123,23 +124,30 @@ dv.plot <- function(df,
   }
   
   if(onlyLin){
-    p01 <- p01 + ggtitle("Concentration vs. Time profile\n")
+    if(!is.null(title)) p01 <- p01 + ggtitle(title)
     return(p01)
   }
   
   if(onlyLog){
-    p02 <- p02 + ggtitle("Concentration vs. Time profile\n")
+    if(!is.null(title)) p02 <- p02 + ggtitle(title)
     return(p02)
   }
   
   if (!onlyLin & !onlyLog){
-    p01 <- p01 %+% xlab("") %+% ylab("")
-    p02 <- p02 %+% xlab("") %+% ylab("")
+    
+    df$type1 <- "Linear"
+    df$type2 <- "Log"
+    
+    p01 <- p01 %+% xlab("") %+% ylab("") %+% df + facet_wrap(~type1)
+    p02 <- p02 %+% xlab("") %+% ylab("") %+% df + facet_wrap(~type2)
+    
+    Label <- NULL
+    if(!is.null(title)) Label <- textGrob(paste0(title,"\n"),vjust=1,hjust=0, x=0, gp=gpar(cex=1.2))
     
     plot_args <- list(p01,p02,ncol=2,
-                      top=textGrob("Concentration vs. Time profile\n",vjust=1,gp=gpar(cex=0.8,fontface="bold")),
-                      left=textGrob(myYlab,gp=gpar(cex=1,fontface="bold"),rot=90),
-                      bottom=textGrob(myXlab,gp=gpar(cex=1,fontface="bold")))
+                      top=Label,
+                      left=textGrob(myYlab,gp=gpar(cex=1),rot=90,vjust=1),
+                      bottom=textGrob(myXlab,gp=gpar(cex=1),vjust = 0))
     
     if(packageVersion("gridExtra") < "0.9.2"){
       arg_names <- names(plot_args)
