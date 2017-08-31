@@ -67,7 +67,7 @@ pop_hist <- function(obsdata,
   
   
   
-  stuff <- stuff + theme_grey() + theme(legend.position="bottom") +
+  stuff <- stuff + theme(legend.position="bottom") +
     scale_colour_manual(name='', values=c('Observed'='red', 
                                           'Simulated (2.5%, 50%, 97.5%)'='grey40')) +
     theme(legend.position="bottom") 
