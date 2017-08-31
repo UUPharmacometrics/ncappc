@@ -9,7 +9,7 @@ dv.plot(df, xvar = "Time", yvar = "Conc", obsLog = FALSE,
   guide = TRUE, onlyLin = FALSE, onlyLog = FALSE, XYlog = FALSE,
   STRATY = ".", STRATX = ".", myYBr = waiver(), myXBr = waiver(),
   myYBrLog = waiver(), myXBrLog = waiver(), myYlim = NULL,
-  myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL)
+  myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL, title = NULL)
 }
 \arguments{
 \item{df}{A data frame to be used for the plot}

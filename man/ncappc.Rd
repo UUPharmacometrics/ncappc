@@ -21,7 +21,8 @@ ncappc(obsFile = "nca_original.npctab.dta",
   "AUCINF_obs", "Vz_obs", "Cl_obs", "HL_Lambda_z"), figFormat = "tiff",
   noPlot = FALSE, printOut = TRUE, studyName = NULL,
   new_data_method = TRUE, overwrite_SIMDATA = NULL,
-  overwrite_sim_est_file = NULL, outFileNm = NULL, out_format = "html")
+  overwrite_sim_est_file = NULL, outFileNm = NULL, out_format = "html",
+  gg_theme = theme_bw())
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
