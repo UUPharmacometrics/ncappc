@@ -193,10 +193,22 @@ if(!onlyNCA){
 
 # Graphical output
 
-```{r concplot, echo=FALSE, fig.height=4, fig.width=6, fig.align='center', fig.cap="[Individual level] Concentration vs. time profile for each individual stratified by dose or population group, if any. The left panels represent the concentration data in linear scale, while the right panels represent the concentration data in semi-logarithmic scale."}
+```{r concplot, fig.align="center",fig.show='asis',fig.cap=x,eval.after='fig.cap'}
 if (length(conc)>0){
-  for (i in 1:length(conc)){suppressMessages(suppressWarnings(grid.draw(conc[[i]]))); Sys.sleep(0.5); grid.newpage()}
+  for (i in 1:length(conc)){
+    if(is.gtable(conc[[i]])){ 
+      suppressMessages(suppressWarnings(grid.arrange(conc[[i]])))
+    } else {
+      print(conc[[i]])
+    }
+    if(i ==1){
+      x <- c(x,"Concentration vs. time profile for each individual (stratified by dose or population group, if any). The left panel shows the concentration data on the linear scale, while the right panel shows the concentration data on semi-logarithmic scale.")
+    } else{
+      x <- c(x,'(Continued) Concentration vs. time profile for each individual (stratified by dose or population group, if any).')
+    }
+  }
 }
+
 ```
 
 (ref:cap-histobsplot) [Population level] Histogram of four selected NCA metrics (AUClast, AUCINF_obs, Cmax, Tmax) estimated from the observed data. The solid blue vertical and dotted lines represent the population median and the "spread" of the data. The "spread" is defined by `r sprtxt` obtained from the observed data.
@@ -207,7 +219,7 @@ if (length(histobs)>0){
 }
 ```
 
-(ref:cap-popplot) [Population level] Histogram of the population median of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population median of the NCA matric obtained from the observed data and the median of the population medians of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data.
+<!-- (ref:cap-popplot) [Population level] Histogram of the population median of the NCA metrics obtained from the simulated data from the `r nsim` simulations. The red and blue solid vertical lines represent the population median of the NCA matric obtained from the observed data and the median of the population medians of the same NCA metric obtained from the `r nsim` number of simulations, respectively. The blue dashed vertical lines represent the "spread" of the simulated distribution. The "spread" is defined as `r sprtxt` obtained from the simulated data. -->
 
 
 <!-- ```{r popplot, echo=FALSE, fig.height=9, fig.width=8, fig.align='center', fig.cap='(ref:cap-popplot)'} -->
