@@ -211,7 +211,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    figFormat="tiff",noPlot=FALSE,printOut=TRUE,studyName=NULL,new_data_method=TRUE,
                    overwrite_SIMDATA=NULL,overwrite_sim_est_file=NULL,outFileNm=NULL,
                    out_format = "html",
-                   gg_theme=theme_bw()){
+                   gg_theme=theme_bw(),
+                   ...){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NULL
   rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd","STRAT1","STRAT2","STRAT3","sdcil","sdciu","str"))
@@ -300,6 +301,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   # popStr1   = 1st level stratification ID names
   # npopStr1  = Number of 1st level stratification ID names
   
+  popStrNm1 <- NULL
+  popStrNm2 <- NULL
+  popStrNm3 <- NULL
+  
+  
   if (is.null(str1Nm)  & is.null(str2Nm)  & is.null(str3Nm)) {case<-1; npopStr<-0} # No stratification
   
   if (!is.null(str1Nm) & is.null(str2Nm)  & is.null(str3Nm)) {case<-2; cpopStrNm<-str1Nm; npopStr<-1; popStrNm1<-str1Nm; popStr1<-str1; npopStr1<-length(str1)} # Str1
@@ -362,6 +368,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   forestplot <- list(); npdeplot    <- list(); histnpdeplot <- list()
   
   # calculate the NCA parameters for the observed data
+  PopED::tic()
   obs_nca <- estimate_nca(case=case,
                           pkData=indf, 
                           all_data = refdf,
@@ -376,7 +383,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                           npopStr1,npopStr2,npopStr3,
                           popStrNm1,popStrNm2,popStrNm3,
                           popStr1,popStr2,popStr3,
-                          dunit=dunit,nca_method=1)
+                          dunit=dunit,...)
+  nca_obs_time <- PopED::toc(echo = F)
+  message("Time taken to estimate NCA parameters on observed data: ", sprintf("%.3f",nca_obs_time), " seconds.")
   
   outData <- obs_nca$outData
   pddf <- obs_nca$pddf
@@ -462,6 +471,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     }
   }
   
+  ## Finished with observed data 
+  ## Start with simulated data
   
   # Print output files if simulated data does not exist
   if (is.null(simFile) || onlyNCA){
@@ -609,6 +620,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       nsim  <- length(simID)
       dset  <- "sim"
       
+      message("Expected time to estimate NCA parameters on simulated data: ", sprintf("%.3f",nca_obs_time*nsim/60), " minutes.")
+      
+      
       # Perform checks on simulated NM output file (nmdf)
       simList <- nca.check.sim(simData=nmdf,
                                idNmSim=idNmSim,timeNmSim=timeNmSim,concNmSim=concNmSim,
@@ -621,7 +635,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                                evid=evid,evidIncl=evidIncl,mdv=mdv)
       
       nmdf      <- simList$simData
-      srdf      <- simList$srdf
+      srdf      <- simList$simRefData
       str1      <- simList$str1
       str2      <- simList$str2
       str3      <- simList$str3
@@ -659,145 +673,42 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       }
       
       
-      # Calculate AUC parameters for the simulation output
+      # Calculate AUC parameters for the simulation data
       simData_tot <- data.frame()
       
+      PopED::tic()
+      #nsim=10
       for (s in 1:nsim){
+        
         simData <- data.frame()
         smdf    <- nmdf[nmdf$NSUB == simID[s],]
-        # Calculate NCA parameters
-        if (case == 1){
-          ifdf <- smdf
-          if (nrow(ifdf) == 0){next}
-          idd  <- unique(as.character(ifdf[,idNmSim]))
-          for (i in 1:length(idd)){
-            if (!is.null(doseAmtNm)){
-              doseData <- as.numeric(as.character(srdf[srdf[,idNmSim]==idd[i], doseAmtNm]))
-              doseData <- doseData[complete.cases(doseData) & doseData>0]
-              idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
-            }else{
-              idzAmt <- NA
-            }
-            stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
-                                  idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
-                                  adminType=adminType, TI=TI,
-                                  dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
-            stc     <- stcTI$tc
-            iTI     <- stcTI$iTI
-            if (nrow(stc)==0) next
-            time    <- as.numeric(stc$time)
-            conc    <- as.numeric(stc$conc)
-            NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
-                               doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
-                               AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                               doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-            simData <- rbind(simData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm),NSIM=s))
-          }
-        }
-        if (case == 2){
-          for (s1 in 1:npopStr1){
-            ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1],]
-            if (nrow(ifdf) == 0){next}
-            idd <- unique(as.character(ifdf[,idNmSim]))
-            if (is.data.frame(idd)) idd <- idd[[1]]
-            for (i in 1:length(idd)){
-              if (!is.null(doseAmtNm)){
-                doseData <- as.numeric(as.character(srdf[srdf[,popStrNm1]==popStr1[s1] & srdf[,idNmSim]==idd[i], doseAmtNm]))
-                doseData <- doseData[complete.cases(doseData) & doseData>0]
-                idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
-              }else{
-                idzAmt <- NA
-              }
-              stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
-                                    idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
-                                    adminType=adminType, TI=TI,
-                                    dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
-              stc     <- stcTI$tc
-              iTI     <- stcTI$iTI
-              if (nrow(stc)==0) next
-              time    <- as.numeric(stc$time)
-              conc    <- as.numeric(stc$conc)
-              NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
-                                 doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
-                                 AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                                 doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-              simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm),NSIM=s))
-            }
-          }
-        }
-        if (case == 3){
-          for (s1 in 1:npopStr1){
-            for (s2 in 1:npopStr2){
-              ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1] & smdf[,popStrNm2]==popStr2[s2],]
-              if (nrow(ifdf) == 0){next}
-              idd <- unique(as.character(ifdf[,idNmSim]))
-              for (i in 1:length(idd)){
-                if (!is.null(doseAmtNm)){
-                  doseData <- as.numeric(as.character(srdf[srdf[,popStrNm1]==popStr1[s1] & srdf[,popStrNm2]==popStr2[s2] & srdf[,idNmSim]==idd[i], doseAmtNm]))
-                  doseData <- doseData[complete.cases(doseData) & doseData>0]
-                  idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
-                }else{
-                  idzAmt <- NA
-                }
-                stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
-                                      idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
-                                      adminType=adminType, TI=TI,
-                                      dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
-                stc     <- stcTI$tc
-                iTI     <- stcTI$iTI
-                if (nrow(stc)==0) next
-                time    <- as.numeric(stc$time)
-                conc    <- as.numeric(stc$conc)
-                NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
-                                   doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
-                                   AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                                   doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-                simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm),NSIM=s))
-              }
-            }
-          }
-        }
-        if (case == 4){
-          for (s1 in 1:npopStr1){
-            for (s2 in 1:npopStr2){
-              for (s3 in 1:npopStr3){
-                ifdf <- smdf[smdf[,popStrNm1]==popStr1[s1] & smdf[,popStrNm2]==popStr2[s2] & smdf[,popStrNm3]==popStr3[s3],]
-                if (nrow(ifdf) == 0){next}
-                idd <- unique(as.character(ifdf[,idNmSim]))
-                for (i in 1:length(idd)){
-                  if (!is.null(doseAmtNm)){
-                    doseData <- as.numeric(as.character(srdf[srdf[,popStrNm1]==popStr1[s1] & srdf[,popStrNm2]==popStr2[s2] & srdf[,popStrNm3]==popStr3[s3] & srdf[,idNmSim]==idd[i], doseAmtNm]))
-                    doseData <- doseData[complete.cases(doseData) & doseData>0]
-                    idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
-                  }else{
-                    idzAmt <- NA
-                  }
-                  stcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = simLog, dataType=dset,
-                                        idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
-                                        adminType=adminType, TI=TI,
-                                        dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
-                  stc     <- stcTI$tc
-                  iTI     <- stcTI$iTI
-                  if (nrow(stc)==0) next
-                  time    <- as.numeric(stc$time)
-                  conc    <- as.numeric(stc$conc)
-                  NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dset,onlyNCA=onlyNCA)
-                  simData <- rbind(simData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm),NSIM=s))
-                }
-              }
-            }
-          }
-        }
+
+        sim_nca <- estimate_nca(case=case,
+                                pkData=smdf, 
+                                all_data = srdf,
+                                doseAmtNm=doseAmtNm,
+                                dvLog = simLog, dataType="sim",
+                                idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
+                                adminType=adminType, TI=TI,
+                                dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat,
+                                backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,
+                                method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
+                                LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,simFile=simFile,onlyNCA=onlyNCA,
+                                npopStr1,npopStr2,npopStr3,
+                                popStrNm1,popStrNm2,popStrNm3,
+                                popStr1,popStr2,popStr3,
+                                dunit=dunit,nca_method=1)
         
-        # if (case == 1) names(simData)[names(simData)%in%c("ID")] <- c(idNmSim)
-        # if (case == 2) names(simData)[names(simData)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
-        # if (case == 3) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
-        # if (case == 4) names(simData)[names(simData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmSim,popStrNm1,popStrNm2,popStrNm3)
-        #write.csv(simData, file=paste(simDir,"/sim_",s,".csv",sep=""), row.names=F, quote=F)
+        
+        simData <- sim_nca$outData
+        simData$NSIM <- s
         
         simData_tot <- dplyr::bind_rows(simData_tot,simData)
       }
  
+      nca_sim_time <- PopED::toc(echo = F)
+      message("Time taken to estimate NCA parameters on simulated data: ", sprintf("%.3f",nca_sim_time), " seconds.")
+
       if (case == 1) names(simData_tot)[names(simData_tot)%in%c("ID")] <- c(idNmSim)
       if (case == 2) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
       if (case == 3) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
