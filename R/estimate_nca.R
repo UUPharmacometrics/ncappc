@@ -13,7 +13,9 @@ estimate_nca <- function(case,
                          popStrNm1,popStrNm2,popStrNm3,
                          popStr1,popStr2,popStr3,
                          dunit=NULL,
-                         nca_method=1
+                         nca_method=1,
+                         tidy=T,
+                         ...
                          ) {
   
   pddf <- data.frame()   # Summary table
@@ -22,6 +24,24 @@ estimate_nca <- function(case,
   
   if(is.null(dunit)){Dcol   <- "Dose"}else{Dcol <- paste0("Dose (",dunit,")")}                       # Dose
 
+  if(tidy){
+    result <- estimate_nca_tidy(case,
+                                pkData, 
+                                all_data,
+                                doseAmtNm,
+                                dvLog, dataType,
+                                idNm, timeNm, concNm,
+                                adminType, TI,
+                                dateColNm, dateFormat, timeFormat,
+                                backExtrp,negConcExcl,doseType,
+                                method,AUCTimeRange,LambdaTimeRange,
+                                LambdaExclude,doseTime,Tau,simFile,onlyNCA,
+                                strat_vars = c(popStrNm1,popStrNm2,popStrNm3),
+                                dunit,...) 
+    return(result)
+  }
+  
+  
   # Estimate NCA metrics for case = 1
   if (case == 1){
     if(nca_method==1){
@@ -57,60 +77,14 @@ estimate_nca <- function(case,
         time    <- as.numeric(tc$time)
         conc    <- as.numeric(tc$conc)
         cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=idd[i]))
-        NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
+        NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
+                           doseType=doseType,adminType=adminType,
                            doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                           LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA)
+                           LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,
+                           dset=dataType,onlyNCA=onlyNCA)
         outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
       }
     }
-    if(nca_method==2){
-      obsData <- tibble::as_tibble(pkData)
-      fullData <- tibble::as_tibble(all_data)
-      
-      if (nrow(obsData) == 0){next}
-      
-      id_name <- quo(!!rlang::sym(idNm))
-      
-      if (is.null(doseAmtNm)){
-        doseAmount <- NA
-        tmp <- fullData %>%  
-          dplyr::select(!!id_name) %>% 
-          distinct() %>% 
-          dplyr::summarise(n=n())
-      }else{
-        dose_amt_name <- quo(!!rlang::sym(doseAmtNm))
-        
-        tmp <- fullData %>%  
-          dplyr::select(!!dose_amt_name,!!id_name) %>% 
-          dplyr::filter((!!dose_amt_name) > 0) %>% 
-          dplyr::group_by(!!dose_amt_name) %>% 
-          distinct() %>% 
-          dplyr::summarise(n=n())
-      }
-      
-      
-      if (is.null(doseAmtNm)){
-        doseAmount <- NA
-      }else{
-        doseData   <- as.numeric(as.character(all_data[,doseAmtNm]))
-        doseData   <- doseData[complete.cases(doseData) & doseData>0]
-        doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
-      }
-      
-      # Description
-      pddf  <- rbind(pddf, data.frame(a=doseAmount, b=length(idd)))
-      
-      pddf  <- rbind(pddf, data.frame(a=200, b=24))
-      indf_t <- tibble::as_tibble(pkData)
-      #indf_t %>% dplyr::group_by_(idNm) %>% dplyr::summarise(mean=mean(DV))
-      outData <- indf_t %>% dplyr::group_by(ID,DOSE) %>% dplyr::mutate(conc=exp(DV)) %>% 
-        dplyr::do(as.data.frame(t(est.nca(time=.$TIME,conc=.$conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
-                                          doseAmt=.$DOSE[1],method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                                          LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA))))
-      outData <- as.data.frame(outData)
-      
-    }
-    
     if(nca_method==3){
       
       ifdf <- pkData
@@ -237,7 +211,7 @@ estimate_nca <- function(case,
           }else{
             idzAmt <- NA
           }
-          tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = dvLog, dataType=dset,
+          tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = dvLog, dataType=dataType,
                                idNm=idNm, timeNm=timeNm, concNm=concNm,
                                adminType=adminType, TI=TI,
                                dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
@@ -307,5 +281,26 @@ estimate_nca <- function(case,
     names(pddf) <- cnm
   }
   
+  # tests
+  # browser()
+  # result$pddf
+  # pddf
+  # dplyr::all_equal(result$pddf,pddf,convert = T)
+  # 
+  # tibble::as_tibble(result$outData)
+  # tibble::as_tibble(outData)
+  # 
+  # result$outData$ID <- as.factor(result$outData$ID)
+  # result$outData$STRAT1 <- as.factor(result$outData$STRAT1)
+  # result$outData$STRAT2 <- as.factor(result$outData$STRAT2)
+  # result$outData$STRAT3 <- as.factor(result$outData$STRAT3)
+  # 
+  # dplyr::all_equal(result$outData,outData,convert = T)
+  # 
+  # new_cdata <- result$cdata %>% purrr::map_df(as.factor)
+  # new_cdata_2 <- cdata %>% purrr::map_df(as.factor)
+  # 
+  # dplyr::all_equal(new_cdata,new_cdata_2,convert = T)
+
   return(list(outData=outData,pddf=pddf,cdata=cdata))
 }
