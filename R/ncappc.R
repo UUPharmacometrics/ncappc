@@ -1624,22 +1624,25 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     file.copy(paste(misc,"styles2.tex",sep="/"),"styles2.tex",overwrite = TRUE)
     file.copy(paste(misc,"custom.css",sep="/"),"custom.css",overwrite = TRUE)
     
-    
+    message("\nprocessing file: ncappc_report.Rmd")
     if(out_format == "html"){
-      rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::html_document2")
+      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::html_document2",quiet = T)
     }  
 
     if(out_format == "pdf"){
-      rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::pdf_document2")
+      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::pdf_document2",quiet = T)
     }  
     
     if(out_format == "all"){
-      rmarkdown::render("ncappc_report.Rmd",output_format = "all")
+      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "all",quiet = T)
     }
     
     if(out_format == "first"){
-      rmarkdown::render("ncappc_report.Rmd")
+      out_file_name <- rmarkdown::render("ncappc_report.Rmd",quiet = T)
     }
+    
+    message("Output created:\n  ",paste(out_file_name,collapse = "\n  "),"\n")
+    
     
     # knit2html(input=mdFile, output=outNm, style=paste(misc,"custom.css",sep="/"))#, force_v1 = TRUE)
     
