@@ -212,6 +212,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    overwrite_SIMDATA=NULL,overwrite_sim_est_file=NULL,outFileNm=NULL,
                    out_format = "html",
                    gg_theme=theme_bw(),
+                   parallel=F,
                    ...){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NULL
@@ -620,8 +621,6 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       nsim  <- length(simID)
       dset  <- "sim"
       
-      message("Expected time to estimate NCA parameters on simulated data: ", sprintf("%.3f",nca_obs_time*nsim/60), " minutes.")
-      
       
       # Perform checks on simulated NM output file (nmdf)
       simList <- nca.check.sim(simData=nmdf,
@@ -672,43 +671,102 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         npopStr1<-length(str1); npopStr2<-length(str2); npopStr3<-length(str3)
       }
       
-      
       # Calculate AUC parameters for the simulation data
-      simData_tot <- data.frame()
       
+      # simData_tot <- data.frame()
+      # 
+      # PopED::tic()
+      # #nsim=10
+      # for (s in 1:nsim){
+      #   
+      #   simData <- data.frame()
+      #   smdf    <- nmdf[nmdf$NSUB == simID[s],]
+      # 
+      #   sim_nca <- estimate_nca(case=case,
+      #                           pkData=smdf, 
+      #                           all_data = srdf,
+      #                           doseAmtNm=doseAmtNm,
+      #                           dvLog = simLog, dataType="sim",
+      #                           idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
+      #                           adminType=adminType, TI=TI,
+      #                           dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat,
+      #                           backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,
+      #                           method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
+      #                           LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,simFile=simFile,onlyNCA=onlyNCA,
+      #                           npopStr1,npopStr2,npopStr3,
+      #                           popStrNm1,popStrNm2,popStrNm3,
+      #                           popStr1,popStr2,popStr3,
+      #                           dunit=dunit,...)
+      #   
+      #   
+      #   simData <- sim_nca$outData
+      #   simData$NSIM <- s
+      #   
+      #   simData_tot <- dplyr::bind_rows(simData_tot,simData)
+      # }
+      # nca_sim_time <- PopED::toc(echo = F)
+      # message("Time taken to estimate NCA parameters on simulated data: ", 
+      #         sprintf("%.3f",nca_sim_time), 
+      #         " seconds.")
+
+
       PopED::tic()
-      #nsim=10
-      for (s in 1:nsim){
-        
-        simData <- data.frame()
-        smdf    <- nmdf[nmdf$NSUB == simID[s],]
-
-        sim_nca <- estimate_nca(case=case,
-                                pkData=smdf, 
-                                all_data = srdf,
-                                doseAmtNm=doseAmtNm,
-                                dvLog = simLog, dataType="sim",
-                                idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
-                                adminType=adminType, TI=TI,
-                                dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat,
-                                backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,
-                                method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                                LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,simFile=simFile,onlyNCA=onlyNCA,
-                                npopStr1,npopStr2,npopStr3,
-                                popStrNm1,popStrNm2,popStrNm3,
-                                popStr1,popStr2,popStr3,
-                                dunit=dunit,nca_method=1)
-        
-        
-        simData <- sim_nca$outData
-        simData$NSIM <- s
-        
-        simData_tot <- dplyr::bind_rows(simData_tot,simData)
+      
+      # set up parallel computing
+      if(parallel){
+        parallel <- PopED::start_parallel(parallel) 
+        on.exit(if(parallel && (attr(parallel,"type")=="snow")) parallel::stopCluster(attr(parallel,"cluster")))
+      }  
+      cores <- 1
+      if(!is.null(attr(parallel, "cores"))) cores <- attr(parallel, "cores")
+      message("Expected time to estimate NCA parameters on simulated data: ", sprintf("%.3f",(nca_obs_time*(1.2))*nsim/60/cores), " minutes.")
+      
+      #  define function with data first
+      tmp_fun <- function(x,...){
+        out <- estimate_nca(case=case,
+                            pkData=x, 
+                            all_data = srdf,
+                            doseAmtNm=doseAmtNm,
+                            dvLog = simLog, dataType="sim",
+                            idNm=idNmSim, timeNm=timeNmSim, concNm=concNmSim,
+                            adminType=adminType, TI=TI,
+                            dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat,
+                            backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,
+                            method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
+                            LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,simFile=simFile,onlyNCA=onlyNCA,
+                            npopStr1,npopStr2,npopStr3,
+                            popStrNm1,popStrNm2,popStrNm3,
+                            popStr1,popStr2,popStr3,
+                            dunit=dunit,...)[["outData"]]
+        out$NSUB <- x$NSUB[1]
+        return(out)
+      } 
+      
+      # split the data
+      split_data <- nmdf %>% 
+        #dplyr::filter(NSUB<20) %>% 
+        split(.$NSUB)
+      
+      # compute the NCA statsitics
+      if(parallel && (attr(parallel,"type")=="multicore")){
+        res <- parallel::mclapply(split_data,tmp_fun,...,mc.cores=attr(parallel, "cores"))
+      } else if(parallel && (attr(parallel,"type")=="snow")){
+        res <- parallel::parLapply(attr(parallel, "cluster"),split_data,tmp_fun,...)
+      } else {
+        res <- lapply(split_data,tmp_fun,...)
       }
- 
+      simData_tot <- dplyr::bind_rows(res)
+      
+      # add NSIM column
+      tmp <- simData_tot %>% dplyr::distinct(NSUB) %>% dplyr::mutate(NSIM=row_number())
+      #tmp$NSIM <- 1:nrow(tmp)
+      simData_tot <- dplyr::left_join(simData_tot,tmp,by="NSUB")
+      
       nca_sim_time <- PopED::toc(echo = F)
-      message("Time taken to estimate NCA parameters on simulated data: ", sprintf("%.3f",nca_sim_time), " seconds.")
-
+      message("Time taken to estimate NCA parameters on simulated data: ", 
+              sprintf("%.3f",nca_sim_time/60), 
+              " minutes.")
+    
       if (case == 1) names(simData_tot)[names(simData_tot)%in%c("ID")] <- c(idNmSim)
       if (case == 2) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1")] <- c(idNmSim,popStrNm1)
       if (case == 3) names(simData_tot)[names(simData_tot)%in%c("ID","STRAT1","STRAT2")] <- c(idNmSim,popStrNm1,popStrNm2)
