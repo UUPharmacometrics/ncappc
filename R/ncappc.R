@@ -180,7 +180,7 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
-#' @importFrom dplyr "%>%" 
+#' @importFrom magrittr "%>%" 
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -212,7 +212,8 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    overwrite_SIMDATA=NULL,overwrite_sim_est_file=NULL,outFileNm=NULL,
                    out_format = "html",
                    gg_theme=theme_bw(),
-                   parallel=F,
+                   parallel=FALSE,
+                   extrapolate=FALSE,
                    ...){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NULL
@@ -348,7 +349,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   }else{
     txt <- paste(txt,"Dose type: non-steady-state",sep="\n")
   }
-  txt <- paste(txt,paste0("No. of population stratification level: ",npopStr),sep="\n")
+  txt <- paste(txt,paste0("No. of population stratification levels: ",npopStr),sep="\n")
   if (case==2){
     txt <- paste(txt,paste0("Population stratification column: ",cpopStrNm),sep="\n")
     txt <- paste(txt,paste0("Population stratification ID within ",popStrNm1,": ",paste(popStr1,collapse=", ")),sep="\n")
@@ -384,7 +385,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                           npopStr1,npopStr2,npopStr3,
                           popStrNm1,popStrNm2,popStrNm3,
                           popStr1,popStr2,popStr3,
-                          dunit=dunit,...)
+                          dunit=dunit,
+                          extrapolate=extrapolate,
+                          ...)
   nca_obs_time <- PopED::toc(echo = F)
   message("Time taken to estimate NCA parameters on observed data: ", sprintf("%.3f",nca_obs_time), " seconds.")
   
@@ -696,7 +699,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       #                           npopStr1,npopStr2,npopStr3,
       #                           popStrNm1,popStrNm2,popStrNm3,
       #                           popStr1,popStr2,popStr3,
-      #                           dunit=dunit,...)
+      #                           dunit=dunit,extrapolate=extrapolate,...)
       #   
       #   
       #   simData <- sim_nca$outData
@@ -737,7 +740,9 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                             npopStr1,npopStr2,npopStr3,
                             popStrNm1,popStrNm2,popStrNm3,
                             popStr1,popStr2,popStr3,
-                            dunit=dunit,...)[["outData"]]
+                            dunit=dunit,
+                            extrapolate=extrapolate,
+                            ...)[["outData"]]
         out$NSUB <- x$NSUB[1]
         return(out)
       } 

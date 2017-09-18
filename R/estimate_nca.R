@@ -15,6 +15,7 @@ estimate_nca <- function(case,
                          dunit=NULL,
                          nca_method=1,
                          tidy=T,
+                         extrapolate=FALSE,
                          ...
                          ) {
   
@@ -37,7 +38,8 @@ estimate_nca <- function(case,
                                 method,AUCTimeRange,LambdaTimeRange,
                                 LambdaExclude,doseTime,Tau,simFile,onlyNCA,
                                 strat_vars = c(popStrNm1,popStrNm2,popStrNm3),
-                                dunit,...) 
+                                dunit,extrapolate=extrapolate,
+                                ...) 
     return(result)
   }
   
@@ -81,7 +83,7 @@ estimate_nca <- function(case,
                            doseType=doseType,adminType=adminType,
                            doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
                            LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,
-                           dset=dataType,onlyNCA=onlyNCA)
+                           dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)
         outData <- rbind(outData, data.frame(ID=idd[i],Dose=idzAmt,t(NCAprm)))
       }
     }
@@ -121,7 +123,7 @@ estimate_nca <- function(case,
         cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=id))
         NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
                            doseAmt=idzAmt,method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                           LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA)
+                           LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)
         outData <- data.frame(ID=id,Dose=idzAmt,t(NCAprm))
         return(outData)
       }
@@ -179,7 +181,7 @@ estimate_nca <- function(case,
         NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                            doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                            AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                           doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA)
+                           doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)
         outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],Dose=idzAmt,t(NCAprm)))
       }
     }
@@ -224,7 +226,7 @@ estimate_nca <- function(case,
           NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                              doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                              AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                             doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA)
+                             doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)
           outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],Dose=idzAmt,t(NCAprm)))
         }
       }
@@ -271,7 +273,7 @@ estimate_nca <- function(case,
             NCAprm  <- est.nca(time=time,conc=conc,backExtrp=backExtrp,negConcExcl=negConcExcl,
                                doseType=doseType,adminType=adminType,doseAmt=idzAmt,method=method,
                                AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,LambdaExclude=LambdaExclude,
-                               doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA)
+                               doseTime=doseTime,Tau=Tau,TI=iTI,simFile=simFile,dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)
             outData <- rbind(outData, data.frame(ID=idd[i],STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Dose=idzAmt,t(NCAprm)))
           }
         }

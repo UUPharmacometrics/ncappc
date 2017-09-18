@@ -168,7 +168,8 @@ est.nca <- function(time,
                     TI=NULL,
                     simFile=NULL,
                     dset="obs",
-                    onlyNCA=FALSE){
+                    onlyNCA=FALSE,
+                    extrapolate=FALSE){
 
   "tail" <- "head" <- "lm" <- "coef" <- "arsq" <- NULL
   rm(list=c("tail","head","lm","coef","arsq"))
@@ -270,97 +271,99 @@ est.nca <- function(time,
     Clast  <- nconc[lIdx]
     
     
-    ###### Prepare for extrapolation for the terminal elimination ######
-    # Determine the lower and upper indeces of the time vector used for Lambda calculation
-    llower <- ifelse(adminType!="iv-bolus", mxId+1, mxId)  # Exclude Cmax from elimination phase extrapolation for non-bolus dose
-    lupper <- nPt
-    
-    # Conc and Time for the elimination phase
-    lconc <- nconc[llower:lupper]
-    ltime <- ntime[llower:lupper]
-    
-    # exclude points with zero or negative concentration
-    zid <- which(lconc <= 0)
-    if(length(zid) > 0){
-      lconc <- lconc[-zid]
-      ltime <- ltime[-zid]
-    }
-    
-    # Re-define llower and lupper if time range is specified for Lambda calculation
-    if(!is.null(LambdaTimeRange)){
-      Lambda_z_lower <- sort(LambdaTimeRange)[1]
-      Lambda_z_upper <- sort(LambdaTimeRange)[2]
-      if(length(ltime[ltime>=Lambda_z_lower & ltime<=Lambda_z_upper]) >= 3){
-        llower <- head(which(ltime >= Lambda_z_lower),1)
-        lupper <- tail(which(ltime <= Lambda_z_upper),1)
-        lconc  <- lconc[llower:lupper]
-        ltime  <- ltime[llower:lupper]
-      }else{
-        lconc <- 0
-        print("Note: LambdaTimeRange does not include 3 or more elimination phase observations; hence, extrapolation for the elimination phase will not be performed.\n")
+    if(extrapolate){
+      ###### Prepare for extrapolation for the terminal elimination ######
+      # Determine the lower and upper indeces of the time vector used for Lambda calculation
+      llower <- ifelse(adminType!="iv-bolus", mxId+1, mxId)  # Exclude Cmax from elimination phase extrapolation for non-bolus dose
+      lupper <- nPt
+      
+      # Conc and Time for the elimination phase
+      lconc <- nconc[llower:lupper]
+      ltime <- ntime[llower:lupper]
+      
+      # exclude points with zero or negative concentration
+      zid <- which(lconc <= 0)
+      if(length(zid) > 0){
+        lconc <- lconc[-zid]
+        ltime <- ltime[-zid]
       }
-    }
-    
-    # exclude time points as defined by LambdaExclude
-    if(!is.null(LambdaExclude) & length(lconc)>=3){
-      for(i in 1:length(LambdaExclude)){
-        if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", LambdaExclude[i])){
-          # Check if the LambdaExclude is numeric
-          lconc <- lconc[!ltime%in%LambdaExclude[i]]
-          ltime <- ltime[!ltime%in%LambdaExclude[i]]
+      
+      # Re-define llower and lupper if time range is specified for Lambda calculation
+      if(!is.null(LambdaTimeRange)){
+        Lambda_z_lower <- sort(LambdaTimeRange)[1]
+        Lambda_z_upper <- sort(LambdaTimeRange)[2]
+        if(length(ltime[ltime>=Lambda_z_lower & ltime<=Lambda_z_upper]) >= 3){
+          llower <- head(which(ltime >= Lambda_z_lower),1)
+          lupper <- tail(which(ltime <= Lambda_z_upper),1)
+          lconc  <- lconc[llower:lupper]
+          ltime  <- ltime[llower:lupper]
         }else{
-          # Check if the LambdaExclude is logical
-          lconc <- eval(parse(text=paste0("lconc[!ltime",LambdaExclude[i],"]")))
-          ltime <- eval(parse(text=paste0("ltime[!ltime",LambdaExclude[i],"]")))
+          lconc <- 0
+          print("Note: LambdaTimeRange does not include 3 or more elimination phase observations; hence, extrapolation for the elimination phase will not be performed.\n")
         }
       }
-    }
-    
-    # Determine the log-linear regression coefficients to calculate Lambda
-    if(length(lconc) >= 3){
-      lconc <- log(lconc)
-      lnPt  <- length(lconc)
-      infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
       
-      for (r in 1:(lnPt-2)){
-        mlr  <- lm(lconc[r:lnPt]~ltime[r:lnPt])
-        if(is.na(coef(mlr)[2])) next
-        if(coef(mlr)[2] >= 0) next
-        n    <- (lnPt-r)+1
-        rsq  <- summary(mlr)$r.squared
-        trsq <- 1-((1-rsq)*(n-1)/(n-2))  # adjusted r^2
-        tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]))
-        infd <- rbind(infd,tmp)
-      }
-      if(nrow(infd) != 0){
-        infd <- dplyr::arrange(infd, -arsq)
-        for (r in 1:nrow(infd)){
-          if(r == 1){
-            Rsq                <- infd$rsq[r]
-            Rsq_adjusted       <- infd$arsq[r]
-            No_points_Lambda_z <- infd$np[r]
-            slope              <- infd$m[r]
-            intercept          <- infd$inpt[r]
+      # exclude time points as defined by LambdaExclude
+      if(!is.null(LambdaExclude) & length(lconc)>=3){
+        for(i in 1:length(LambdaExclude)){
+          if(grepl("^[-]?[0-9]*[.]?[0-9]*[eE]?[-]?[0-9]*[.]?[0-9]*$", LambdaExclude[i])){
+            # Check if the LambdaExclude is numeric
+            lconc <- lconc[!ltime%in%LambdaExclude[i]]
+            ltime <- ltime[!ltime%in%LambdaExclude[i]]
           }else{
-            tarsq <- infd$arsq[r]
-            tDPt  <- infd$np[r]
-            if(Rsq_adjusted - tarsq > 0.0001) break
-            if(No_points_Lambda_z > tDPt) next
-            Rsq                <- infd$rsq[r]
-            Rsq_adjusted       <- tarsq
-            No_points_Lambda_z <- tDPt
-            slope              <- infd$m[r]
-            intercept          <- infd$inpt[r]
+            # Check if the LambdaExclude is logical
+            lconc <- eval(parse(text=paste0("lconc[!ltime",LambdaExclude[i],"]")))
+            ltime <- eval(parse(text=paste0("ltime[!ltime",LambdaExclude[i],"]")))
           }
         }
-        Corr_XY     <- -1*sqrt(Rsq)
-        Lambda_z    <- (-1*slope)
-        HL_Lambda_z <- log(2)/Lambda_z
-        lastPt      <- exp((slope*ltime[lnPt])+intercept)
       }
-    }
-    
-    
+      
+      # Determine the log-linear regression coefficients to calculate Lambda
+      if(length(lconc) >= 3){
+        lconc <- log(lconc)
+        lnPt  <- length(lconc)
+        infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
+        
+        for (r in 1:(lnPt-2)){
+          mlr  <- lm(lconc[r:lnPt]~ltime[r:lnPt])
+          if(is.na(coef(mlr)[2])) next
+          if(coef(mlr)[2] >= 0) next
+          n    <- (lnPt-r)+1
+          rsq  <- summary(mlr)$r.squared
+          trsq <- 1-((1-rsq)*(n-1)/(n-2))  # adjusted r^2
+          tmp  <- cbind(np=n,rsq=rsq,arsq=trsq,m=(coef(mlr)[2]),inpt=(coef(mlr)[1]))
+          infd <- rbind(infd,tmp)
+        }
+        if(nrow(infd) != 0){
+          infd <- dplyr::arrange(infd, -arsq)
+          for (r in 1:nrow(infd)){
+            if(r == 1){
+              Rsq                <- infd$rsq[r]
+              Rsq_adjusted       <- infd$arsq[r]
+              No_points_Lambda_z <- infd$np[r]
+              slope              <- infd$m[r]
+              intercept          <- infd$inpt[r]
+            }else{
+              tarsq <- infd$arsq[r]
+              tDPt  <- infd$np[r]
+              if(Rsq_adjusted - tarsq > 0.0001) break
+              if(No_points_Lambda_z > tDPt) next
+              Rsq                <- infd$rsq[r]
+              Rsq_adjusted       <- tarsq
+              No_points_Lambda_z <- tDPt
+              slope              <- infd$m[r]
+              intercept          <- infd$inpt[r]
+            }
+          }
+          Corr_XY     <- -1*sqrt(Rsq)
+          Lambda_z    <- (-1*slope)
+          HL_Lambda_z <- log(2)/Lambda_z
+          lastPt      <- exp((slope*ltime[lnPt])+intercept)
+        }
+      }
+      
+    } # end if(extrapolate)
+
     # Interpolation for AUClower_upper, if needed
     # Intpol11 = TRUE if start time within observed data but does not coincide
     # Intpol12 = TRUE if start time outside observed data
@@ -411,7 +414,7 @@ est.nca <- function(time,
         }
       }
     }
-    
+      
     # If interpolation is executed, redefine time and conc data
     if(Intpol11 | Intpol21){
       pkData <- data.frame(time=ntime, conc=nconc)
@@ -428,7 +431,7 @@ est.nca <- function(time,
       Tlast  <- ntime[lIdx]
       Clast  <- nconc[lIdx]
     }
-    
+      
     
     ##### Estimate NCA metrics from T0 to Tlast #####
     # Initiate vectors for AUClast & AUMClast

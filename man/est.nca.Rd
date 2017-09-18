@@ -10,7 +10,7 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   method = "linearup-logdown", AUCTimeRange = NULL,
   LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
   Tau = NULL, TI = NULL, simFile = NULL, dset = "obs",
-  onlyNCA = FALSE)
+  onlyNCA = FALSE, extrapolate = FALSE)
 }
 \arguments{
 \item{time}{Numeric array for time}

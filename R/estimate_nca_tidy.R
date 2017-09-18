@@ -11,7 +11,9 @@ estimate_nca_tidy <- function(case,
                               LambdaExclude,doseTime,Tau,simFile,onlyNCA,
                               strat_vars = NULL,
                               #popStrNm1=NULL,popStrNm2=NULL,popStrNm3=NULL,
-                              dunit=NULL,...) 
+                              dunit=NULL,
+                              extrapolate=FALSE,
+                              ...) 
 {
   
   pddf <- data.frame()   # Summary table
@@ -86,7 +88,7 @@ estimate_nca_tidy <- function(case,
   outData <- outData %>%
     dplyr::do(data.frame(Dose=.$ind_amt[1],t(est.nca(time=.$time,conc=.$conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
                                                      doseAmt=.$ind_amt[1],method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                                                     LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=.$iTI[1],simFile=simFile,dset=dataType,onlyNCA=onlyNCA)))) 
+                                                     LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=.$iTI[1],simFile=simFile,dset=dataType,onlyNCA=onlyNCA,extrapolate=extrapolate)))) 
   if(!is.null(strats)) for (i in 1:length(strats)) outData <- outData %>% dplyr::rename(!!paste0("STRAT",i):=!!strats[[i]])
 
   outData <- outData %>% data.frame(check.names=FALSE)
