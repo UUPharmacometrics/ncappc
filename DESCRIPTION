@@ -12,9 +12,6 @@ Description: A flexible tool is presented here that can perform
     pharmacokinetic (PK) model using NCA metrics.
 Depends:
     R (>= 2.15.3),
-    ggplot2 (>= 2.0.0),
-    grid,
-    gridExtra (>= 2.0.0)
 Imports:
     scales,
     gtable,
@@ -24,7 +21,15 @@ Imports:
     dplyr,
     Cairo,
     readr (>= 0.2.2),
-    lazyeval
+    lazyeval,
+    PopED,
+    magrittr,
+    rlang,
+    purrr,
+    tibble,
+    ggplot2 (>= 2.0.0),
+    grid,
+    gridExtra (>= 2.0.0)
 Suggests:
     testthat
 License: GPL-3
