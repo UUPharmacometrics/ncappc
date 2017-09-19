@@ -70,7 +70,7 @@ x <- NULL
 if(exists("pop_hist_list")){
   if (length(pop_hist_list)>0){
     x <- c()
-    for (i in 1:length(pop)){
+    for (i in 1:length(pop_hist_list)){
       print(pop_hist_list[[i]])
       if(i ==1){
         #cat("## Summary NCA metrics : {-}")
@@ -236,7 +236,7 @@ x <- NULL
 if(exists("pop_hist_list")){
   if (length(pop_hist_list)>0){
     x <- c()
-    for (i in 1:length(pop)){
+    for (i in 1:length(pop_hist_list)){
       print(pop_hist_list[[i]])
       if(i ==1){
         x <- c(x,paste0('Histogram of the population mean and variance of the NCA metrics. The observed metric is compared to percentiles of the simulated metric computed from ', nsim, ' simulations.'))
