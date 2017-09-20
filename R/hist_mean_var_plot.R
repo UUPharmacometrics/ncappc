@@ -1,8 +1,8 @@
-pop_hist <- function(obsdata,
-                     smeanData, 
-                     svarData,
-                     title=NULL,
-                     quant=c(0.025,0.975),...) 
+hist_mean_var_plot <- function(obsdata,
+                              smeanData, 
+                              svarData,
+                              title=NULL,
+                              quant=c(0.025,0.975),...) 
 {
   ## create data
   sim_mean_dat <- smeanData
