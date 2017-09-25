@@ -2,11 +2,10 @@
 # Chayan, 12/2014
 
 # roxygen comments
-#' Estimates individual NCA metrics from concentration vs time data.
-#' data.
+#' Estimate individual NCA metrics.
 #'
-#' \pkg{est.nca} estimates a comprehensive set of NCA metrics
-#' for a given individual using concentration vs time profile.
+#' Estimates a comprehensive set of NCA metrics
+#' for a given individual using concentration vs. time data.
 #'
 #' \pkg{est.nca} estimates a comprehensive set of NCA metrics using the
 #' concentration-time profile of an individual. NCA metrics are eatimated
@@ -120,13 +119,13 @@
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})
 #' @param doseAmt Dose amounts (\strong{"NULL"})
-#' @param method Method to estimate AUC. \code{linear} method applies the linear
-#'   trapezoidal rule to estimate the area under the curve. \code{log} method
+#' @param method Method to estimate AUC. The \code{"linear"} method applies the linear
+#'   trapezoidal rule to estimate the area under the curve. The \code{"log"} method
 #'   applies the logarithmic trapezoidal rule to estimate the area under the
-#'   curve. \code{linearup-logdown} method applies the linear trapezoidal rule to
+#'   curve. The \code{"linearup-logdown"} method applies the linear trapezoidal rule to
 #'   estimate the area under the curve for the ascending part of the curve and
 #'   the logarithmic trapezoidal rule to estimate the area under the curve for
-#'   the descending part of the curve. (\strong{"linearup-logdown"})
+#'   the descending part of the curve. 
 #' @param AUCTimeRange User-defined window of time used to estimate AUC 
 #'   (\strong{"NULL"})
 #' @param LambdaTimeRange User-defined window of time to estimate elimination 
