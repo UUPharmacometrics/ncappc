@@ -1,15 +1,15 @@
 Package: ncappc
-Title: NCA Calculation and Population PK Model Diagnosis
+Title: NCA Calculations and Population Model Diagnosis
 Version: 0.2.1.9006
 Authors@R: c(person("Chayan", "Acharya", role = "aut"),
              person("Andrew C.", "Hooker", role = c("aut", "cre"), email = "andrew.hooker@farmbio.uu.se"),
              person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),
              person("Siv", "Jonsson", role = "aut"),
              person("Mats O.", "Karlsson", role = "aut"))
-Description: A flexible tool is presented here that can perform
+Description: A flexible tool that can perform
     (i) traditional non-compartmental analysis (NCA) and
     (ii) simulation-based posterior predictive checks for a population
-    pharmacokinetic (PK) model using NCA metrics.
+    pharmacokinetic (PK) model using NCA metrics.  
 Depends:
     R (>= 2.15.3),
 Imports:
