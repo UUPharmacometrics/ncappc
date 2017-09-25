@@ -7,8 +7,8 @@ ncappc: NCA Calculations and Population Model Diagnosis
 
 A flexible tool that can perform: 
 1. Traditional non-compartmental analysis (NCA) and 
-2. Simulation-based posterior predictive checks for a population
-    pharmacokinetic (PK) and/or pharmacodynamic (PKPD) model using NCA metrics. 
+2. Simulation-based posterior predictive checks for population
+    pharmacokinetic (PK) and/or pharmacodynamic (PKPD) models using NCA metrics. 
     
 ## Installation
 

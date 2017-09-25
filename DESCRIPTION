@@ -8,8 +8,8 @@ Authors@R: c(person("Chayan", "Acharya", role = "aut"),
              person("Mats O.", "Karlsson", role = "aut"))
 Description: A flexible tool that can perform
     (i) traditional non-compartmental analysis (NCA) and
-    (ii) simulation-based posterior predictive checks for a population
-    pharmacokinetic (PK) model using NCA metrics.  
+    (ii) Simulation-based posterior predictive checks for population
+    pharmacokinetic (PK) and/or pharmacodynamic (PKPD) models using NCA metrics. 
 Depends:
     R (>= 2.15.3),
 Imports:
