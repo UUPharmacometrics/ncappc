@@ -2,8 +2,7 @@
 % Please edit documentation in R/est.nca.R
 \name{est.nca}
 \alias{est.nca}
-\title{Estimates individual NCA metrics from concentration vs time data.
-data.}
+\title{Estimate individual NCA metrics.}
 \usage{
 est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   doseType = "ns", adminType = "extravascular", doseAmt = NULL,
@@ -30,13 +29,13 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
 
 \item{doseAmt}{Dose amounts (\strong{"NULL"})}
 
-\item{method}{Method to estimate AUC. \code{linear} method applies the linear
-trapezoidal rule to estimate the area under the curve. \code{log} method
+\item{method}{Method to estimate AUC. The \code{"linear"} method applies the linear
+trapezoidal rule to estimate the area under the curve. The \code{"log"} method
 applies the logarithmic trapezoidal rule to estimate the area under the
-curve. \code{linearup-logdown} method applies the linear trapezoidal rule to
+curve. The \code{"linearup-logdown"} method applies the linear trapezoidal rule to
 estimate the area under the curve for the ascending part of the curve and
 the logarithmic trapezoidal rule to estimate the area under the curve for
-the descending part of the curve. (\strong{"linearup-logdown"})}
+the descending part of the curve.}
 
 \item{AUCTimeRange}{User-defined window of time used to estimate AUC 
 (\strong{"NULL"})}
@@ -67,8 +66,8 @@ although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 An array of estimated NCA metrics
 }
 \description{
-\pkg{est.nca} estimates a comprehensive set of NCA metrics
-for a given individual using concentration vs time profile.
+Estimates a comprehensive set of NCA metrics
+for a given individual using concentration vs. time data.
 }
 \details{
 \pkg{est.nca} estimates a comprehensive set of NCA metrics using the
