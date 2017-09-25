@@ -1,0 +1,24 @@
+# Sample .travis.yml for R projects
+
+language: r
+cache: packages
+#warnings_are_errors: true
+#sudo: required
+
+#r_github_packages:
+#  - jimhester/covr
+
+r:
+#  - oldrel
+  - release
+  - devel
+
+
+#r_github_packages:
+#  - cran/survival
+
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov(type=("all"))'

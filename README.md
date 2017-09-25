@@ -1,6 +1,16 @@
-# ncappc
+ncappc: NCA Calculations and Population Model Diagnosis
+======
 
-Installation
+[![Travis-CI Build Status](https://travis-ci.org/UUPharmacometrics/ncappc.svg?branch=master)](https://travis-ci.org/UUPharmacometrics/ncappc)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ncappc)](https://CRAN.R-project.org/package=ncappc)
+[![codecov.io](https://codecov.io/github/UUPharmacometrics/ncappc/coverage.svg?branch=master)](https://codecov.io/github/UUPharmacometrics/ncappc?branch=master)
+
+A flexible tool that can perform: 
+1. Traditional non-compartmental analysis (NCA) and 
+2. Simulation-based posterior predictive checks for a population
+    pharmacokinetic (PK) model using NCA metrics. 
+    
+## Installation
 
 You need to have R installed.  Download the latest version of R from www.r-project.org.
 Install ncappc in R using one of the following methods:
