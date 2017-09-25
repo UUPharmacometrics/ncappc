@@ -246,17 +246,18 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   
   # Simulated data is not supplied
-  if (is.null(simFile)){
-    message("Note: Simulated data file is not supplied. Only NCA module will be executed.")
-  }else{
-    if (!is.data.frame(simFile) && !file_test("-f", simFile)){
-      message(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed."))
-      simFile <- NULL
+  if(!onlyNCA){
+    if (is.null(simFile)){
+      message("Note: Simulated data file is not supplied. Only NCA module will be executed.")
     }else{
-      backExtrp <- FALSE
+      if (!is.data.frame(simFile) && !file_test("-f", simFile)){
+        message(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed."))
+        simFile <- NULL
+      }else{
+        backExtrp <- FALSE
+      }
     }
   }
-  
   
   # Check observed data
   obsList <- nca.check.obs(obsData=indf,
@@ -1486,4 +1487,12 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   unlink(list.files(pattern = "sum.tex"))
   unlink(list.files(pattern = "tab.tex"))
   unlink(list.files(pattern = "knitr.sty"))
+  
+  if(!exists("fnOut")) fnOut <- list()
+  # if (exists("outData"))     assign("ncaOutput", outData, envir=streamsEnv)
+  fnOut$ncaOutput <- outData
+  # if (exists("statData"))    assign("ObsStat", statData, envir=streamsEnv)
+  # if (exists("concplot"))    assign("concPlot", concplot, envir=streamsEnv)
+  # if (exists("histobsplot")) assign("histobsPlot", histobsplot, envir=streamsEnv)
+  invisible(fnOut)
 }
