@@ -2,4 +2,7 @@
 ^\.Rproj\.user$
 ^sync_fork.sh$
 ^to_change.txt$
+^.travis.yml$
+^appveyor.yml$
+
 

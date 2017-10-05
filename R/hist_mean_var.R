@@ -2,6 +2,8 @@ hist_mean_var <- function(obs_data, sim_data,
                           param, 
                           strat_vars=NULL) {
   
+  NSIM <- ID <- figlbl <- NULL
+  
   # get stratification variable
   strats <- NULL
   if(!is.null(strat_vars)) strats <- rlang::syms(strat_vars)
@@ -15,7 +17,7 @@ hist_mean_var <- function(obs_data, sim_data,
   }
   sum_dat <- sum_dat %>%  dplyr::select(param,NSIM,!!!strats) %>% dplyr::group_by(NSIM) 
   if(!is.null(strats)) sum_dat <- sum_dat %>% dplyr::group_by(!!!strats,add=TRUE)
-  sum_dat <- sum_dat %>% dplyr::summarise_all(dplyr::funs(mean,median,var),na.rm=T) %>% 
+  sum_dat <- sum_dat %>% dplyr::summarise_all(dplyr::funs("mean","median","var"),na.rm=T) %>% 
     dplyr::ungroup()
   
   # get data to look as it should
@@ -30,12 +32,12 @@ hist_mean_var <- function(obs_data, sim_data,
   obs_data <- obs_data %>% tidyr::nest()
   
   mean_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\_mean$"),!!!strats) %>% 
-    setNames(., sub("_mean$", "", names(.)))
+    stats::setNames(., sub("_mean$", "", names(.)))
   if(!is.null(strats)) mean_data <- mean_data %>% dplyr::group_by(!!!strats)
   mean_data <- mean_data %>% tidyr::nest()
   
   var_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\var$"),!!!strats) %>% 
-    setNames(., sub("_var$", "", names(.)))
+    stats::setNames(., sub("_var$", "", names(.)))
   if(!is.null(strats)) var_data <- var_data %>% dplyr::group_by(!!!strats)
   var_data <- var_data %>% tidyr::nest()
   

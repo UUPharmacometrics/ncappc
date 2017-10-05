@@ -94,8 +94,8 @@ nca.pde.deviation.outlier <- function(obsdata,
     if (length(id)!=1 | (!is.element(id, obsdata[,idNm])) | (!is.element(id, simdata[,idNm]))){stop("Either more than one values are provided to id argument, or provided id value is not present in observed and/or simulated data.")}
   }
   
-  iobslst <- as.list(apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam),   2, FUN=function(x){x<-as.numeric(as.character(x)); x[complete.cases(x) & abs(x)!=Inf]}))
-  isimlst <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x){x<-as.numeric(as.character(x)); x[complete.cases(x) & abs(x)!=Inf]}))
+  iobslst <- as.list(apply(subset(obsdata, eval(parse(text=idNm))==id, select=calcparam),   2, FUN=function(x){x<-as.numeric(as.character(x)); x[stats::complete.cases(x) & abs(x)!=Inf]}))
+  isimlst <- as.matrix(apply(subset(simdata, eval(parse(text=idNm))==id, select=calcparam), 2, FUN=function(x){x<-as.numeric(as.character(x)); x[stats::complete.cases(x) & abs(x)!=Inf]}))
   if(is.null(colnames(isimlst))) isimlst <- t(isimlst)
   
   metric     <- ""    # NCA metric associated with the outlier

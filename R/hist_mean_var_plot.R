@@ -28,7 +28,7 @@ hist_mean_var_plot <- function(obsdata,
   bw <- function(x) 2 * IQR(x) / (length(x)^(1/3))
   
   stuff<- ggplot(data=long_dat, mapping=aes(x=value) )
-  stuff <- stuff + facet_wrap( ~ var2 , scale="free")
+  stuff <- stuff + facet_wrap( ~ var2 , scales="free")
   
   for(i in 1:length(dfs)){
     stuff<- stuff + geom_histogram(data=dfs[[i]], binwidth=bw(dfs[[i]]$value),colour="black", fill="white")

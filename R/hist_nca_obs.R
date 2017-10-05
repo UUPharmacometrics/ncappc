@@ -11,7 +11,7 @@ hist_nca_obs <- function(case, outData, AUClast, AUCINF_obs, Cmax, Tmax, cunit, 
     # Obs hist plot
     if (nrow(outData)>=5){
       plotData <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
-      numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
+      numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[stats::complete.cases(x)])})
       if (length(numPrm[numPrm>=5]) == 0) next
       
       pltPrm      <- names(numPrm[numPrm>=5])
@@ -41,7 +41,7 @@ hist_nca_obs <- function(case, outData, AUClast, AUCINF_obs, Cmax, Tmax, cunit, 
       # Obs hist plot
       plotData <- subset(outData, STRAT1==popStr1[s1], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
       if (nrow(plotData)<5) next
-      numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
+      numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[stats::complete.cases(x)])})
       if (length(numPrm[numPrm>=5]) == 0) next
       
       pltPrm      <- names(numPrm[numPrm>=5])
@@ -71,7 +71,7 @@ hist_nca_obs <- function(case, outData, AUClast, AUCINF_obs, Cmax, Tmax, cunit, 
         # Obs hist plot
         plotData <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
         if (nrow(plotData)<5) next
-        numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
+        numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[stats::complete.cases(x)])})
         if (length(numPrm[numPrm>=5]) == 0) next
         
         pltPrm      <- names(numPrm[numPrm>=5])
@@ -104,7 +104,7 @@ hist_nca_obs <- function(case, outData, AUClast, AUCINF_obs, Cmax, Tmax, cunit, 
           # Obs hist plot
           plotData <- subset(outData, STRAT1==popStr1[s1] & STRAT2==popStr2[s2] & STRAT3==popStr3[s3], select=c(AUClast,AUCINF_obs,Cmax,Tmax))
           if (nrow(plotData)<5) next
-          numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
+          numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[stats::complete.cases(x)])})
           if (length(numPrm[numPrm>=5]) == 0) next
           
           pltPrm      <- names(numPrm[numPrm>=5])

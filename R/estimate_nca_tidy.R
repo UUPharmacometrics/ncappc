@@ -1,5 +1,7 @@
-estimate_nca_tidy <- function(case,
-                              pkData, 
+if(getRversion() >= '2.15.1')
+  utils::globalVariables(c("."))
+
+estimate_nca_tidy <- function(pkData, 
                               all_data,
                               doseAmtNm,
                               dvLog, dataType,
@@ -15,6 +17,9 @@ estimate_nca_tidy <- function(case,
                               extrapolate=FALSE,
                               ...) 
 {
+  
+  # for CRAN checks
+  dose <- time <- conc <- NULL
   
   pddf <- data.frame()   # Summary table
   outData   <- data.frame()  # Create empty data frame for output
@@ -61,7 +66,7 @@ estimate_nca_tidy <- function(case,
     
     ind_amt_data <- ind_amt_data %>% 
       dplyr::distinct() %>% 
-      dplyr::summarise(n=n(),dose=first(!!dose_amt_name)) %>% 
+      dplyr::summarise("n"=n(),"dose"=first(!!dose_amt_name)) %>% 
       dplyr::mutate(ind_amt=as.double(dplyr::if_else(n==1,as.character(dose),"NA")))
     
     join_vars <- c(id_name,strats) %>% 

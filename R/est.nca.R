@@ -589,10 +589,10 @@ est.nca <- function(time,
         Clss <- ifelse(!is.null(doseAmt),doseAmt/AUCtau,NA)
         Cmax <- max(nconc)
         p_Fluctuation <- 100*(Cmax-Cmin)/Cavg
-        if(complete.cases(Lambda_z)) Accumulation_Index <- 1/(1-exp(-Lambda_z*Tau))
+        if(stats::complete.cases(Lambda_z)) Accumulation_Index <- 1/(1-exp(-Lambda_z*Tau))
         
         # re-define MRTINF for steady state and calculate Vss
-        if(complete.cases(AUCINF_obs) & complete.cases(AUMCINF_obs) & AUCtau != 0){
+        if(stats::complete.cases(AUCINF_obs) & stats::complete.cases(AUMCINF_obs) & AUCtau != 0){
           if(adminType == "iv-infusion"){
             MRTINF_obs  <- ((AUMCtau+Tau*(AUCINF_obs-AUCtau))/(AUCtau)-(TI/2))
             MRTINF_pred <- ((AUMCtau+Tau*(AUCINF_pred-AUCtau))/(AUCtau)-(TI/2))

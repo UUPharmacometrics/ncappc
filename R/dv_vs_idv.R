@@ -25,7 +25,7 @@ dv_vs_idv <- function(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, fi
         eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
       }
       suppressMessages(suppressWarnings(grid.arrange(gdr)))
-      dev.off()
+      grDevices::dev.off()
     }
   }
   
@@ -46,7 +46,7 @@ dv_vs_idv <- function(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, fi
           eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
         }
         suppressMessages(suppressWarnings(grid.arrange(gdr)))
-        dev.off()
+        grDevices::dev.off()
       }
     }
   }  
@@ -69,7 +69,7 @@ dv_vs_idv <- function(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, fi
             eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
           }
           suppressMessages(suppressWarnings(grid.arrange(gdr)))
-          dev.off()
+          grDevices::dev.off()
         }
       }
     }
@@ -95,7 +95,7 @@ dv_vs_idv <- function(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, fi
               eval(parse(text=paste0(figFormat,"(file=\"",fl,"\",height=10,width=15,units=\"cm\",res=120)")))
             }
             suppressMessages(suppressWarnings(grid.arrange(gdr)))
-            dev.off()
+            grDevices::dev.off()
           }
         }
       }

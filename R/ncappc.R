@@ -180,7 +180,10 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
+#' @importFrom dplyr "n"
+#' @importFrom dplyr "first"
 #' @importFrom magrittr "%>%" 
+#' @importFrom rlang ":=" 
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -423,7 +426,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   if (case == 1){
     tmpDF    <- outData[,ncaPrm]
-    statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+    statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
     statData <- data.frame(statData)
     if (nrow(statData) == 0) next
     statData <- cbind(data.frame(Stat=statPrm), statData)
@@ -431,7 +434,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (case == 2){
     for (s1 in 1:npopStr1){
       tmpDF    <- outData[outData$STRAT1==popStr1[s1],ncaPrm]
-      tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+      tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
       tmpStat  <- data.frame(tmpStat)
       if (nrow(tmpStat) == 0) next
       tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
@@ -443,7 +446,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     for (s1 in 1:npopStr1){
       for (s2 in 1:npopStr2){
         tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2],ncaPrm]
-        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
         if (nrow(tmpStat) == 0) next
         tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
@@ -457,7 +460,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       for (s2 in 1:npopStr2){
         for (s3 in 1:npopStr3){
           tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2] & outData$STRAT3==popStr3[s3],ncaPrm]
-          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
           if (nrow(tmpStat) == 0) next
           tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)
@@ -1287,7 +1290,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     if (case == 1){
       tmpDF       <- dasdf[,ncaPrm]
-      statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+      statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
       statDataSim <- data.frame(statDataSim)
       if (nrow(statDataSim) == 0) next
       statDataSim <- cbind(data.frame(Stat=statPrm), statDataSim)
@@ -1295,7 +1298,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if (case == 2){
       for (s1 in 1:npopStr1){
         tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1],ncaPrm]
-        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
         if (nrow(tmpStat) == 0) next
         tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
@@ -1307,7 +1310,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       for (s1 in 1:npopStr1){
         for (s2 in 1:npopStr2){
           tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2],ncaPrm]
-          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
           if (nrow(tmpStat) == 0) next
           tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
@@ -1321,7 +1324,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         for (s2 in 1:npopStr2){
           for (s3 in 1:npopStr3){
             tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2] & dasdf$STRAT3==popStr3[s3],ncaPrm]
-            tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
+            tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
             tmpStat  <- data.frame(tmpStat)
             if (nrow(tmpStat) == 0) next
             tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)

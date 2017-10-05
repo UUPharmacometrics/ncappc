@@ -27,9 +27,13 @@ Imports:
     rlang,
     purrr,
     tibble,
+    rmarkdown,
+    tidyr,
     ggplot2 (>= 2.0.0),
     grid,
-    gridExtra (>= 2.0.0)
+    gridExtra (>= 2.0.0),
+    grDevices,
+    stats
 Suggests:
     testthat
 License: GPL-3
