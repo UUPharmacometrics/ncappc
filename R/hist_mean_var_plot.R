@@ -4,6 +4,9 @@ hist_mean_var_plot <- function(obsdata,
                               title=NULL,
                               quant=c(0.025,0.975),...) 
 {
+  
+  type <- var <- var2 <- value <- low <- high <- median <-  NULL
+  
   ## create data
   sim_mean_dat <- smeanData
   sim_mean_dat$type <- "Mean"

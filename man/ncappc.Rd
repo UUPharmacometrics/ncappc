@@ -209,6 +209,22 @@ on the simulation data.  If \code{FALSE} the information in the ncaSimEst file
 \item{outFileNm}{Additional tag to the name of the output html and pdf output
 file hyphenated to the standard ncappc report file name standard ncappc
 report file name. Default is \strong{\code{NULL}}}
+
+\item{out_format}{What type of output format should the NCA report have? 
+Pass "all" to render all formats defined within the rmarkdown file.
+Pass "first" to render the first format defined within the rmarkdown file.
+Pass "html" to render in HTML.
+Pass "pdf" to render in PDF.}
+
+\item{gg_theme}{Which ggplot theme should be used for the plots?}
+
+\item{parallel}{Should the nca computations for the simulated data be run in parallel? See
+\code{\link[PopED]{start_parallel}} for a description and additional arguments that can be 
+added to this function and passed to \code{\link[PopED]{start_parallel}}.}
+
+\item{extrapolate}{Should the NCA calculations extrapolate from the last observation to infinity?}
+
+\item{...}{Additional arguments passed to other functions, including \code{\link[PopED]{start_parallel}}.}
 }
 \value{
 NCA results and diagnostic test results

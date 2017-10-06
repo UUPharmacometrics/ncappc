@@ -170,6 +170,17 @@
 #' @param outFileNm Additional tag to the name of the output html and pdf output
 #'   file hyphenated to the standard ncappc report file name standard ncappc
 #'   report file name. Default is \strong{\code{NULL}}
+#' @param out_format What type of output format should the NCA report have? 
+#'   Pass "all" to render all formats defined within the rmarkdown file.
+#'   Pass "first" to render the first format defined within the rmarkdown file.
+#'   Pass "html" to render in HTML.
+#'   Pass "pdf" to render in PDF. 
+#' @param gg_theme Which ggplot theme should be used for the plots?
+#' @param parallel Should the nca computations for the simulated data be run in parallel? See
+#'   \code{\link[PopED]{start_parallel}} for a description and additional arguments that can be 
+#'   added to this function and passed to \code{\link[PopED]{start_parallel}}.
+#' @param extrapolate Should the NCA calculations extrapolate from the last observation to infinity?
+#' @param ... Additional arguments passed to other functions, including \code{\link[PopED]{start_parallel}}.
 #' 
 #' @import ggplot2
 #' @import grid
@@ -180,10 +191,13 @@
 #' @import Cairo
 #' @import xtable
 #' @import reshape2
-#' @importFrom dplyr "n"
-#' @importFrom dplyr "first"
+#' @importFrom dplyr first n row_number
 #' @importFrom magrittr "%>%" 
 #' @importFrom rlang ":=" 
+#' @importFrom rlang ".data" 
+#' @importFrom grDevices dev.off 
+#' @importFrom stats median IQR quantile var complete.cases setNames
+#' @importFrom utils read.table menu data
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
@@ -219,8 +233,31 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    extrapolate=FALSE,
                    ...){
   
-  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NULL
-  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs","Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu","sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual","xlab","ylab","guides","guide_legend","theme","element_text","unit","element_rect","geom_histogram","aes","geom_vline","grid.arrange","unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs","geom_point","geom_errorbarh","knit2html","knit2pdf","knit","file_test","tail","read.csv","read.table","dev.off","write.table","head","write.csv","coef","dist","lm","median","na.omit","percent","qchisq","qnorm","qt","quantile","scale_y_continuous","sd","STRAT1","STRAT2","STRAT3","sdcil","sdciu","str"))
+  "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- 
+    "AUCINF_obs" <- "Cmax" <- "Tmax" <- "FCT" <- "ID" <- "STR1" <- 
+    "STR2" <- "STR3" <- "NPDE" <- "mcil" <- "mciu" <- "sdu" <- "sducil" <- 
+    "sduciu" <- "scale_linetype_manual" <- "scale_color_manual" <- "xlab" <- 
+    "ylab" <- "guides" <- "guide_legend" <- "theme" <- "element_text" <- 
+    "unit" <- "element_rect" <- "geom_histogram" <- "aes" <- "geom_vline" <- 
+    "grid.arrange" <- "unit.c" <- "grid.grab" <- "ggsave" <- "facet_wrap" <- 
+    "ggplot" <- "labs" <- "geom_point" <- "geom_errorbarh" <- "knit2html" <- 
+    "knit2pdf" <- "knit" <- "file_test" <- "tail" <- "read.csv" <- "read.table" <- 
+    "dev.off" <- "write.table" <- "head" <- "write.csv" <- "coef" <- "dist" <- 
+    "lm" <- "median" <- "na.omit" <- "percent" <- "qchisq" <- "qnorm" <- "qt" <- 
+    "quantile" <- "scale_y_continuous" <- "sd" <- "STRAT1" <- "STRAT2" <- 
+    "STRAT3" <- "sdcil" <- "sdciu" <- "str" <- NSUB <- NULL
+  
+  rm(list=c("..density..","meanObs","sprlow","sprhgh","AUClast","AUCINF_obs",
+            "Cmax","Tmax","FCT","ID","STR1","STR2","STR3","NPDE","mcil","mciu",
+            "sdu","sducil","sduciu","scale_linetype_manual","scale_color_manual",
+            "xlab","ylab","guides","guide_legend","theme","element_text","unit",
+            "element_rect","geom_histogram","aes","geom_vline","grid.arrange",
+            "unit.c","grid.grab","ggsave","facet_wrap","ggplot","labs",
+            "geom_point","geom_errorbarh","knit2html","knit2pdf","knit",
+            "file_test","tail","read.csv","read.table","dev.off","write.table",
+            "head","write.csv","coef","dist","lm","median","na.omit","percent",
+            "qchisq","qnorm","qt","quantile","scale_y_continuous","sd","STRAT1",
+            "STRAT2","STRAT3","sdcil","sdciu","str"))
   
   options(warning.length=5000)
   options(scipen=999)
@@ -402,7 +439,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
 
   #plots
   if (!noPlot){
-    concplot <- dv_vs_idv(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, figFormat,
+    concplot <- dv_vs_idv(case, cdata, concplot, printOut, usrdir, figFormat,
                           cunit, tunit,
                           npopStr1, STRAT1, popStr1, popStrNm1, 
                           npopStr2, STRAT2, popStr2, popStrNm2, 
@@ -426,7 +463,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   
   if (case == 1){
     tmpDF    <- outData[,ncaPrm]
-    statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+    statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
     statData <- data.frame(statData)
     if (nrow(statData) == 0) next
     statData <- cbind(data.frame(Stat=statPrm), statData)
@@ -434,7 +471,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if (case == 2){
     for (s1 in 1:npopStr1){
       tmpDF    <- outData[outData$STRAT1==popStr1[s1],ncaPrm]
-      tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+      tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
       tmpStat  <- data.frame(tmpStat)
       if (nrow(tmpStat) == 0) next
       tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
@@ -446,7 +483,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     for (s1 in 1:npopStr1){
       for (s2 in 1:npopStr2){
         tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2],ncaPrm]
-        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
         if (nrow(tmpStat) == 0) next
         tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
@@ -460,7 +497,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       for (s2 in 1:npopStr2){
         for (s3 in 1:npopStr3){
           tmpDF    <- outData[outData$STRAT1==popStr1[s1] & outData$STRAT2==popStr2[s2] & outData$STRAT3==popStr3[s3],ncaPrm]
-          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
           if (nrow(tmpStat) == 0) next
           tmpStat  <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)
@@ -721,7 +758,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       
       # set up parallel computing
       if(parallel){
-        parallel <- PopED::start_parallel(parallel) 
+        parallel <- PopED::start_parallel(parallel,...) 
         on.exit(if(parallel && (attr(parallel,"type")=="snow")) parallel::stopCluster(attr(parallel,"cluster")))
       }  
       cores <- 1
@@ -754,7 +791,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       # split the data
       split_data <- nmdf %>% 
         #dplyr::filter(NSUB<20) %>% 
-        split(.$NSUB)
+        split(.data$NSUB)
       
       # compute the NCA statsitics
       if(parallel && (attr(parallel,"type")=="multicore")){
@@ -1290,7 +1327,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     
     if (case == 1){
       tmpDF       <- dasdf[,ncaPrm]
-      statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+      statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
       statDataSim <- data.frame(statDataSim)
       if (nrow(statDataSim) == 0) next
       statDataSim <- cbind(data.frame(Stat=statPrm), statDataSim)
@@ -1298,7 +1335,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     if (case == 2){
       for (s1 in 1:npopStr1){
         tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1],ncaPrm]
-        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+        tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
         tmpStat  <- data.frame(tmpStat)
         if (nrow(tmpStat) == 0) next
         tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],Stat=statPrm), tmpStat)
@@ -1310,7 +1347,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       for (s1 in 1:npopStr1){
         for (s2 in 1:npopStr2){
           tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2],ncaPrm]
-          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+          tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
           tmpStat  <- data.frame(tmpStat)
           if (nrow(tmpStat) == 0) next
           tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],Stat=statPrm), tmpStat)
@@ -1324,7 +1361,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         for (s2 in 1:npopStr2){
           for (s3 in 1:npopStr3){
             tmpDF    <- dasdf[dasdf$STRAT1==popStr1[s1] & dasdf$STRAT2==popStr2[s2] & dasdf$STRAT3==popStr3[s3],ncaPrm]
-            tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[stats::complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[stats::complete.cases(x)]),dig=4)}})
+            tmpStat  <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
             tmpStat  <- data.frame(tmpStat)
             if (nrow(tmpStat) == 0) next
             tmpStat     <- cbind(data.frame(STRAT1=popStr1[s1],STRAT2=popStr2[s2],STRAT3=popStr3[s3],Stat=statPrm), tmpStat)

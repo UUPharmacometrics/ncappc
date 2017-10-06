@@ -54,7 +54,7 @@ estimate_nca <- function(case,
         doseAmount <- NA
       }else{
         doseData   <- as.numeric(as.character(all_data[,doseAmtNm]))
-        doseData   <- doseData[stats::complete.cases(doseData) & doseData>0]
+        doseData   <- doseData[complete.cases(doseData) & doseData>0]
         doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
       }
       
@@ -65,7 +65,7 @@ estimate_nca <- function(case,
           idzAmt <- NA
         }else{
           doseData <- as.numeric(as.character(all_data[all_data[,idNm]==idd[i], doseAmtNm]))
-          doseData <- doseData[stats::complete.cases(doseData) & doseData>0]
+          doseData <- doseData[complete.cases(doseData) & doseData>0]
           idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
         }
         tcTI <- nca.ind.data(pkData=ifdf, ID=idd[i], dvLog = dvLog, dataType=dataType,
@@ -96,7 +96,7 @@ estimate_nca <- function(case,
         doseAmount <- NA
       }else{
         doseData   <- as.numeric(as.character(all_data[,doseAmtNm]))
-        doseData   <- doseData[stats::complete.cases(doseData) & doseData>0]
+        doseData   <- doseData[complete.cases(doseData) & doseData>0]
         doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
       }
       
@@ -107,7 +107,7 @@ estimate_nca <- function(case,
           idzAmt <- NA
         }else{
           doseData <- as.numeric(as.character(data[data[,idNm]==id, doseAmtNm]))
-          doseData <- doseData[stats::complete.cases(doseData) & doseData>0]
+          doseData <- doseData[complete.cases(doseData) & doseData>0]
           idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
         }
         tcTI <- nca.ind.data(pkData=data, ID=id, dvLog = dvLog, dataType=dataType,
@@ -152,7 +152,7 @@ estimate_nca <- function(case,
       idd <- unique(as.character(ifdf[,idNm]))
       if (!is.null(doseAmtNm)){
         doseData   <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1], doseAmtNm]))
-        doseData   <- doseData[stats::complete.cases(doseData) & doseData>0]
+        doseData   <- doseData[complete.cases(doseData) & doseData>0]
         doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
       }else{
         doseAmount <- NA
@@ -162,7 +162,7 @@ estimate_nca <- function(case,
       for (i in 1:length(idd)){
         if (!is.null(doseAmtNm)){
           doseData <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1] & all_data[,idNm]==idd[i], doseAmtNm]))
-          doseData <- doseData[stats::complete.cases(doseData) & doseData>0]
+          doseData <- doseData[complete.cases(doseData) & doseData>0]
           idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
         }else{
           idzAmt <- NA
@@ -197,7 +197,7 @@ estimate_nca <- function(case,
         idd <- unique(as.character(ifdf[,idNm]))
         if (!is.null(doseAmtNm)){
           doseData   <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1] & all_data[,popStrNm2]==popStr2[s2], doseAmtNm]))
-          doseData   <- doseData[stats::complete.cases(doseData) & doseData>0]
+          doseData   <- doseData[complete.cases(doseData) & doseData>0]
           doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
         }else{
           doseAmount <- NA
@@ -207,7 +207,7 @@ estimate_nca <- function(case,
         for (i in 1:length(idd)){
           if (!is.null(doseAmtNm)){
             doseData <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1] & all_data[,popStrNm2]==popStr2[s2] & all_data[,idNm]==idd[i], doseAmtNm]))
-            doseData <- doseData[stats::complete.cases(doseData) & doseData>0]
+            doseData <- doseData[complete.cases(doseData) & doseData>0]
             idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
           }else{
             idzAmt <- NA
@@ -244,7 +244,7 @@ estimate_nca <- function(case,
           idd <- unique(as.character(ifdf[,idNm]))
           if (!is.null(doseAmtNm)){
             doseData   <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1] & all_data[,popStrNm2]==popStr2[s2] & all_data[,popStrNm3]==popStr3[s3], doseAmtNm]))
-            doseData   <- doseData[stats::complete.cases(doseData) & doseData>0]
+            doseData   <- doseData[complete.cases(doseData) & doseData>0]
             doseAmount <- ifelse(length(doseData)==0, NA, paste(unique(doseData), collapse=", "))
           }else{
             doseAmount <- NA
@@ -254,7 +254,7 @@ estimate_nca <- function(case,
           for (i in 1:length(idd)){
             if (!is.null(doseAmtNm)){
               doseData <- as.numeric(as.character(all_data[all_data[,popStrNm1]==popStr1[s1] & all_data[,popStrNm2]==popStr2[s2] & all_data[,popStrNm3]==popStr3[s3] & all_data[,idNm]==idd[i], doseAmtNm]))
-              doseData <- doseData[stats::complete.cases(doseData) & doseData>0]
+              doseData <- doseData[complete.cases(doseData) & doseData>0]
               idzAmt   <- ifelse(length(doseData)==0, NA, doseData[1])
             }else{
               idzAmt <- NA

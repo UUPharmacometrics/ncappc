@@ -61,6 +61,8 @@ data (\strong{\code{NULL}})}
 
 \item{onlyNCA}{If \code{TRUE} only NCA is performed and ppc part is ignored
 although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
+
+\item{extrapolate}{Should the function extrapolate from the last observation to infinity?}
 }
 \value{
 An array of estimated NCA metrics

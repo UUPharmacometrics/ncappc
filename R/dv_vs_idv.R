@@ -1,6 +1,6 @@
 
 
-dv_vs_idv <- function(case, cdata, IDVleg, DVleg, concplot, printOut, usrdir, figFormat,
+dv_vs_idv <- function(case, cdata, concplot, printOut, usrdir, figFormat,
                       cunit, tunit,
                       npopStr1, STRAT1, popStr1, popStrNm1, 
                       npopStr2, STRAT2, popStr2, popStrNm2, 

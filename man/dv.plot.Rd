@@ -63,6 +63,8 @@ is shown on the logarithmic scale. Default is \strong{FALSE}.}
 \item{myYlimLog}{sets the Y-axis limit for the log plot}
 
 \item{myXlimLog}{sets the X-axis limit for the log plot}
+
+\item{title}{The title of the plot.}
 }
 \value{
 returns a graphical object created by arrangeGrob function

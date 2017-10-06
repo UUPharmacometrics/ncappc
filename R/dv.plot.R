@@ -37,6 +37,7 @@
 #' @param myXlim sets X-axis limits for the linear plot
 #' @param myYlimLog sets the Y-axis limit for the log plot
 #' @param myXlimLog sets the X-axis limit for the log plot
+#' @param title The title of the plot.
 #' 
 #' @return returns a graphical object created by arrangeGrob function
 #' @export
