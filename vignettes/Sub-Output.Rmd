@@ -3,46 +3,41 @@ title: "Sub-Output"
 output: rmarkdown::html_vignette
 ---
 
-## Tabular output  
+## Tabular output
+
+A number of tables are produced from the ***ncappc*** 
+tool.  Descriptions of these tables are below.  All tables are shown in the produced report and as tab separated value (.tsv) files, *i.e.*, the columns in the tables are separated by tabs.  "NaN" or "NA" is produced if a metric or value is irrelevant for a specified data type or case.
+
+
 ### ncaOutput.tsv  
-The ***ncappc*** functionality produces this table to report the estimated values of the NCA metrics described in the previous section for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. The extension "tsv" stands for "tab separated variable", *i.e.*, the columns in this table are separated by tabs. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
 
-If simulated data is provided, this table also reports three additional columns for each of the eight NCA metrics that can be used for the diagnostics (AUClast, AUMClast, AUClower_upper, Tmax, Cmax, HL_Lambda_z, AUCINF_obs, AUCINF_pred). The names of the additional columns for AUClast are simAUClast, dAUClast and npdeAUClast. simAUClast for an individual represents the mean of the estimated AUClast values obtained from the set of simulated data. dAUClast for an individual represents the deviation of the mean of the simulated AUClast values from the AUClast value obtained from the observed data, scaled by the "spread" of the simulated distribution as described in the corresponding command-line argument. npdeAUClast for an individual represents the NPDE value of AUClast estimated from the simulated data with respect to the value of AUClast estimated from the observed data. Similar names are assigned to the additional columns for the other seven metrics.
+The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. If simulated data is provided, this table also reports three additional columns for each of the NCA metrics that can be used for diagnostics. sim[metric_name] represents the median of the metric obtained from the set of simulated data. d[metric_name] represents the deviation of the median of the simulated metrics from the metric obtained from the observed data, scaled by the "spread" of the simulated distribution (as defined in the "spread" argument of the ncappc function). npde[metric_name] represents the NPDE value of the metric estimated from the simulated data with respect to the observed data.
 
-### Obs\_Stat.tsv  
-This table reports a set of statistical parameters calculated for the entire population or the stratified population for the following NCA metrics estimated from the observed data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
-  * Ntot = Total number of data points, Nunique = number of unique data points
-  * Min = minimum value
-  * Max = maximum value
-  * Mean = mean or average value
-  * SD = standard deviation
-  * SE = standard error
-  * CVp = coefficient of variation %
-  * a95CIu = upper limit of 95% arithmetic confidence interval
-  * a95CIl = lower limit of 95% arithmetic confidence interval
-  * gMean = geometric mean
-  * gCVp = geometric coefficient of variation %.
+### ObsStat.tsv  
 
-### Sim\_Stat.tsv  
-This table reports a set of statistical parameters calculated for the entire population or the stratified population for the mean values of the following NCA metrics estimated from the simulated data: Tmax, Cmax, AUClast, AUClower_upper, AUCINF_obs, AUC_pExtrap_obs, AUCINF_pred, AUC_pExtrap_pred, AUMClast, AUMCINF_obs, AUMC_pExtrap_obs, AUMCINF_pred, AUMC_pExtrap_pred, HL_Lambda_z, Rsq, Rsq_adjusted and No_points_Lambda_z. Brief description of the twelve statistical parameters reported for each NCA metric is given below.
-  * Ntot = Total number of data points, Nunique = number of unique data points
-  * Min = minimum value
-  * Max = maximum value
-  * Mean = mean or average value
-  * SD = standard deviation
-  * SE = standard error
-  * CVp = coefficient of variation %
-  * a95CIu = upper limit of 95% arithmetic confidence interval
-  * a95CIl = lower limit of 95% arithmetic confidence interval
-  * gMean = geometric mean
-  * gCVp = geometric coefficient of variation %.
+A set of statistical parameters calculated for the entire population or the stratified population for the NCA metrics estimated from the *observed data*. Calculated statistical parameters are: 
+
+* **Ntot:** Total number of data points 
+* **Nunique:**  number of unique data points
+* **Min:** minimum value
+* **Max:** maximum value
+* **Mean:**  mean/average value
+* **SD:**  standard deviation
+* **SE:** standard error
+* **CVp:**  coefficient of variation in percent
+* **a95CIu:** upper limit of 95% arithmetic confidence interval
+* **a95CIl:** lower limit of 95% arithmetic confidence interval
+* **gMean:** geometric mean
+* **gCVp:** geometric coefficient of variation in percent.
+
+### SimStat.tsv 
+A set of statistical parameters calculated for the entire population or the stratified population for the NCA metrics estimated from the *simulated data*. The table is structured as "ObsStat.tsv".
 
 ### ncaSimData.tsv  
 This table reports the simulated concentration-time profiles for each individual obtained from a number of simulations. Currently the ***ncappc*** function accepts only NONMEM output format for the simulated data. All columns from the NONMEM output file are kept unaltered in this file and an additional column, namely "NSUB", is printed to denote the corresponding simulation number for the concentration-time profile.
 
 ### ncaSimEst.tsv  
-This table reports the estimated NCA metrics values for each individual obtained from the simulated concentration-time profiles. The number of the reported values for each individual for each NCA metric is equal to the number of simmulations performed. "NSUB" column denotes the simulation number. "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.
-
+Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. The "NSUB" column denotes the simulation number.
 
 ## Graphical output
 ### [Individual level] Concentration *vs.* time profile  

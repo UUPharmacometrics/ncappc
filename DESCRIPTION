@@ -33,7 +33,8 @@ Imports:
     grid,
     gridExtra (>= 2.0.0),
     grDevices,
-    stats
+    stats,
+    bookdown
 Suggests:
     testthat
 License: GPL-3

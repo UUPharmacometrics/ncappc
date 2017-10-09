@@ -98,14 +98,14 @@ kable(pddf, align='c',booktabs = TRUE,longtable = TRUE,
 
 # Tabular output
 
-A number of tables are produced from the *ncappc* tool and are found in the same directory as this report.  Descriptions of these tables are below.  All tables are produced as tab separated value (tsv) files, *i.e.*, the columns in the tables are separated by tabs.
+A number of tables are produced from the *ncappc* tool and are found in the same directory as this report.  Descriptions of these tables are below.  All tables are produced as tab separated value (.tsv) files, *i.e.*, the columns in the tables are separated by tabs.  "NaN" or "NA" is produced if a metric or value is irrelevant for a specified data type or case.
 
 
 ```{r ncaOutput cond text, echo=FALSE, results='asis'}
 if(onlyNCA){
-  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.  "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type.')
+  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.')
 } else {
-  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command.  "NaN" or "NA" is produced for the NCA metrics which are irrelevant for the specified data type. This table also reports three additional columns for each of the NCA metrics that can be used for diagnostics. sim[metric_name] represents the median of the metric obtained from the set of simulated data. d[metric_name] represents the deviation of the median of the simulated metrics from the metric obtained from the observed data, scaled by the "spread" of the simulated distribution (as defined in the "spread" argument of the ncappc function). npde[metric_name] represents the NPDE value of the metric estimated from the simulated data with respect to the observed data.')
+  cat('**ncaOutput.tsv:** The estimated values of the NCA metrics for each individual along with other stratifiers (eg. population group ID, dose ID, etc.) if specified in the input command. This table also reports three additional columns for each of the NCA metrics that can be used for diagnostics. sim[metric_name] represents the median of the metric obtained from the set of simulated data. d[metric_name] represents the deviation of the median of the simulated metrics from the metric obtained from the observed data, scaled by the "spread" of the simulated distribution (as defined in the "spread" argument of the ncappc function). npde[metric_name] represents the NPDE value of the metric estimated from the simulated data with respect to the observed data.')
 }
 ```
 
@@ -122,7 +122,7 @@ kable(prnTab, align='c',booktabs = TRUE,longtable = TRUE,
 <!-- print(xtable(prnTab, align=rep("c",ncol(prnTab)+1), rotate.colnames = T), include.rownames=FALSE, type = 'latex') -->
 <!-- ``` -->
 
-**ObsStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *observed data*: `r paste0(names(statData)[-1],collapse=", ")`. Calculated statistical parameters: **Ntot:** Total number of data points, **Nunique:**  number of unique data points, **Min:** minimum value, **Max:** maximum value, **Mean:**  mean/average value, **SD:**  standard deviation, **SE:** standard error, **CVp:**  coefficient of variation in percent, **a95CIu:** upper limit of 95% arithmetic confidence interval, **a95CIl:** lower limit of 95% arithmetic confidence interval, **gMean:** geometric mean, **gCVp:** geometric coefficient of variation in percent. 
+**ObsStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the following NCA metrics estimated from the *observed data*: `r paste0(names(statData)[-1],collapse=", ")`. Calculated statistical parameters: **Ntot:** Total number of data points, **Nunique:**  number of unique data points, **Min:** minimum value, **Max:** maximum value, **Mean:**  mean/average value, **SD:**  standard deviation, **SE:** standard error, **CVp:**  coefficient of variation in percent, **a95CIu:** upper limit of 95% arithmetic confidence interval, **a95CIl:** lower limit of 95% arithmetic confidence interval, **gMean:** geometric mean, **gCVp:** geometric coefficient of variation in percent. 
   
 ```{r ObsStat, echo=FALSE}
 tmp_data <- statData[,1:9]
@@ -134,7 +134,7 @@ kable(tmp_data, align='c',booktabs = TRUE,longtable = TRUE,
 
 ```{r SimStat cond text, echo=FALSE, results='asis'}
 if(!onlyNCA){
-  cat('**SimStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the median values of the following NCA metrics estimated from the *simulated data*. The table is structured as "ObsStat.tsv".')
+  cat('**SimStat.tsv:** A set of statistical parameters calculated for the entire population or the stratified population for the NCA metrics estimated from the *simulated data*. The table is structured as "ObsStat.tsv".')
 } 
 ```
 
@@ -176,7 +176,7 @@ if(!onlyNCA){
 
 ```{r ncaSimEst cond text, echo=FALSE, results='asis'}
 if(!onlyNCA){
-  cat('**ncaSimEst.tsv:** Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. "NSUB" column denotes the simulation number.')
+  cat('**ncaSimEst.tsv:** Estimated NCA metrics for each individual using the simulated concentration-time profile obtained from each simulation. The "NSUB" column denotes the simulation number.')
 } 
 ```
 

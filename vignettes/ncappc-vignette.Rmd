@@ -1,37 +1,79 @@
-%\VignetteIndexEntry{ncappc}
-%\VignetteEngine{knitr::knitr}
 ---
-title: "ncappc"
-author: "Chayan Acharya, Andrew C. Hooker, Siv Jonsson, Mats O. Karlsson"
-output: rmarkdown::html_vignette
+title: "Introduction to the ncappc package"
+author: "Chayan Acharya, Andrew C. Hooker, Siv Jönsson, Mats O. Karlsson"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
 vignette: >
-  %\VignetteIndexEntry{ncappc}
-  %\VignetteEngine{knitr::knitr}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Introduction to the ncappc package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ncappc)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, comment=NA, tidy = TRUE, 
+               fig.align = 'center',
+               fig.show='asis', out.width='90%', fig.pos='H')
+```
 
 # Introduction
-**Usage: ncappc (obsFile=, ...)**
 
-<img src="ncappc-Schema.png" height="450px" width="650px" align="middle" />
+The ***ncappc*** package is a flexible tool in R to:
 
-**Figure 1.** Schematic work-flow of ***ncappc***.
+ * perform non-compartmental analysis (NCA)
+ * perform simulation-based posterior predictive checks (PPC) for a population PK model using NCA metrics.
 
-The ***ncappc*** functionality is a flexible tool in R to,
- * perform NCA
- * perform simulation-based posterior predictive checks for a population PK model using NCA metrics.
+The main tool of the  ***ncappc*** 
+package is the function  ```ncappc()```. In order to perform a traditional NCA, the only mandatory argument to the function is the ```obsFile``` argument, which is the name of the file with the observed concentration vs. time data. 
 
-The work-flow of ***ncappc*** is shown in Figure 1. In order to perform NCA, the only mandatory argument is *obsFile*, which is the name of the file with the observed concentration vs. time data. Other arguments may be assigned to the desired values, if required.
-
-In the presence of the non-empty simFile argument (NONMEM output file with the simulated concentration vs. time data) ***ncappc*** function performs the diagnostic tests for the related PK model besides performing the traditional NCA. This function creates a directory, called "SIMDATA", to store the estimated NCA metrics from the simulated data. If the working directory contains any directory called "SIMDATA", this function offers the following three options to the user:
-  * Press 1 to overwrite the existing directory
-  * Press 2 to rename the existing "SIMDATA" directory. The "SIMDATA" will be renamed to "SIMDATA_PREVIOUS" and a new directory called "SIMDATA" will be created
-  * Press 3 to reuse the data from the existing "SIMDATA" directory. The "SIMDATA" directory must contain the files created by ***ncappc*** previously using the NONMEM simulation output.
-
-
-# Command-line arguments
-```{r argument, child = 'Sub-CommandLineArguments.Rmd', echo=FALSE}
+```{r,echo=TRUE,eval=FALSE}
+ncappc(obsFile = "file_with_observations.txt")
 ```
+
+The above command will compute NCA statstics on all individuals in the file and output a report on the results as shown in the workflow in Figure 1.  
+
+```{r,out.height='90%',out.width='90%',fig.align='center',fig.cap="**Figure 1:** Schematic work-flow of the ```ncappc()``` function in the ***ncappc*** package.",echo = FALSE}
+knitr::include_graphics('./ncappc-Schema.png')
+```
+
+Options to how the NCA statistics will be computed and if the report should be generated are available, see ```?ncappc```.   For example, the following code only computes the NCA metrics and outputs that to an R object:
+
+```{r,echo=TRUE,tidy=FALSE}
+data_1 <- tibble(
+  ID=1,
+  TIME = c(0,0.25,0.5,1,1.5,2,3,4,6,8,12,16,24),
+  DV=c(0, 0.07, 0.14, 0.21, 0.24, 0.27, 0.26, 0.25, 0.22, 0.19, 0.13, 0.081, 0.033)
+)
+  
+  
+out <- ncappc(obsFile=data_1,
+              onlyNCA = T,
+              extrapolate = T,
+              printOut = F,
+              evid = FALSE,
+              noPlot = T)
+
+out$ncaOutput %>% select(c(AUClast,AUCINF_pred,Cmax,Tmax))
+```
+
+In the presence of the non-empty ```simFile``` argument (simulated concentration vs. time data) the ```ncappc()``` function performs diagnostic tests for the related PK model in addition to performing the traditional NCA. For example, if you have a model defined in NONMEM, then you could produce simulated datasets using the PsN command:
+
+```{bash,echo=TRUE,eval=FALSE}
+nca run1.mod -samples=1000 -columns=EVID,DOSE -dir=nca_ex_1
+```
+
+In the created directory then you can create the NCA metrics as well as a PPC of those metrics using the following command:
+```{r,echo=TRUE,eval=FALSE}
+ncappc(concUnit="ng/ml", doseAmtNm = "DOSE") 
+```
+
+
+<!-- # Command-line arguments -->
+<!-- ```{r argument, child = 'Sub-CommandLineArguments.Rmd', echo=FALSE} -->
+<!-- ``` -->
 
 # Estimated NCA metrics
 ```{r definition, child = 'Sub-EstimatedNCAmetrics.Rmd', echo=FALSE}

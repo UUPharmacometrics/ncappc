@@ -3,7 +3,8 @@ title: "Sub-EstimatedNCAmetrics"
 output: rmarkdown::html_vignette
 ---
 
-NCA metrics are eatimated according to traditional PK calculations. The names of the various NCA metrics estimated in this package are assigned mainly following the names used in WinNonlin. This package accepts any of the three different types of drug administration, (i) iv-bolus, (ii) iv-infusion and (iii) extravascular; ***ncappc*** also can accept both non-steady state and steady-state data. The NCa metric that are estimated and reported by ***ncappc*** are listed below.
+NCA metrics are estimated according to traditional PK calculations. The names of the various NCA metrics estimated in this package are assigned mainly following the names used in WinNonlin. This package accepts any of the three different types of drug administration, (i) iv-bolus, (ii) iv-infusion and (iii) extra-vascular; ***ncappc*** 
+also can accept both non-steady state and steady-state data. The NCA metrics that are estimated and reported by ***ncappc*** are listed below.
 
 **C0**  
 C0 is the initial concentration at the dosing time. It is the observed concentration at the dosing time, if available. Otherwise it is approximated using the following rules. For iv-bolus data, log-linear back-extrapolation (*see "backExtrap" argument*) is performed from the first two observations to estimate C0, provided the local slope is negative. However, if the slope is >=0 or at least one of the first two concentrations is 0, the first non-zero concentration is used as C0. For other types of administration, C0 is equal to 0 for non steady-state data and for steady-state data the minimum value observed between the dosing intervals is used to estimate C0, provided the "backExtrap" argument is set to "yes".
@@ -12,7 +13,7 @@ C0 is the initial concentration at the dosing time. It is the observed concentra
 Cmax and Tmax are the value and the time of maximum observed concentration, respectively. If the maximum concentration is not unique, the first maximum is used. For steady state data, The maximum value between the dosing intervals is considered. Cmax_D is the dose normalized maximum observed concentration.
 
 **Clast and Tlast**  
-Clast and Tlast are the last measurable positive comcentration and the corresponding time, respectively.
+Clast and Tlast are the last measurable positive concentration and the corresponding time, respectively.
 
 **AUClast**  
 The area under the concentration vs. time curve from the first observed to last measurable concentration.
@@ -34,7 +35,7 @@ No_points_Lambda_z is the number of observed data points used to determine the b
 The percentage of AUC that is contributed by the back extrapolation to estimate C0. The rules to to estimate C0 is given above.
 
 **AUClower_upper**  
-The AUC under the concentration-time profile within the user-specified window of time privided as the "AUCTimeRange" argument. In case of empty "AUCTimeRange" argument, AUClower_upper is equal to the AUClast.
+The AUC under the concentration-time profile within the user-specified window of time provided as the "AUCTimeRange" argument. In case of empty "AUCTimeRange" argument, AUClower_upper is equal to the AUClast.
 
 **Rsq, Rsq_adjusted and Corr_XY**  
 Regression coefficient of the regression line used to estimate the elimination rate constant. Rsq_adjusted is the adjusted value of Rsq given by the following relation.  
@@ -42,7 +43,7 @@ $Rsq\_adjusted = 1-\frac{(1-Rsq^2)*(n-1)}{n-2}$
 where *n* is the number of points in the regression line. Corr_XY is the square root of Rsq.
 
 **Lambda_z**  
-Elimination rate constant estimated from the regression line representing the terminal phase of the concentration-time prifile. The relation between the slope of the regression line and Lambda_z is:  
+Elimination rate constant estimated from the regression line representing the terminal phase of the concentration-time profile. The relation between the slope of the regression line and Lambda_z is:  
 $Lambda\_z = -(slope)$
 
 **Lambda_lower and Lambda_upper**  
@@ -53,7 +54,7 @@ Terminal half-life of the drug:
 $HL\_Lambda\_z = \frac{ln2}{\lambda_z}$
 
 **AUCINF_obs and AUCINF_obs_D**  
-AUC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last observed concentration (${Clast_obs}$). The equiation used for the estimation is given below.  
+AUC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last observed concentration (${Clast_obs}$). The equation used for the estimation is given below.  
 $AUCINF\_obs = AUClast+\frac{Clast\_obs}{\lambda_z}$  
 AUCINF_obs_D is the dose normalized AUCINF_obs.
 
@@ -62,7 +63,7 @@ Percentage of the AUCINF_obs that is contributed by the extrapolation from the l
 $AUC\_pExtrap\_obs = \frac{AUCINF\_obs-AUClast}{AUCINF\_obs}*100\%$
 
 **AUMCINF_obs**  
-AUMC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last observed concentration. The equiation used for the estimation is given below.  
+AUMC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last observed concentration. The equation used for the estimation is given below.  
 $AUMCINF\_obs = AUMClast+\frac{Tlast*Clast\_obs}{\lambda_z}+\frac{Clast\_obs}{\lambda_{z}^2}$
 
 **AUMC_pExtrap_obs**  
@@ -78,7 +79,7 @@ Total body clearance.
 $Cl\_obs = \frac{Dose}{AUCINF\_obs}$
 
 **AUCINF_pred and AUCINF_pred_D**  
-AUC from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last predicted concentration obtained from the regression line used to estimate Lambda_z (${Clast\_pred}$). The equiation used for the estimation is given below.  
+AUC from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last predicted concentration obtained from the regression line used to estimate Lambda_z (${Clast\_pred}$). The equation used for the estimation is given below.  
 $AUCINF\_pred = AUClast+\frac{Clast\_pred}{\lambda_z}$  
 AUCINF_pred_D is the dose normalized AUCINF_pred.
 
@@ -87,7 +88,7 @@ Percentage of the AUCINF_pred that is contributed by the extrapolation from the 
 $AUC\_pExtrap\_pred = \frac{AUCINF\_pred-AUClast}{AUCINF\_pred}*100\%$
 
 **AUMCINF_pred**  
-AUMC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last predicted concentration obtained from the regression line used to estimate Lambda_z (${Clast\_pred}$). The equiation used for the estimation is given below.  
+AUMC estimated from the first sampled data extrapolated to ${\infty}$. The extrapolation in the terminal phase is based on the last predicted concentration obtained from the regression line used to estimate Lambda_z (${Clast\_pred}$). The equation used for the estimation is given below.  
 
 $AUMCINF\_pred = AUMClast+\frac{Tlast*Clast\_pred}{\lambda_z}+\frac{Clast\_pred}{\lambda_{z}^2}$  
 
@@ -134,7 +135,7 @@ $Vss\_obs = MRTINF\_obs*Cl\_obs$
 $Vss\_pred = MRTINF\_pred*Cl\_pred$  
 
 **Tau**  
-The dosing interval for steady-state data. This value is assumed equarion over multiple doses.
+The dosing interval for steady-state data. This value is assumed to be the same over multiple doses.
 
 **Cmin and Tmin**  
 Cmin is the minimum concentration between 0 and Tau and Tmin is the corresponding time for steady-state data.
