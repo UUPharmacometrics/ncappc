@@ -13,6 +13,8 @@ vignette: >
 ```{r setup, include=FALSE}
 library(knitr)
 library(ncappc)
+library(tibble)
+library(dplyr)
 opts_chunk$set(echo = FALSE, comment=NA, tidy = TRUE, 
                fig.align = 'center',
                fig.show='asis', out.width='90%', fig.pos='H')
