@@ -194,7 +194,7 @@
 #' @importFrom dplyr first n row_number
 #' @importFrom magrittr "%>%" 
 #' @importFrom rlang ":=" 
-#' @importFrom rlang ".data" 
+# @importFrom rlang ".data" 
 #' @importFrom grDevices dev.off 
 #' @importFrom stats median IQR quantile var complete.cases setNames
 #' @importFrom utils read.table menu data

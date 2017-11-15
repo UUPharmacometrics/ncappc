@@ -83,17 +83,17 @@ estimate_nca_tidy <- function(pkData,
   new_data <- obsData %>% dplyr::group_by(!!id_name) 
   if(!is.null(strats)) new_data <- new_data %>% dplyr::group_by(!!!strats,add=TRUE)
   new_data <- new_data %>% 
-    dplyr::do(data.frame(nca_ind_data(.data, dvLog = dvLog, dataType=dataType,
+    dplyr::do(data.frame(nca_ind_data(., dvLog = dvLog, dataType=dataType,
                                       idNm=idNm, timeNm=timeNm, concNm=concNm,
                                       adminType=adminType, TI=TI,
-                                      dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat),ind_amt=.data$ind_amt[1]))
+                                      dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat),ind_amt=.$ind_amt[1]))
   
   outData <- new_data %>% dplyr::group_by(!!id_name)
   if(!is.null(strats)) outData <- outData %>% dplyr::group_by(!!!strats,add=TRUE)
   outData <- outData %>%
-    dplyr::do(data.frame(Dose=.data$ind_amt[1],t(est.nca(time=.data$time,conc=.data$conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
-                                                     doseAmt=.data$ind_amt[1],method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
-                                                     LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=.data$iTI[1],simFile=simFile,dset=dataType,
+    dplyr::do(data.frame(Dose=.$ind_amt[1],t(est.nca(time=.$time,conc=.$conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
+                                                     doseAmt=.$ind_amt[1],method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
+                                                     LambdaExclude=LambdaExclude,doseTime=doseTime,Tau=Tau,TI=.$iTI[1],simFile=simFile,dset=dataType,
                                                      onlyNCA=onlyNCA,extrapolate=extrapolate)))) 
   if(!is.null(strats)) for (i in 1:length(strats)) outData <- outData %>% dplyr::rename(!!paste0("STRAT",i):=!!strats[[i]])
 

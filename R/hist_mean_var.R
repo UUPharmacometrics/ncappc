@@ -32,12 +32,12 @@ hist_mean_var <- function(obs_data, sim_data,
   obs_data <- obs_data %>% tidyr::nest()
   
   mean_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\_mean$"),!!!strats) %>% 
-    setNames(.data, sub("_mean$", "", names(.data)))
+    setNames(., sub("_mean$", "", names(.)))
   if(!is.null(strats)) mean_data <- mean_data %>% dplyr::group_by(!!!strats)
   mean_data <- mean_data %>% tidyr::nest()
   
   var_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\var$"),!!!strats) %>% 
-    setNames(.data, sub("_var$", "", names(.data)))
+    setNames(., sub("_var$", "", names(.)))
   if(!is.null(strats)) var_data <- var_data %>% dplyr::group_by(!!!strats)
   var_data <- var_data %>% tidyr::nest()
   
@@ -62,6 +62,7 @@ hist_mean_var <- function(obs_data, sim_data,
   }
   
   plot_data <- plot_data %>% dplyr::mutate(plot=purrr::pmap(list(obs_data,mean_data,var_data,figlbl),hist_mean_var_plot))
+  
   pop_hist_list <- plot_data$plot
   return(pop_hist_list)
   #   
