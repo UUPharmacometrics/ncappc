@@ -789,9 +789,10 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       } 
       
       # split the data
-      split_data <- nmdf %>% 
+      split_data <- split(nmdf,nmdf$NSUB) 
+        #%>% 
         #dplyr::filter(NSUB<20) %>% 
-        split(.data$NSUB)
+        #split(.data$NSUB)
       
       # compute the NCA statsitics
       if(parallel && (attr(parallel,"type")=="multicore")){
