@@ -645,9 +645,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         nmdf <- simFile
       }else{
         if (new_data_method){
+          message("Reading the simulated data file\n")
           nmdf <- read_nm_table(simFile,sim_num = T,sim_name="NSUB")
           nmdf <- data.frame(nmdf)
         } else {
+          message("Reading the simulated data file\n")
           nmdf <- nca.read.sim(simFile=simFile, MDV.rm=F)
         }
       }
