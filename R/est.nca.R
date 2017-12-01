@@ -169,7 +169,8 @@ est.nca <- function(time,
                     simFile=NULL,
                     dset="obs",
                     onlyNCA=FALSE,
-                    extrapolate=FALSE){
+                    extrapolate=FALSE,
+                    sparse_compute=TRUE){
 
   "tail" <- "head" <- "lm" <- "coef" <- "arsq" <- NULL
   rm(list=c("tail","head","lm","coef","arsq"))
@@ -187,7 +188,7 @@ est.nca <- function(time,
   }
   
   # Check if the number of observations is at least 3, otherwise skip the operation
-  if(length(nconc) >= 2){
+  if(length(nconc) >= 2 | sparse_compute){
     
     # Steady state data
     if(doseType == "ss"){
