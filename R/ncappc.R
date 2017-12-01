@@ -294,7 +294,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
         message(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed."))
         simFile <- NULL
       }else{
-        backExtrp <- FALSE
+        #backExtrp <- FALSE
       }
     }
   }
