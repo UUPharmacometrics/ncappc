@@ -181,6 +181,10 @@ est.nca <- function(time,
   ntime <- as.numeric(time)  # Save time to ntime
   nconc <- as.numeric(conc)  # Save conc to nconc
   
+  # check that method is defined as it should be
+  if(!(method %in% c("linear","log", "linearup-logdown"))) 
+    stop(paste(method,"is not one of 'linear','log', or 'linearup-logdown'"))
+  
   # Exclude zero or negative concentration from calculations
   if(negConcExcl){
     zid <- which (nconc < 0)

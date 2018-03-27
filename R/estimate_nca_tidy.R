@@ -69,9 +69,11 @@ estimate_nca_tidy <- function(pkData,
       dplyr::summarise("n"=n(),"dose"=first(!!dose_amt_name)) %>% 
       dplyr::mutate(ind_amt=as.double(dplyr::if_else(n==1,as.character(dose),"NA")))
     
-    join_vars <- c(id_name,strats) %>% 
-      purrr::map(rlang::UQE) %>% paste()
-
+    # join_vars <- c(id_name,strats) %>% 
+    #   purrr::map(rlang::UQE) %>% paste()
+    
+    join_vars <- c(id_name,strats) %>% paste()
+    
     obsData <- dplyr::left_join(obsData,ind_amt_data,by=join_vars)
     
   } else {

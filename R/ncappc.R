@@ -289,6 +289,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
   if(!onlyNCA){
     if (is.null(simFile)){
       message("Note: Simulated data file is not supplied. Only NCA module will be executed.")
+      onlyNCA <- TRUE
     }else{
       if (!is.data.frame(simFile) && !file_test("-f", simFile)){
         message(paste0("Note: Simulated data file, ",simFile,", is not found in the working directory. Only NCA module will be executed."))
@@ -524,19 +525,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     # Subset table to print in the report
@@ -1388,19 +1389,19 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     # Raname ID and stratifier columns and format output table sigfig
     if (case == 1){
       names(outData)[names(outData)%in%c("ID")] <- c(idNmObs)
-      outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(2:ncol(outData))] <- as.data.frame(lapply(outData[,c(2:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 2){
       names(outData)[names(outData)%in%c("ID","STRAT1")] <- c(idNmObs,popStrNm1)
-      outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(3:ncol(outData))] <- as.data.frame(lapply(outData[,c(3:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 3){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2")] <- c(idNmObs,popStrNm1,popStrNm2)
-      outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(4:ncol(outData))] <- as.data.frame(lapply(outData[,c(4:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     if (case == 4){
       names(outData)[names(outData)%in%c("ID","STRAT1","STRAT2","STRAT3")] <- c(idNmObs,popStrNm1,popStrNm2,popStrNm3)
-      outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
+      #outData[,c(5:ncol(outData))] <- as.data.frame(lapply(outData[,c(5:ncol(outData))], FUN=function(x) out.digits(x,dig=4)))
     }
     
     
