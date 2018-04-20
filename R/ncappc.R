@@ -180,6 +180,7 @@
 #'   \code{\link[PopED]{start_parallel}} for a description and additional arguments that can be 
 #'   added to this function and passed to \code{\link[PopED]{start_parallel}}.
 #' @param extrapolate Should the NCA calculations extrapolate from the last observation to infinity?
+#' @param timing Should timings of calculations be reported to the screen?
 #' @param ... Additional arguments passed to other functions, including \code{\link[PopED]{start_parallel}}.
 #' 
 #' @import ggplot2
@@ -231,6 +232,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                    gg_theme=theme_bw(),
                    parallel=FALSE,
                    extrapolate=FALSE,
+                   timing = FALSE,
                    ...){
   
   "..density.." <- "meanObs" <- "sprlow" <- "sprhgh" <- "AUClast" <- 
@@ -431,7 +433,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
                           extrapolate=extrapolate,
                           ...)
   nca_obs_time <- PopED::toc(echo = F)
-  message("Time taken to estimate NCA parameters on observed data: ", sprintf("%.3f",nca_obs_time), " seconds.")
+  if(timing) message("Time taken to estimate NCA parameters on observed data: ", sprintf("%.3f",nca_obs_time), " seconds.")
   
   outData <- obs_nca$outData
   pddf <- obs_nca$pddf
@@ -813,7 +815,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       simData_tot <- dplyr::left_join(simData_tot,tmp,by="NSUB")
       
       nca_sim_time <- PopED::toc(echo = F)
-      message("Time taken to estimate NCA parameters on simulated data: ", 
+      if(timing) message("Time taken to estimate NCA parameters on simulated data: ", 
               sprintf("%.3f",nca_sim_time/60), 
               " minutes.")
     
