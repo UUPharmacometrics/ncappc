@@ -22,7 +22,8 @@ ncappc(obsFile = "nca_original.npctab.dta",
   noPlot = FALSE, printOut = TRUE, studyName = NULL,
   new_data_method = TRUE, overwrite_SIMDATA = NULL,
   overwrite_sim_est_file = NULL, outFileNm = NULL, out_format = "html",
-  gg_theme = theme_bw(), parallel = FALSE, extrapolate = FALSE, ...)
+  gg_theme = theme_bw(), parallel = FALSE, extrapolate = FALSE,
+  timing = FALSE, ...)
 }
 \arguments{
 \item{obsFile}{Observed concentration-time data from an internal data frame
@@ -223,6 +224,8 @@ Pass "pdf" to render in PDF.}
 added to this function and passed to \code{\link[PopED]{start_parallel}}.}
 
 \item{extrapolate}{Should the NCA calculations extrapolate from the last observation to infinity?}
+
+\item{timing}{Should timings of calculations be reported to the screen?}
 
 \item{...}{Additional arguments passed to other functions, including \code{\link[PopED]{start_parallel}}.}
 }

@@ -9,7 +9,8 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   method = "linearup-logdown", AUCTimeRange = NULL,
   LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
   Tau = NULL, TI = NULL, simFile = NULL, dset = "obs",
-  onlyNCA = FALSE, extrapolate = FALSE, sparse_compute = TRUE)
+  onlyNCA = FALSE, extrapolate = FALSE, sparse_compute = TRUE,
+  force_extrapolate = FALSE, ...)
 }
 \arguments{
 \item{time}{Numeric array for time}
@@ -63,6 +64,8 @@ data (\strong{\code{NULL}})}
 although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 
 \item{extrapolate}{Should the function extrapolate from the last observation to infinity?}
+
+\item{...}{Arguments passed from other functions.  Not used.}
 }
 \value{
 An array of estimated NCA metrics
