@@ -143,6 +143,7 @@
 #' @param onlyNCA If \code{TRUE} only NCA is performed and ppc part is ignored
 #'   although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}
 #' @param extrapolate Should the function extrapolate from the last observation to infinity?
+#' @param ... Arguments passed from other functions.  Not used.
 #' 
 #' @return An array of estimated NCA metrics
 #' @export
@@ -170,7 +171,8 @@ est.nca <- function(time,
                     dset="obs",
                     onlyNCA=FALSE,
                     extrapolate=FALSE,
-                    sparse_compute=TRUE){
+                    sparse_compute=TRUE,
+                    force_extrapolate = FALSE,...){
 
   "tail" <- "head" <- "lm" <- "coef" <- "arsq" <- NULL
   rm(list=c("tail","head","lm","coef","arsq"))
@@ -280,6 +282,7 @@ est.nca <- function(time,
       ###### Prepare for extrapolation for the terminal elimination ######
       # Determine the lower and upper indeces of the time vector used for Lambda calculation
       llower <- ifelse(adminType!="iv-bolus", mxId+1, mxId)  # Exclude Cmax from elimination phase extrapolation for non-bolus dose
+      if(force_extrapolate) llower <- mxId
       lupper <- nPt
       
       # Conc and Time for the elimination phase
@@ -324,12 +327,14 @@ est.nca <- function(time,
       }
       
       # Determine the log-linear regression coefficients to calculate Lambda
-      if(length(lconc) >= 3){
+      num_points_needed <- 3
+      if(force_extrapolate) num_points_needed <- 2
+      if(length(lconc) >= num_points_needed){
         lconc <- log(lconc)
         lnPt  <- length(lconc)
         infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
         
-        for (r in 1:(lnPt-2)){
+        for (r in 1:(lnPt-(num_points_needed -1))){
           mlr  <- lm(lconc[r:lnPt]~ltime[r:lnPt])
           if(is.na(coef(mlr)[2])) next
           if(coef(mlr)[2] >= 0) next
@@ -365,6 +370,10 @@ est.nca <- function(time,
           HL_Lambda_z <- log(2)/Lambda_z
           lastPt      <- exp((slope*ltime[lnPt])+intercept)
         }
+      } else {
+        message(num_points_needed," or more elimination phase observations were not identified\n",
+                "extrapolation for the elimination phase will not be performed.\n")
+        
       }
       
     } # end if(extrapolate)
