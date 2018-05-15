@@ -330,6 +330,18 @@ est.nca <- function(time,
       num_points_needed <- 3
       if(force_extrapolate) num_points_needed <- 2
       if(length(lconc) >= num_points_needed){
+        
+        # make sure force_extrapolate does not change results for "good" profiles
+        if(force_extrapolate & adminType!="iv-bolus"){
+          if(length(lconc) > (num_points_needed + 2)){
+            if(lconc[1]==Cmax){ 
+              lconc <- lconc[-1]
+              ltime <- ltime[-1]
+              num_points_needed <- 3
+            }
+          }
+        }
+        
         lconc <- log(lconc)
         lnPt  <- length(lconc)
         infd  <- data.frame(np=numeric(0),rsq=numeric(0),arsq=numeric(0),m=numeric(0),inpt=numeric(0))
