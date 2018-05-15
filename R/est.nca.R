@@ -356,6 +356,7 @@ est.nca <- function(time,
             }else{
               tarsq <- infd$arsq[r]
               tDPt  <- infd$np[r]
+              if(is.nan(tarsq)) break
               if(Rsq_adjusted - tarsq > 0.0001) break
               if(No_points_Lambda_z > tDPt) next
               Rsq                <- infd$rsq[r]
