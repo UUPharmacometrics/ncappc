@@ -43,7 +43,7 @@ hist_mean_var_plot <- function(obsdata,
     dplyr::mutate(type="Mean") %>% 
     dplyr::mutate(var2=paste0(var," :: ",type))
   
-  long_sum_2 <- obsdata %>% dplyr::summarise_all(funs(var),na.rm=TRUE) %>% 
+  long_sum_2 <- obsdata %>% dplyr::summarise_all(dplyr::funs(var),na.rm=TRUE) %>% 
     tidyr::gather(key = "var",value = "value") %>% 
     dplyr::mutate(type="Variance") %>% 
     dplyr::mutate(var2=paste0(var," :: ",type))
