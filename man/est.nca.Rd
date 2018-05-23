@@ -9,7 +9,7 @@ est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
   method = "linearup-logdown", AUCTimeRange = NULL,
   LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
   Tau = NULL, TI = NULL, simFile = NULL, dset = "obs",
-  onlyNCA = FALSE, extrapolate = FALSE, sparse_compute = TRUE,
+  onlyNCA = FALSE, extrapolate = FALSE, sparse_compute = FALSE,
   force_extrapolate = FALSE, ...)
 }
 \arguments{
