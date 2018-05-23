@@ -1510,28 +1510,36 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       # }
     }
     
-    file.copy(paste(misc,"ncappc_report.Rmd",sep="/"),"ncappc_report.Rmd",overwrite = TRUE)
+    rmd_name <- "ncappc_report"
+    if(!is.null(outFileNm)) rmd_name <- paste0(rmd_name,"-",outFileNm)
+    rmd_name <- paste0(rmd_name,".Rmd")
+    
+    file.copy(paste(misc,"ncappc_report.Rmd",sep="/"),rmd_name,overwrite = TRUE)
+    # file.copy(paste(misc,"ncappc_report.Rmd",sep="/"),"ncappc_report.Rmd",overwrite = TRUE)
     file.copy(paste(misc,"styles.tex",sep="/"),"styles.tex",overwrite = TRUE)
     file.copy(paste(misc,"styles2.tex",sep="/"),"styles2.tex",overwrite = TRUE)
     file.copy(paste(misc,"custom.css",sep="/"),"custom.css",overwrite = TRUE)
     
-    message("\nprocessing file: ncappc_report.Rmd")
+    
+    message("\nprocessing file:",rmd_name,"\n")
     if(out_format == "html"){
-      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::html_document2",quiet = T)
+      out_file_name <- rmarkdown::render(rmd_name,output_format = "bookdown::html_document2",quiet = T)
+      # out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::html_document2",quiet = T)
     }  
 
     if(out_format == "pdf"){
-      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "bookdown::pdf_document2",quiet = T)
+      out_file_name <- rmarkdown::render(rmd_name,output_format = "bookdown::pdf_document2",quiet = T)
     }  
     
     if(out_format == "all"){
-      out_file_name <- rmarkdown::render("ncappc_report.Rmd",output_format = "all",quiet = T)
+      out_file_name <- rmarkdown::render(rmd_name,output_format = "all",quiet = T)
     }
     
     if(out_format == "first"){
-      out_file_name <- rmarkdown::render("ncappc_report.Rmd",quiet = T)
+      out_file_name <- rmarkdown::render(rmd_name,quiet = T)
     }
     
+  
     message("Output created:\n  ",paste(out_file_name,collapse = "\n  "),"\n")
     
     
