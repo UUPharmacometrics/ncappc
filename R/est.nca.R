@@ -171,7 +171,7 @@ est.nca <- function(time,
                     dset="obs",
                     onlyNCA=FALSE,
                     extrapolate=FALSE,
-                    sparse_compute=TRUE,
+                    sparse_compute=FALSE,
                     force_extrapolate = FALSE,...){
 
   "tail" <- "head" <- "lm" <- "coef" <- "arsq" <- NULL
@@ -182,7 +182,7 @@ est.nca <- function(time,
   
   ntime <- as.numeric(time)  # Save time to ntime
   nconc <- as.numeric(conc)  # Save conc to nconc
-  
+
   # check that method is defined as it should be
   if(!(method %in% c("linear","log", "linearup-logdown"))) 
     stop(paste(method,"is not one of 'linear','log', or 'linearup-logdown'"))
@@ -483,7 +483,8 @@ est.nca <- function(time,
         }
       }else if(method == "log"){
         delauc   <- (nconc[r+1]-nconc[r])*(ntime[r+1]-ntime[r])/log(nconc[r+1]/nconc[r])
-        delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
+        delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - 
+          ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
         AUClast  <- sum(AUClast, delauc)
         AUMClast <- sum(AUMClast, delaumc)
         if(backExtrp){
@@ -516,7 +517,8 @@ est.nca <- function(time,
           }
         }else{
           delauc   <- (nconc[r+1]-nconc[r])*(ntime[r+1]-ntime[r])/log(nconc[r+1]/nconc[r])
-          delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
+          delaumc  <- ((((nconc[r+1]*otime[r+1])-(nconc[r]*otime[r]))*(otime[r+1]-otime[r]))/(log(nconc[r+1]/nconc[r]))) - 
+            ((nconc[r+1]-nconc[r])*((otime[r+1]-otime[r])**2)/((log(nconc[r+1]/nconc[r]))**2))
           AUClast  <- sum(AUClast, delauc)
           AUMClast <- sum(AUMClast, delaumc)
           if(backExtrp){
