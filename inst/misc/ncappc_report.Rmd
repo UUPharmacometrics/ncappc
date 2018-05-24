@@ -15,7 +15,7 @@ output:
 <!-- toc: yes -->
 <!-- css: custom.css -->
 
-```{r setup, include=FALSE}
+```{r setup_ncappc_report, include=FALSE}
 library(knitr)
 opts_chunk$set(echo = FALSE, comment=NA, tidy = TRUE, 
                fig.align = 'center',
