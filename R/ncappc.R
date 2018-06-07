@@ -217,20 +217,20 @@
 #'   DV=c(0, 0.07, 0.14, 0.21, 0.24, 0.27, 0.26, 0.25, 0.22, 0.19, 0.13, 0.081, 0.033)
 #' )
 #' out_1 <- ncappc(obsFile=data_1,
-#'                 onlyNCA = T,
-#'                 extrapolate = T,
-#'                 printOut = F,
-#'                 evid = F,
-#'                 timing=T)
-#' 
-#' 
-#' data_2 <- data_1 %>% dplyr::filter(TIME>17|TIME<3)
-#' out_2 <- ncappc(obsFile=data_2,
-#'                 onlyNCA = T,
-#'                 extrapolate = T,
-#'                 printOut = F,
+#'                 onlyNCA = TRUE,
+#'                 extrapolate = TRUE,
+#'                 printOut = FALSE,
 #'                 evid = FALSE,
-#'                 force_extrapolate=T)
+#'                 timing=TRUE)
+#' 
+#' 
+#' data_2 <- dplyr::filter(data_1,TIME>17|TIME<3)
+#' out_2 <- ncappc(obsFile=data_2,
+#'                 onlyNCA = TRUE,
+#'                 extrapolate = TRUE,
+#'                 printOut = FALSE,
+#'                 evid = FALSE,
+#'                 force_extrapolate=TRUE)
 #'
 
 ncappc <- function(obsFile="nca_original.npctab.dta",
@@ -494,8 +494,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
     tmpDF    <- outData[,ncaPrm]
     statData <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
     statData <- data.frame(statData)
-    if (nrow(statData) == 0) next
-    statData <- cbind(data.frame(Stat=statPrm), statData)
+    if (nrow(statData) != 0) statData <- cbind(data.frame(Stat=statPrm), statData)
   }
   if (case == 2){
     for (s1 in 1:npopStr1){
@@ -984,49 +983,51 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           }
         }
         plotdata <- outData
-        if (nrow(plotdata) == 0) next
-        figlbl <- "All data"
-        # Deviation plot
-        if (!noPlot){
-          ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
-          if (!is.null(ggdev)){
-            suppressMessages(suppressWarnings(print(ggdev)))
-            if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
-            devplot[[length(devplot)+1]] <- ggdev
+        if (nrow(plotdata) != 0) {
+          figlbl <- "All data"
+          # Deviation plot
+          if (!noPlot){
+            ggdev <- nca.deviation.plot(plotdata=plotdata,xvar="ID",devcol=devcol,figlbl=figlbl,spread=spread,cunit=cunit,tunit=tunit)
+            if (!is.null(ggdev)){
+              suppressMessages(suppressWarnings(print(ggdev)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/Deviation_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+              devplot[[length(devplot)+1]] <- ggdev
+            }
           }
-        }
-        # NPDE plot
-        npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
-        if (is.null(npdeout$forestdata)) next
-        forestdata <- npdeout$forestdata
-        forestdata$str <- figlbl
-        fpval <- rbind(fpval, forestdata)
-        if (!noPlot){
-          npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
-          suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
-          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
-          histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
-          suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
-          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/HistNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
-        }
-        if (!noPlot){
-          # Forest plot for NPDE
-          fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
-          xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
-          ggplt <- ggplot(fpval) + ggOpt_forest +
-            geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
-            geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
-            geom_point(aes(sd,str,color="SD"), size=2) +
-            geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
-            geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
-            geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
-            geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
-            geom_text(aes(label=out.digits(sd,dig=2),x=sd,y=str,color="SD",vjust=1.5),size=4,show.legend=F) +
-            geom_text(aes(label=out.digits(sdcil,dig=2),x=sdcil,y=str,color="SD",vjust=2.5),size=4,show.legend=F) +
-            geom_text(aes(label=out.digits(sdciu,dig=2),x=sdciu,y=str,color="SD",vjust=2.5),size=4,show.legend=F)
-          suppressMessages(suppressWarnings(print(ggplt)))
-          forestplot[[length(forestplot)+1]] <- ggplt
-          if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/ForestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+          # NPDE plot
+          npdeout <- nca.npde.plot(plotdata=plotdata,xvar="ID",npdecol=npdecol,figlbl=figlbl,cunit=cunit,tunit=tunit)
+          if (!is.null(npdeout$forestdata)) {
+            forestdata <- npdeout$forestdata
+            forestdata$str <- figlbl
+            fpval <- rbind(fpval, forestdata)
+            if (!noPlot){
+              npdeplot[[length(npdeplot)+1]] <- npdeout$ggnpde
+              suppressMessages(suppressWarnings(print(npdeout$ggnpde)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/NPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+              histnpdeplot[[length(histnpdeplot)+1]] <- npdeout$gghnpde
+              suppressMessages(suppressWarnings(print(npdeout$gghnpde)))
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/HistNPDE_",figlbl,".",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+            }
+            if (!noPlot){
+              # Forest plot for NPDE
+              fpval$FCT <- paste0("mean=",signif(fpval$mean,2),"+/-CI=",signif(fpval$mcil,2),",",signif(fpval$mciu,2),", SD=",signif(fpval$sd,2),"+/-CI=",signif(fpval$sdcil,2),",",signif(fpval$sdciu,2))
+              xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
+              ggplt <- ggplot(fpval) + ggOpt_forest +
+                geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
+                geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+                geom_point(aes(sd,str,color="SD"), size=2) +
+                geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+                geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
+                geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
+                geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
+                geom_text(aes(label=out.digits(sd,dig=2),x=sd,y=str,color="SD",vjust=1.5),size=4,show.legend=F) +
+                geom_text(aes(label=out.digits(sdcil,dig=2),x=sdcil,y=str,color="SD",vjust=2.5),size=4,show.legend=F) +
+                geom_text(aes(label=out.digits(sdciu,dig=2),x=sdciu,y=str,color="SD",vjust=2.5),size=4,show.legend=F)
+              suppressMessages(suppressWarnings(print(ggplt)))
+              forestplot[[length(forestplot)+1]] <- ggplt
+              if (printOut) suppressMessages(suppressWarnings(ggsave(filename=paste0(usrdir,"/ForestNPDE.",figFormat),height=hth,width=wth,units="cm",dpi=120)))
+            }
+          }
         }
       }
     }else if (case==2){
@@ -1361,8 +1362,7 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
       tmpDF       <- dasdf[,ncaPrm]
       statDataSim <- sapply(tmpDF, function(x){x<-as.numeric(as.character(x)); if(length(x[complete.cases(x)])<2){rep(NA,13)}else{out.digits(calc.stat(x[complete.cases(x)]),dig=4)}})
       statDataSim <- data.frame(statDataSim)
-      if (nrow(statDataSim) == 0) next
-      statDataSim <- cbind(data.frame(Stat=statPrm), statDataSim)
+      if (nrow(statDataSim) != 0) statDataSim <- cbind(data.frame(Stat=statPrm), statDataSim)
     }
     if (case == 2){
       for (s1 in 1:npopStr1){

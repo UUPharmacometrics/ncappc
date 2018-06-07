@@ -12,7 +12,7 @@ hist_nca_obs <- function(case, outData, AUClast, AUCINF_obs, Cmax, Tmax, cunit, 
     if (nrow(outData)>=5){
       plotData <- subset(outData, select=c(AUClast,AUCINF_obs,Cmax,Tmax))
       numPrm   <- sapply(plotData, FUN=function(x){x <- as.numeric(as.character(x)); length(x[complete.cases(x)])})
-      if (length(numPrm[numPrm>=5]) == 0) next
+      if (length(numPrm[numPrm>=5]) == 0) return(NULL)
       
       pltPrm      <- names(numPrm[numPrm>=5])
       figlbl      <- NULL

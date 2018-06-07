@@ -65,6 +65,12 @@ although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}}
 
 \item{extrapolate}{Should the function extrapolate from the last observation to infinity?}
 
+\item{sparse_compute}{Should NCA metrics be computed even with only one sample?}
+
+\item{force_extrapolate}{Extrapolate AUC_inf with sparse data.  Sparse data is defined as 
+fewer than 3 points after Cmax for non-bolus input.  In that case, Cmax is included in the extrapolation 
+and only one extra point in required for extrapolation.}
+
 \item{...}{Arguments passed from other functions.  Not used.}
 }
 \value{

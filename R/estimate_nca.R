@@ -47,7 +47,10 @@ estimate_nca <- function(case,
   if (case == 1){
     if(nca_method==1){
       ifdf <- pkData
-      if (nrow(ifdf) == 0){next}
+      if (nrow(ifdf) == 0){
+        warning("No data for individual")
+        return(NULL)
+      }
       
       idd  <- unique(as.character(ifdf[,idNm]))
       if (is.null(doseAmtNm)){
@@ -89,7 +92,10 @@ estimate_nca <- function(case,
     if(nca_method==3){
       
       ifdf <- pkData
-      if (nrow(ifdf) == 0){next}
+      if (nrow(ifdf) == 0){        
+        warning("No data for individual")
+        return(NULL)
+      }
       
       idd  <- unique(as.character(ifdf[,idNm]))
       if (is.null(doseAmtNm)){
@@ -116,7 +122,10 @@ estimate_nca <- function(case,
                              dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat)
         tc      <- tcTI$tc
         iTI     <- tcTI$iTI
-        if (nrow(tc)==0) next
+        if (nrow(tc)==0){
+          warning("No data for individual")
+          return(NULL)
+        } 
         time    <- as.numeric(tc$time)
         conc    <- as.numeric(tc$conc)
         cdata   <- rbind(cdata,cbind(Time=time,Conc=conc,ID=id))

@@ -284,19 +284,19 @@ data_1 <- data.frame(
   DV=c(0, 0.07, 0.14, 0.21, 0.24, 0.27, 0.26, 0.25, 0.22, 0.19, 0.13, 0.081, 0.033)
 )
 out_1 <- ncappc(obsFile=data_1,
-                onlyNCA = T,
-                extrapolate = T,
-                printOut = F,
-                evid = F,
-                timing=T)
-
-
-data_2 <- data_1 \%>\% dplyr::filter(TIME>17|TIME<3)
-out_2 <- ncappc(obsFile=data_2,
-                onlyNCA = T,
-                extrapolate = T,
-                printOut = F,
+                onlyNCA = TRUE,
+                extrapolate = TRUE,
+                printOut = FALSE,
                 evid = FALSE,
-                force_extrapolate=T)
+                timing=TRUE)
+
+
+data_2 <- dplyr::filter(data_1,TIME>17|TIME<3)
+out_2 <- ncappc(obsFile=data_2,
+                onlyNCA = TRUE,
+                extrapolate = TRUE,
+                printOut = FALSE,
+                evid = FALSE,
+                force_extrapolate=TRUE)
 
 }

@@ -143,6 +143,10 @@
 #' @param onlyNCA If \code{TRUE} only NCA is performed and ppc part is ignored
 #'   although simFile is not \code{NULL}. Default is \strong{\code{FALSE}}
 #' @param extrapolate Should the function extrapolate from the last observation to infinity?
+#' @param sparse_compute Should NCA metrics be computed even with only one sample?
+#' @param force_extrapolate Extrapolate AUC_inf with sparse data.  Sparse data is defined as 
+#'   fewer than 3 points after Cmax for non-bolus input.  In that case, Cmax is included in the extrapolation 
+#'   and only one extra point in required for extrapolation.
 #' @param ... Arguments passed from other functions.  Not used.
 #' 
 #' @return An array of estimated NCA metrics
