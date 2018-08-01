@@ -4,5 +4,5 @@
 ^to_change.txt$
 ^.travis.yml$
 ^appveyor.yml$
-
+^cran-comments.md$
 
