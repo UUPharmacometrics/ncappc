@@ -4,9 +4,10 @@
 \alias{nca.ind.data}
 \title{Prepare individual PK data}
 \usage{
-nca.ind.data(pkData, ID, dvLog = FALSE, dataType = "obs", idNm = "ID",
-  timeNm = "TIME", concNm = "DV", adminType = "extravascular",
-  TI = NULL, dateColNm = NULL, dateFormat = NULL, timeFormat = "number")
+nca.ind.data(pkData, ID, dvLog = FALSE, dataType = "obs",
+  idNm = "ID", timeNm = "TIME", concNm = "DV",
+  adminType = "extravascular", TI = NULL, dateColNm = NULL,
+  dateFormat = NULL, timeFormat = "number")
 }
 \arguments{
 \item{pkData}{PK concentration-time data.}

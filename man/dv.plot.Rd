@@ -5,11 +5,12 @@
 \title{Plots drug plasma concentration vs time data}
 \usage{
 dv.plot(df, xvar = "Time", yvar = "Conc", obsLog = FALSE,
-  myXlab = "Time", myYlab = "Concentration", color = NULL, group = NULL,
-  guide = TRUE, onlyLin = FALSE, onlyLog = FALSE, XYlog = FALSE,
-  STRATY = ".", STRATX = ".", myYBr = waiver(), myXBr = waiver(),
-  myYBrLog = waiver(), myXBrLog = waiver(), myYlim = NULL,
-  myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL, title = NULL)
+  myXlab = "Time", myYlab = "Concentration", color = NULL,
+  group = NULL, guide = TRUE, onlyLin = FALSE, onlyLog = FALSE,
+  XYlog = FALSE, STRATY = ".", STRATX = ".", myYBr = waiver(),
+  myXBr = waiver(), myYBrLog = waiver(), myXBrLog = waiver(),
+  myYlim = NULL, myXlim = NULL, myYlimLog = NULL, myXlimLog = NULL,
+  title = NULL)
 }
 \arguments{
 \item{df}{A data frame to be used for the plot}

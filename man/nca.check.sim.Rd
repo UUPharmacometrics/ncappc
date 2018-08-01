@@ -5,10 +5,11 @@
 \title{Check simulated data}
 \usage{
 nca.check.sim(simData, idNmSim = "ID", timeNmSim = "TIME",
-  concNmSim = "DV", filterNm = NULL, filterExcl = NULL, str1Nm = NULL,
-  str1 = NULL, str2Nm = NULL, str2 = NULL, str3Nm = NULL, str3 = NULL,
-  adminType = "extravascular", TI = NULL, doseAmtNm = NULL,
-  blqNm = NULL, blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE)
+  concNmSim = "DV", filterNm = NULL, filterExcl = NULL,
+  str1Nm = NULL, str1 = NULL, str2Nm = NULL, str2 = NULL,
+  str3Nm = NULL, str3 = NULL, adminType = "extravascular",
+  TI = NULL, doseAmtNm = NULL, blqNm = NULL, blqExcl = 1,
+  evid = TRUE, evidIncl = 0, mdv = FALSE)
 }
 \arguments{
 \item{simData}{Simulated concentration-time data.}

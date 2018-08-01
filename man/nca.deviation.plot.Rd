@@ -5,8 +5,8 @@
 \title{Plot individual deviation of NCA metrics estimated from observed and simulated
 data}
 \usage{
-nca.deviation.plot(plotdata, xvar = NULL, devcol = NULL, figlbl = NULL,
-  spread = "npi", cunit = NULL, tunit = NULL)
+nca.deviation.plot(plotdata, xvar = NULL, devcol = NULL,
+  figlbl = NULL, spread = "npi", cunit = NULL, tunit = NULL)
 }
 \arguments{
 \item{plotdata}{A data frame containing the scaled deviation values of the

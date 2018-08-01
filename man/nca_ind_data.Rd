@@ -6,7 +6,8 @@
 \usage{
 nca_ind_data(pkData, dvLog = FALSE, dataType = "obs", idNm = "ID",
   timeNm = "TIME", concNm = "DV", adminType = "extravascular",
-  TI = NULL, dateColNm = NULL, dateFormat = NULL, timeFormat = "number")
+  TI = NULL, dateColNm = NULL, dateFormat = NULL,
+  timeFormat = "number")
 }
 \arguments{
 \item{pkData}{PK concentration-time data.}

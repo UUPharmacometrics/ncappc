@@ -4,8 +4,9 @@
 \alias{histobs.plot}
 \title{Plots histogram of selected set of NCA metrics.}
 \usage{
-histobs.plot(plotData, figlbl = NULL, param = c("AUClast", "AUCINF_obs",
-  "Cmax", "Tmax"), cunit = NULL, tunit = NULL, spread = "npi")
+histobs.plot(plotData, figlbl = NULL, param = c("AUClast",
+  "AUCINF_obs", "Cmax", "Tmax"), cunit = NULL, tunit = NULL,
+  spread = "npi")
 }
 \arguments{
 \item{plotData}{A data frame with the estimated NCA metrics}
