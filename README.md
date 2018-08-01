@@ -2,7 +2,7 @@ ncappc: NCA Calculations and Population Model Diagnosis
 ======
 
 [![Travis-CI Build Status](https://travis-ci.org/UUPharmacometrics/ncappc.svg?branch=master)](https://travis-ci.org/UUPharmacometrics/ncappc)
-[![AppVeyor status](https://ci.appveyor.com/api/projects/status/github/UUPharmacometrics/ncappc?branch=master&svg=true)](https://ci.appveyor.com/project/UUPharmacometrics/ncappc)
+[![AppVeyor status](https://ci.appveyor.com/api/projects/status/q84ds9j9jbl30s2q?svg=true)](https://ci.appveyor.com/project/andrewhooker/ncappc)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/ncappc)](https://CRAN.R-project.org/package=ncappc)
 [![codecov.io](https://codecov.io/github/UUPharmacometrics/ncappc/coverage.svg?branch=master)](https://codecov.io/github/UUPharmacometrics/ncappc?branch=master)
 
