@@ -1014,9 +1014,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
               xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
               ggplt <- ggplot(fpval) + ggOpt_forest +
                 geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
-                geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+                #geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+                geom_errorbarh(aes(y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
                 geom_point(aes(sd,str,color="SD"), size=2) +
-                geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+                #geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+                geom_errorbarh(aes(y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
                 geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
                 geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
                 geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
@@ -1119,9 +1121,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
-            geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            #geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
-            geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            #geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
             geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
@@ -1225,9 +1229,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
-            geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            #geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
-            geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            #geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
             geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
@@ -1336,9 +1342,11 @@ ncappc <- function(obsFile="nca_original.npctab.dta",
           xlim1 <- floor(min(fpval$mcil)); xlim2 <- ceiling(fpval$sdciu)
           ggplt <- ggplot(fpval) + ggOpt_forest +
             geom_point(aes(mean,str,color="mean"), show.legend=T, size=2) +
-            geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            #geom_errorbarh(aes(x=mean,y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=mcil,xmax=mciu),size=0.4, color="red",height=0.1) +
             geom_point(aes(sd,str,color="SD"), size=2) +
-            geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            #geom_errorbarh(aes(x=sd,y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
+            geom_errorbarh(aes(y=str,xmin=sdcil,xmax=sdciu), size=0.4, color="darkgreen", height=0.1) +
             geom_text(aes(label=out.digits(mean,dig=2),x=mean,y=str,color="mean",vjust=-1),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mcil,dig=2),x=mcil,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
             geom_text(aes(label=out.digits(mciu,dig=2),x=mciu,y=str,color="mean",vjust=-2.5),size=4,show.legend=F) +
