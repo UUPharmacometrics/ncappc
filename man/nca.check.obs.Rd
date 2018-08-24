@@ -25,7 +25,7 @@ nca.check.obs(obsData, idNmObs = "ID", timeNmObs = "TIME",
 \item{concNmObs}{Column name for concentration in observed data. Default is 
 \strong{"DV"}}
 
-\item{doseType}{Steady-state (ss) or nonsteady-state (ns) dose. Default is 
+\item{doseType}{Steady-state (ss) or non-steady-state (ns) dose. Default is 
 \strong{"ns"}}
 
 \item{doseTime}{Dose time prior to the first observation for steady-state
@@ -80,7 +80,7 @@ given individual. Default is \strong{\code{NULL}}}
 \item{doseAmtNm}{Column name to specify dose amount. Default is
 \strong{\code{NULL}}}
 
-\item{dateColNm}{colunm name for date if used (e.g. "Date", "DATE"). Default
+\item{dateColNm}{column name for date if used (e.g. "Date", "DATE"). Default
 is \strong{\code{NULL}}}
 
 \item{dateFormat}{date format (D-M-Y, D/M/Y or any other combination of

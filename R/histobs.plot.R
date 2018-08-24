@@ -20,7 +20,7 @@
 #'   "AUCINF_pred", "AUMClast", "Cmax", "Tmax" and "HL_Lambda_z". 
 #'   (\strong{c("AUClast", "AUCINF_obs", "Cmax", "Tmax")})
 #' @param cunit Unit for concentration (default is \strong{\code{NULL}})
-#' @param tunit Unit for time (defulat is \strong{\code{NULL}})
+#' @param tunit Unit for time (default is \strong{\code{NULL}})
 #' @param spread Measure of the spread of simulated data (ppi (95\% parametric 
 #'   prediction interval) or npi (95\% nonparametric prediction interval)) 
 #'   (\strong{"npi"})

@@ -8,7 +8,7 @@
 #' for a given individual using concentration vs. time data.
 #'
 #' \pkg{est.nca} estimates a comprehensive set of NCA metrics using the
-#' concentration-time profile of an individual. NCA metrics are eatimated
+#' concentration-time profile of an individual. NCA metrics are estimated
 #' according to traditional PK calculations. The names of the various NCA
 #' metrics estimated in this package are assigned mainly following the names
 #' used in WinNonlin. This package accepts any of the three different types of
@@ -26,7 +26,7 @@
 #'  between the dosing intervals is considered. Cmax_D is the dose normalized
 #'  maximum observed concentration.
 #'  \item \strong{Clast and Tlast} are the last measurable positive
-#'  comcentration and the corresponding time, respectively. 
+#'  concentration and the corresponding time, respectively. 
 #'  \item \strong{AUClast} is the area under the concentration vs. time curve
 #'  from the first observed to last measurable concentration.
 #'  \item \strong{AUMClast} is the first moment of the concentration vs. time
@@ -41,7 +41,7 @@
 #'  \item \strong{AUC_pBack_Ext_pred} is the percentage of AUCINF_pred that is 
 #'  contributed by the back extrapolation to estimate C0.
 #'  \item \strong{AUClower_upper} is the AUC under the concentration-time 
-#'  profile within the user-specified window of time privided as the 
+#'  profile within the user-specified window of time provided as the 
 #'  "AUCTimeRange" argument. In case of empty "AUCTimeRange" argument, 
 #'  AUClower_upper is the same as AUClast.
 #'  \item \strong{Rsq, Rsq_adjusted and Corr_XY} are regression coefficient 
@@ -49,7 +49,7 @@
 #'  adjusted value of Rsq and the square root of Rsq, respectively.
 #'  \item \strong{Lambda_z} is the elimination rate constant estimated from the 
 #'  regression line representing the terminal phase of the concentration-time 
-#'  prifile.
+#'  data.
 #'  \item \strong{Lambda_lower and Lambda_upper} are the lower and upper limit 
 #'  of the time values from the concentration-time profile used to estimate 
 #'  Lambda_z, respectively, in case the "LambdaTimeRange" is used to specify 
@@ -93,8 +93,7 @@
 #'  sampled time extrapolated to infinity based on the last predicted 
 #'  concentration obtained from the regression line used to estimate Lambda_z 
 #'  (Clast_pred).
-#'  \item \strong{Tau} is the dosing interval for steady-state data. This value 
-#'  is assumed equarion over multiple doses.
+#'  \item \strong{Tau} is the dosing interval for steady-state data. 
 #'  \item \strong{Cmin and Tmin} are the minimum concentration between 0 and 
 #'  Tau and the corresponding time, respectively.
 #'  \item \strong{Cavg} is the average concentration between 0 and Tau for 
@@ -114,7 +113,7 @@
 #' @param backExtrp If back-extrapolation is needed for AUC (TRUE or FALSE) 
 #'   (\strong{FALSE})
 #' @param negConcExcl Exclude -ve conc (\strong{FALSE})
-#' @param doseType Steady-state (ss) or nonsteady-state (ns) dose
+#' @param doseType Steady-state (ss) or non-steady-state (ns) dose
 #'   (\strong{"ns"})
 #' @param adminType Route of administration
 #'   (iv-bolus,iv-infusion,extravascular) (\strong{"extravascular"})

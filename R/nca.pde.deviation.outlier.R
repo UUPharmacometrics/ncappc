@@ -40,7 +40,7 @@
 #'   "AUClast", "AUClower_upper", "AUCINF_obs", "AUCINF_pred", "AUMClast",
 #'   "Cmax", "Tmax" and "HL_Lambda_z". (\strong{c("AUClast", "Cmax")})
 #' @param cunit Unit for concentration (default is \strong{\code{NULL}})
-#' @param tunit Unit for time (defulat is \strong{\code{NULL}})
+#' @param tunit Unit for time (default is \strong{\code{NULL}})
 #' @param noPlot Perform only NCA calculations without any plot generation
 #'   (TRUE, FALSE) (\strong{FALSE})
 #' @param onlyNCA If \code{TRUE} only NCA is performed and ppc part is ignored

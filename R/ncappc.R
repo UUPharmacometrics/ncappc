@@ -24,7 +24,7 @@
 #' population mean. The individual level comparison is performed based on the 
 #' deviation of the mean of any NCA metric based on simulations for an 
 #' individual from the corresponding NCA metric obtained from the observed data.
-#' Additionaly, \pkg{ncappc} reports the normalized prediction distribution 
+#' Additionally, \pkg{ncappc} reports the normalized prediction distribution 
 #' error (NPDE) of the simulated NCA metrics for each individual and their 
 #' distribution within a population. \pkg{ncappc} produces two default outputs 
 #' depending on the type of analysis performed, i.e., traditional NCA and PopPK 
@@ -35,7 +35,7 @@
 #' values of the NCA metrics estimated from the observed and the simulated data,
 #' along with the deviation, NPDE, regression parameters used to estimate the 
 #' elimination rate constant and the related population statistics. The default 
-#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Useage}
+#' values of the arguments used in \pkg{ncappc} are shown in the \strong{Usage}
 #' section of this document and/or in \strong{bold} in the \strong{Arguments} 
 #' section.
 #'
@@ -43,7 +43,7 @@
 #'   or an external table with comma, tab or space as separators. 
 #' @param simFile NONMEM simulation output with the simulated concentration-time
 #'   data from an internal data frame or an external table. \code{NULL} produces
-#'   just the NCA output, a filename or data frame prduces the NCA output as
+#'   just the NCA output, a filename or data frame produces the NCA output as
 #'   well as the PopPK diagnosis. If \code{new_data_method=TRUE} then this can
 #'   be a compressed file as well. 
 #' @param str1Nm Column name for 1st level population stratifier. Default is
@@ -99,7 +99,7 @@
 #'   \strong{\code{NULL}}
 #' @param adminType Route of administration. Allowed options are iv-bolus,
 #'   iv-infusion or extravascular. Default is \strong{"extravascular"}
-#' @param doseType Steady-state (ss) or nonsteady-state (ns) dose. Default is
+#' @param doseType Steady-state (ss) or non-steady-state (ns) dose. Default is
 #'   \strong{"ns"}
 #' @param doseTime Dose time prior to the first observation for steady-state
 #'   data. Default is \strong{\code{NULL}}
@@ -138,7 +138,7 @@
 #'   \strong{(c"AUClast", "Cmax")}
 #' @param timeFormat time format (number, H:M, H:M:S). Default is
 #'   \strong{"number"}
-#' @param dateColNm colunm name for date if used (e.g. "Date", "DATE"). Default
+#' @param dateColNm column name for date if used (e.g. "Date", "DATE"). Default
 #'   is \strong{\code{NULL}}
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
 #'   D,M,Y). Default is \strong{\code{NULL}}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_nm_table.R
 \name{read_nm_table}
 \alias{read_nm_table}
-\title{Read nonmem table files produced.}
+\title{Read NONMEM table files produced.}
 \usage{
 read_nm_table(nm_table, only_obs = FALSE, method = "default",
   quiet = TRUE, sim_num = FALSE, sim_name = "NSIM")
@@ -18,7 +18,7 @@ downloaded. Remote gz files can also be automatically downloaded &
 decompressed.}
 
 \item{only_obs}{Should the non-observation lines in the data set be removed? 
-Currently filtered uisng the expected \code{MDV} column. \code{TRUE} or 
+Currently filtered using the expected \code{MDV} column. \code{TRUE} or 
 \code{FALSE}.}
 
 \item{method}{Can be one of \code{default}, \code{readr_1},  \code{readr_2}, 
@@ -40,7 +40,7 @@ Returns a data frame of the simulated table with an added column for
   "tbl", "data.frame")} for easy use with \code{\link[dplyr]{dplyr}}.
 }
 \description{
-The function reads in nonmem table files.  The files can be created from the 
+The function reads in NONMEM table files.  The files can be created from the 
 \code{$EST} line or from the \code{$SIM} line in a NONMEM model file.
 }
 \details{

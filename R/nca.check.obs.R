@@ -15,7 +15,7 @@
 #'   \strong{"TIME"}
 #' @param concNmObs Column name for concentration in observed data. Default is 
 #'   \strong{"DV"}
-#' @param doseType Steady-state (ss) or nonsteady-state (ns) dose. Default is 
+#' @param doseType Steady-state (ss) or non-steady-state (ns) dose. Default is 
 #'   \strong{"ns"}
 #' @param doseTime Dose time prior to the first observation for steady-state
 #'   data. Default is \strong{\code{NULL}}
@@ -54,7 +54,7 @@
 #'   given individual. Default is \strong{\code{NULL}}
 #' @param doseAmtNm Column name to specify dose amount. Default is
 #'   \strong{\code{NULL}}
-#' @param dateColNm colunm name for date if used (e.g. "Date", "DATE"). Default
+#' @param dateColNm column name for date if used (e.g. "Date", "DATE"). Default
 #'   is \strong{\code{NULL}}
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
 #'   D,M,Y). Default is \strong{\code{NULL}}

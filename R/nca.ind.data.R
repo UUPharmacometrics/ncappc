@@ -27,7 +27,7 @@
 #'   for all individuals. If TI is the name of a column with numeric data
 #'   present in the data set, TI is set to the unique value of the column for a
 #'   given individual. Default is \strong{\code{NULL}}
-#' @param dateColNm colunm name for date if used (e.g. "Date", "DATE"). Default
+#' @param dateColNm column name for date if used (e.g. "Date", "DATE"). Default
 #'   is \strong{\code{NULL}}
 #' @param dateFormat date format (D-M-Y, D/M/Y or any other combination of
 #'   D,M,Y). Default is \strong{\code{NULL}}

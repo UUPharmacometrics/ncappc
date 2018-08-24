@@ -1,6 +1,6 @@
-#' Read nonmem table files produced.
+#' Read NONMEM table files produced.
 #' 
-#' The function reads in nonmem table files.  The files can be created from the 
+#' The function reads in NONMEM table files.  The files can be created from the 
 #' \code{$EST} line or from the \code{$SIM} line in a NONMEM model file.
 #' 
 #' Currently the function searches the \code{$TABLE} for multiple header lines, 
@@ -17,7 +17,7 @@
 #'   downloaded. Remote gz files can also be automatically downloaded &
 #'   decompressed.
 #' @param only_obs Should the non-observation lines in the data set be removed? 
-#'   Currently filtered uisng the expected \code{MDV} column. \code{TRUE} or 
+#'   Currently filtered using the expected \code{MDV} column. \code{TRUE} or 
 #'   \code{FALSE}.
 #' @param method Can be one of \code{default}, \code{readr_1},  \code{readr_2}, 
 #'   \code{readr_3}, \code{slow}. \code{readr_1} should be fastest.  All but 

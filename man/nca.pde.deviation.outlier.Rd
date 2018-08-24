@@ -41,7 +41,7 @@ test to detect outliers. The allowed NCA metrics for this histograms are
 
 \item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
+\item{tunit}{Unit for time (default is \strong{\code{NULL}})}
 
 \item{noPlot}{Perform only NCA calculations without any plot generation
 (TRUE, FALSE) (\strong{FALSE})}

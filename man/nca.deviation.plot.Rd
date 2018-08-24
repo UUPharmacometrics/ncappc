@@ -27,7 +27,7 @@ prediction interval) or npi (95\% nonparametric prediction interval))
 
 \item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
+\item{tunit}{Unit for time (default is \strong{\code{NULL}})}
 }
 \value{
 returns the data frame with the NPDE values based on the input data.
@@ -42,6 +42,6 @@ estimated from observed and simulated data. This function requires three
 mandatory arguments, (i) deviation data, (ii) independent variable and (iii) 
 dependent variables. The deviation of the NCA metrics values estimated from
 the observed and simulated data are scaled by the "spread" of the simulated
-metrics values. The "spead" of the simulated data is measured either by the
+metrics values. The "speed" of the simulated data is measured either by the
 standard deviation or the 95% nonparametric interval.
 }

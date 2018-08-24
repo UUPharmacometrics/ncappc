@@ -21,7 +21,7 @@ stratifier (\strong{NULL})}
 
 \item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
+\item{tunit}{Unit for time (default is \strong{\code{NULL}})}
 }
 \value{
 returns a data frame with the mean and SD of population NPDE values

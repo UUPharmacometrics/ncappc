@@ -16,7 +16,7 @@
 #' @param figlbl Figure label based on dose identifier and/or population
 #'   stratifier (\strong{NULL})
 #' @param cunit Unit for concentration (default is \strong{\code{NULL}})
-#' @param tunit Unit for time (defulat is \strong{\code{NULL}})
+#' @param tunit Unit for time (default is \strong{\code{NULL}})
 #'
 #' @return returns a data frame with the mean and SD of population NPDE values
 #'   of each NCA metric and two graphical objects created by arrangeGrob

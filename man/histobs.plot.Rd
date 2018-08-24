@@ -21,7 +21,7 @@ for this histograms are "AUClast", "AUClower_upper", "AUCINF_obs",
 
 \item{cunit}{Unit for concentration (default is \strong{\code{NULL}})}
 
-\item{tunit}{Unit for time (defulat is \strong{\code{NULL}})}
+\item{tunit}{Unit for time (default is \strong{\code{NULL}})}
 
 \item{spread}{Measure of the spread of simulated data (ppi (95\% parametric 
 prediction interval) or npi (95\% nonparametric prediction interval)) 
