@@ -439,8 +439,8 @@ est.nca <- function(time,
           Intpol22 <- TRUE
           CR2 <- lastPt * exp(-Lambda_z * (TR2-Tlast))
           CR2 <- ifelse(CR2==0, 0.0001, CR2)
-          nconc <- c(nconc, CR1)
-          ntime <- c(ntime, TR1)
+          nconc <- c(nconc, CR2)
+          ntime <- c(ntime, TR2)
         }
       }
     }
