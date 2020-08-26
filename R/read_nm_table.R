@@ -85,13 +85,24 @@ read_nm_table <- function (nm_table,
     if(any(is.na(tab_dat[1]))){ 
       if(sim_num){
         ## create simulation number
-        args <- lazyeval::interp(~ cumsum(is.na(var))+1, var = as.name(names(tab_dat)[1]))
-        tab_dat <- dplyr::mutate_(tab_dat,NSIM=args)
+        if (packageVersion("dplyr") >= "0.7.0") {
+          var <- names(tab_dat)[1]
+          tab_dat <- dplyr::mutate(tab_dat,NSIM=cumsum(is.na(.data[[var]]))+1)
+        } else { # use the depreciated dplyr function
+          args <- lazyeval::interp(~ cumsum(is.na(var))+1, var = as.name(names(tab_dat)[1]))
+          tab_dat <- dplyr::mutate_(tab_dat,NSIM=args)
+        }
       }
       
       ## filter out NA columns
-      args <- lazyeval::interp(~ !is.na(var), var = as.name(names(tab_dat)[1]))
-      tab_dat <- dplyr::filter_(tab_dat,args)
+      if (packageVersion("dplyr") >= "0.7.0") {
+        var <- names(tab_dat)[1]
+        tab_dat <- dplyr::filter(tab_dat,!is.na(.data[[var]]))
+      } else { # use the depreciated dplyr function
+        args <- lazyeval::interp(~ !is.na(var), var = as.name(names(tab_dat)[1]))
+        tab_dat <- dplyr::filter_(tab_dat,args)
+      }
+
     }
     return(tab_dat)
   }
@@ -253,7 +264,11 @@ read_nm_table <- function (nm_table,
   if(sim_num) names(tab_dat)[match("NSIM",names(tab_dat))] <- sim_name
   
   tab_dat <- data.frame(tab_dat)
-  tab_dat <- dplyr::as_data_frame(tab_dat)
-  
+  if (packageVersion("tibble") >= "2.0.0") {
+    tab_dat <- tibble::as_tibble(tab_dat)
+  } else { # use the depreciated dplyr function
+    tab_dat <- dplyr::as_data_frame(tab_dat)
+  }
+
   return(tab_dat)
 }
