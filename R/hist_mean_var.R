@@ -16,9 +16,23 @@ hist_mean_var <- function(obs_data, sim_data,
     }
   }
   sum_dat <- sum_dat %>%  dplyr::select(param,NSIM,!!!strats) %>% dplyr::group_by(NSIM) 
-  if(!is.null(strats)) sum_dat <- sum_dat %>% dplyr::group_by(!!!strats,add=TRUE)
-  sum_dat <- sum_dat %>% dplyr::summarise_all(dplyr::funs("mean","median","var"),na.rm=T) %>% 
-    dplyr::ungroup()
+  if(!is.null(strats)){
+    if (packageVersion("dplyr") >= "1.0.0") {
+      sum_dat <- sum_dat %>% dplyr::group_by(!!!strats,.add=TRUE)
+    } else { # use the depreciated dplyr function
+      sum_dat <- sum_dat %>% dplyr::group_by(!!!strats,add=TRUE)
+    }
+  } 
+  
+  if (packageVersion("dplyr") >= "0.8.0") {
+    sum_dat <- sum_dat %>% 
+      dplyr::summarise_all(list(~mean(.),~median(.),~var(.)),na.rm=T) %>% 
+      dplyr::ungroup()
+  } else { # use the depreciated dplyr function
+    sum_dat <- sum_dat %>% dplyr::summarise_all(dplyr::funs("mean","median","var"),na.rm=T) %>% 
+      dplyr::ungroup()
+  }
+  
   
   # get data to look as it should
   #obs_data <- outData 
@@ -29,17 +43,30 @@ hist_mean_var <- function(obs_data, sim_data,
   }
   obs_data <- obs_data %>%  dplyr::filter(ID!="") %>% dplyr::select(param,!!!strats) 
   if(!is.null(strats)) obs_data <- obs_data %>% dplyr::group_by(!!!strats)
-  obs_data <- obs_data %>% tidyr::nest()
+  if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
+    obs_data <- obs_data %>% tidyr::nest(data=everything())
+  } else {
+    obs_data <- obs_data %>% tidyr::nest()
+  }
   
   mean_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\_mean$"),!!!strats) %>% 
     setNames(., sub("_mean$", "", names(.)))
   if(!is.null(strats)) mean_data <- mean_data %>% dplyr::group_by(!!!strats)
-  mean_data <- mean_data %>% tidyr::nest()
+  if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
+    mean_data <- mean_data %>% tidyr::nest(data=everything())
+  } else {
+    mean_data <- mean_data %>% tidyr::nest()
+  }
+  
   
   var_data <- sum_dat %>%  dplyr::select(dplyr::matches(".*\\var$"),!!!strats) %>% 
     setNames(., sub("_var$", "", names(.)))
   if(!is.null(strats)) var_data <- var_data %>% dplyr::group_by(!!!strats)
-  var_data <- var_data %>% tidyr::nest()
+  if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
+    var_data <- var_data %>% tidyr::nest(data=everything())
+  } else {
+    var_data <- var_data %>% tidyr::nest()
+  }
   
   if(!is.null(strats)){
     join_vars <- strats %>% paste()

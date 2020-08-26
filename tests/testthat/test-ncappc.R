@@ -22,7 +22,7 @@ test_that("Extravascular single dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- exvas_sd_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -48,7 +48,7 @@ test_that("Extravascular single dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- exvas_sd_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -91,7 +91,7 @@ test_that("Extravascular multiple dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- exvas_md_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -121,7 +121,7 @@ test_that("Extravascular multiple dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- exvas_md_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -164,7 +164,7 @@ test_that("IV single dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_sd_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -198,7 +198,7 @@ test_that("IV single dose data is computed corectly",{
  
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_sd_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -243,7 +243,7 @@ test_that("IV multiple dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_md_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -277,7 +277,7 @@ test_that("IV multiple dose data is computed corectly",{
   
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_md_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -321,7 +321,7 @@ test_that("IV infusion single dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_inf_sd_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -356,7 +356,7 @@ test_that("IV infusion single dose data is computed corectly",{
   
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_inf_sd_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -402,7 +402,7 @@ test_that("IV infusion multiple dose data is computed corectly",{
                 noPlot = T)
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_inf_md_true_result %>% 
     dplyr::filter(var=="Linear_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)
@@ -437,7 +437,7 @@ test_that("IV infusion multiple dose data is computed corectly",{
   
   
   calc_vals <- out$ncaOutput %>% tibble::as_tibble() %>% 
-    dplyr::mutate_all(dplyr::funs(as.numeric(as.character(.))))
+    dplyr::mutate_all(~as.numeric(as.character(.)))
   true_vals <- iv_inf_md_true_result %>% 
     dplyr::filter(var=="Linear_log_trapezoidal_WinNonlin") %>% 
     dplyr::rename("ID"=var) %>% dplyr::mutate(ID=1)

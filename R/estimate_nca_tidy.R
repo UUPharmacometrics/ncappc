@@ -50,7 +50,13 @@ estimate_nca_tidy <- function(pkData,
   
   ## create DF of a summary of groups
   pddf <- tmp_data
-  if(!is.null(strats)) pddf <- pddf %>% dplyr::group_by(!!!strats,add=TRUE)
+  if(!is.null(strats)){
+    if (packageVersion("dplyr") >= "1.0.0") {
+      pddf <- pddf %>% dplyr::group_by(!!!strats,.add=TRUE)
+    } else { # use the depreciated dplyr function
+      pddf <- pddf %>% dplyr::group_by(!!!strats,add=TRUE)
+    }
+  } 
   pddf <- pddf %>% dplyr::distinct() 
   if(!is.null(dose_amt_name)){
     tmp_fcn <- function(x){paste(sort(unique(x)),collapse = ", ")}
@@ -62,7 +68,13 @@ estimate_nca_tidy <- function(pkData,
   
   if(!is.null(dose_amt_name)){
     ind_amt_data <- tmp_data %>% dplyr::group_by(!!id_name) 
-    if(!is.null(strats)) ind_amt_data <- ind_amt_data %>% dplyr::group_by(!!!strats,add=TRUE)
+    if(!is.null(strats)){
+      if (packageVersion("dplyr") >= "1.0.0") {
+        ind_amt_data <- ind_amt_data %>% dplyr::group_by(!!!strats,.add=TRUE)
+      } else { # use the depreciated dplyr function
+        ind_amt_data <- ind_amt_data %>% dplyr::group_by(!!!strats,add=TRUE)
+      }
+    } 
     
     ind_amt_data <- ind_amt_data %>% 
       dplyr::distinct() %>% 
@@ -83,7 +95,13 @@ estimate_nca_tidy <- function(pkData,
   # }
   
   new_data <- obsData %>% dplyr::group_by(!!id_name) 
-  if(!is.null(strats)) new_data <- new_data %>% dplyr::group_by(!!!strats,add=TRUE)
+  if(!is.null(strats)){
+    if (packageVersion("dplyr") >= "1.0.0") {
+      new_data <- new_data %>% dplyr::group_by(!!!strats,.add=TRUE)
+    } else { # use the depreciated dplyr function
+      new_data <- new_data %>% dplyr::group_by(!!!strats,add=TRUE)
+    }
+  } 
   new_data <- new_data %>% 
     dplyr::do(data.frame(nca_ind_data(., dvLog = dvLog, dataType=dataType,
                                       idNm=idNm, timeNm=timeNm, concNm=concNm,
@@ -91,7 +109,13 @@ estimate_nca_tidy <- function(pkData,
                                       dateColNm=dateColNm, dateFormat=dateFormat, timeFormat=timeFormat),ind_amt=.$ind_amt[1]))
   
   outData <- new_data %>% dplyr::group_by(!!id_name)
-  if(!is.null(strats)) outData <- outData %>% dplyr::group_by(!!!strats,add=TRUE)
+  if(!is.null(strats)){
+    if (packageVersion("dplyr") >= "1.0.0") {
+      outData <- outData %>% dplyr::group_by(!!!strats,.add=TRUE)
+    } else { # use the depreciated dplyr function
+      outData <- outData %>% dplyr::group_by(!!!strats,add=TRUE)
+    }
+  } 
   outData <- outData %>%
     dplyr::do(data.frame(Dose=.$ind_amt[1],t(est.nca(time=.$time,conc=.$conc,backExtrp=backExtrp,negConcExcl=negConcExcl,doseType=doseType,adminType=adminType,
                                                      doseAmt=.$ind_amt[1],method=method,AUCTimeRange=AUCTimeRange,LambdaTimeRange=LambdaTimeRange,
