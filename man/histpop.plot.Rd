@@ -4,9 +4,15 @@
 \alias{histpop.plot}
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
-histpop.plot(obsdata = outData, simdata = smedianData, figlbl = NULL,
-  param = c("AUClast", "Cmax"), cunit = NULL, tunit = NULL,
-  spread = "npi")
+histpop.plot(
+  obsdata = outData,
+  simdata = smedianData,
+  figlbl = NULL,
+  param = c("AUClast", "Cmax"),
+  cunit = NULL,
+  tunit = NULL,
+  spread = "npi"
+)
 }
 \arguments{
 \item{obsdata}{Data frame with the values of the NCA metrics estimated from

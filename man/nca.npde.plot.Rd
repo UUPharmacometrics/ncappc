@@ -4,8 +4,14 @@
 \alias{nca.npde.plot}
 \title{Plots population histogram of the NCA metrics selected for model diagnosis.}
 \usage{
-nca.npde.plot(plotdata, xvar = NULL, npdecol = NULL, figlbl = NULL,
-  cunit = NULL, tunit = NULL)
+nca.npde.plot(
+  plotdata,
+  xvar = NULL,
+  npdecol = NULL,
+  figlbl = NULL,
+  cunit = NULL,
+  tunit = NULL
+)
 }
 \arguments{
 \item{plotdata}{Data frame with the values of the NPDE values of each

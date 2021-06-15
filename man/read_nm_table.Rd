@@ -4,8 +4,14 @@
 \alias{read_nm_table}
 \title{Read NONMEM table files produced.}
 \usage{
-read_nm_table(nm_table, only_obs = FALSE, method = "default",
-  quiet = TRUE, sim_num = FALSE, sim_name = "NSIM")
+read_nm_table(
+  nm_table,
+  only_obs = FALSE,
+  method = "default",
+  quiet = TRUE,
+  sim_num = FALSE,
+  sim_name = "NSIM"
+)
 }
 \arguments{
 \item{nm_table}{The NONMEM table file to read. A text string. If \code{dplyr}

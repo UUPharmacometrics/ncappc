@@ -4,15 +4,39 @@
 \alias{nca.check.obs}
 \title{Check observed data}
 \usage{
-nca.check.obs(obsData, idNmObs = "ID", timeNmObs = "TIME",
-  concNmObs = "DV", doseType = "ns", doseTime = NULL, Tau = NULL,
-  filterNm = NULL, filterExcl = NULL, str1Nm = NULL, str1 = NULL,
-  str2Nm = NULL, str2 = NULL, str3Nm = NULL, str3 = NULL,
-  AUCTimeRange = NULL, LambdaTimeRange = NULL,
-  adminType = "extravascular", TI = NULL, doseAmtNm = NULL,
-  dateColNm = NULL, dateFormat = NULL, timeFormat = "number",
-  concUnit = NULL, timeUnit = NULL, doseUnit = NULL, blqNm = NULL,
-  blqExcl = 1, evid = TRUE, evidIncl = 0, mdv = FALSE)
+nca.check.obs(
+  obsData,
+  idNmObs = "ID",
+  timeNmObs = "TIME",
+  concNmObs = "DV",
+  doseType = "ns",
+  doseTime = NULL,
+  Tau = NULL,
+  filterNm = NULL,
+  filterExcl = NULL,
+  str1Nm = NULL,
+  str1 = NULL,
+  str2Nm = NULL,
+  str2 = NULL,
+  str3Nm = NULL,
+  str3 = NULL,
+  AUCTimeRange = NULL,
+  LambdaTimeRange = NULL,
+  adminType = "extravascular",
+  TI = NULL,
+  doseAmtNm = NULL,
+  dateColNm = NULL,
+  dateFormat = NULL,
+  timeFormat = "number",
+  concUnit = NULL,
+  timeUnit = NULL,
+  doseUnit = NULL,
+  blqNm = NULL,
+  blqExcl = 1,
+  evid = TRUE,
+  evidIncl = 0,
+  mdv = FALSE
+)
 }
 \arguments{
 \item{obsData}{Observed concentration-time data.}

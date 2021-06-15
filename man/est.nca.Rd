@@ -4,13 +4,29 @@
 \alias{est.nca}
 \title{Estimate individual NCA metrics.}
 \usage{
-est.nca(time, conc, backExtrp = FALSE, negConcExcl = FALSE,
-  doseType = "ns", adminType = "extravascular", doseAmt = NULL,
-  method = "linearup-logdown", AUCTimeRange = NULL,
-  LambdaTimeRange = NULL, LambdaExclude = NULL, doseTime = doseTime,
-  Tau = NULL, TI = NULL, simFile = NULL, dset = "obs",
-  onlyNCA = FALSE, extrapolate = FALSE, sparse_compute = FALSE,
-  force_extrapolate = FALSE, ...)
+est.nca(
+  time,
+  conc,
+  backExtrp = FALSE,
+  negConcExcl = FALSE,
+  doseType = "ns",
+  adminType = "extravascular",
+  doseAmt = NULL,
+  method = "linearup-logdown",
+  AUCTimeRange = NULL,
+  LambdaTimeRange = NULL,
+  LambdaExclude = NULL,
+  doseTime = doseTime,
+  Tau = NULL,
+  TI = NULL,
+  simFile = NULL,
+  dset = "obs",
+  onlyNCA = FALSE,
+  extrapolate = FALSE,
+  sparse_compute = FALSE,
+  force_extrapolate = FALSE,
+  ...
+)
 }
 \arguments{
 \item{time}{Numeric array for time}

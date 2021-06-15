@@ -6,10 +6,20 @@
 deviation of NCA metrics estimated from observed and simulated data.
 Identifies outlier to population PK model.}
 \usage{
-nca.pde.deviation.outlier(obsdata, simdata, idNm = "ID", id = NULL,
-  spread = "npi", figlbl = NULL, calcparam = c("AUClast", "Cmax"),
-  diagparam = c("AUClast", "Cmax"), cunit = NULL, tunit = NULL,
-  noPlot = FALSE, onlyNCA = onlyNCA)
+nca.pde.deviation.outlier(
+  obsdata,
+  simdata,
+  idNm = "ID",
+  id = NULL,
+  spread = "npi",
+  figlbl = NULL,
+  calcparam = c("AUClast", "Cmax"),
+  diagparam = c("AUClast", "Cmax"),
+  cunit = NULL,
+  tunit = NULL,
+  noPlot = FALSE,
+  onlyNCA = onlyNCA
+)
 }
 \arguments{
 \item{obsdata}{A data frame containing the NCA metrics values estimated from
