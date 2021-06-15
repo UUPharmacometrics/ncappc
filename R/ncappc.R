@@ -189,7 +189,7 @@
 #' @import scales
 #' @import gtable
 #' @import knitr
-#' @import Cairo
+# @import Cairo
 #' @import xtable
 #' @import reshape2
 #' @importFrom dplyr first n row_number
@@ -198,7 +198,7 @@
 # @importFrom rlang ".data" 
 #' @importFrom grDevices dev.off 
 #' @importFrom stats median IQR quantile var complete.cases setNames
-#' @importFrom utils read.table menu data
+#' @importFrom utils read.table menu data packageVersion
 #' 
 #' @return NCA results and diagnostic test results
 #' @export
