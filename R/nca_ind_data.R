@@ -32,7 +32,7 @@
 #' 
 #' @return A list of objects with time-conc data and individual infusion
 #'   duration for iv-infusion data
-#' @export
+# @export
 #'
 
 nca_ind_data <- function(pkData, dvLog = FALSE,
