@@ -46,7 +46,7 @@ hist_mean_var_plot <- function(obsdata,
   long_sum <- obsdata %>% dplyr::summarise_all(mean,na.rm=TRUE)
   if (packageVersion("tidyr") >= "1.0.0") {
     long_sum <- long_sum %>% 
-      tidyr::pivot_longer(cols=everything(),names_to = "var", values_to = "value") 
+      tidyr::pivot_longer(cols=tidyr::everything(),names_to = "var", values_to = "value") 
   } else { # use the older retired gather function
     long_sum <- long_sum %>% tidyr::gather(key = "var",value = "value")
   }
@@ -61,7 +61,7 @@ hist_mean_var_plot <- function(obsdata,
   }
   if (packageVersion("tidyr") >= "1.0.0") {
     long_sum_2 <- long_sum_2 %>% 
-      tidyr::pivot_longer(cols=everything(),names_to = "var", values_to = "value") 
+      tidyr::pivot_longer(cols=tidyr::everything(),names_to = "var", values_to = "value") 
   } else { # use the older retired gather function
     long_sum_2 <- long_sum_2 %>% tidyr::gather(key = "var",value = "value")
   }

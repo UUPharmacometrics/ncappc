@@ -44,7 +44,7 @@ hist_mean_var <- function(obs_data, sim_data,
   obs_data <- obs_data %>%  dplyr::filter(ID!="") %>% dplyr::select(param,!!!strats) 
   if(!is.null(strats)) obs_data <- obs_data %>% dplyr::group_by(!!!strats)
   if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
-    obs_data <- obs_data %>% tidyr::nest(data=everything())
+    obs_data <- obs_data %>% tidyr::nest(data=tidyr::everything())
   } else {
     obs_data <- obs_data %>% tidyr::nest()
   }
@@ -53,7 +53,7 @@ hist_mean_var <- function(obs_data, sim_data,
     setNames(., sub("_mean$", "", names(.)))
   if(!is.null(strats)) mean_data <- mean_data %>% dplyr::group_by(!!!strats)
   if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
-    mean_data <- mean_data %>% tidyr::nest(data=everything())
+    mean_data <- mean_data %>% tidyr::nest(data=tidyr::everything())
   } else {
     mean_data <- mean_data %>% tidyr::nest()
   }
@@ -63,7 +63,7 @@ hist_mean_var <- function(obs_data, sim_data,
     setNames(., sub("_var$", "", names(.)))
   if(!is.null(strats)) var_data <- var_data %>% dplyr::group_by(!!!strats)
   if ((packageVersion("tidyr") >= "1.0.0") & is.null(strats)) {
-    var_data <- var_data %>% tidyr::nest(data=everything())
+    var_data <- var_data %>% tidyr::nest(data=tidyr::everything())
   } else {
     var_data <- var_data %>% tidyr::nest()
   }
