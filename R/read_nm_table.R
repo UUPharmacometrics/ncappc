@@ -28,6 +28,7 @@
 #' @param sim_num Should the function add a column to the returned data frame 
 #'   that identifies the simulation number (if present)?
 #' @param sim_name The name of the resulting column in the returned data frame if \code{sim_num} is true.
+#' @param verbose Should the output be more verbose for error checking?
 #'   
 #' @return Returns a data frame of the simulated table with an added column for 
 #'   the simulation number. The data frame is given class \code{c("tbl_df", 
@@ -40,7 +41,8 @@ read_nm_table <- function (nm_table,
                            method="default",
                            quiet=TRUE,
                            sim_num=FALSE,
-                           sim_name="NSIM"){
+                           sim_name="NSIM",
+                           verbose = FALSE){
   
   # \code{\link[dplyr]{dplyr}} and \code{\link[readr]{readr}} are available and
   # \code{\link[readr]{readr}} (version >= 0.2.2).
@@ -72,13 +74,25 @@ read_nm_table <- function (nm_table,
     header_names <- strsplit(header_line,"\\s+,*\\s*")[[1]]
     
     if(!comma_sep){
-      tab_dat <- readr::read_table(nm_table, col_names = header_names, 
-                                   col_types=paste0(rep("d",length(header_names)),collapse = ""),
-                                   skip = 2) 
+      if(verbose){
+        tab_dat <- readr::read_table(nm_table, col_names = header_names, 
+                                     col_types=paste0(rep("d",length(header_names)),collapse = ""),
+                                     skip = 2)
+      } else {
+        tab_dat <- suppressWarnings(readr::read_table(nm_table, col_names = header_names, 
+                                                      col_types=paste0(rep("d",length(header_names)),collapse = ""),
+                                                      skip = 2))
+      }
     } else {
-      tab_dat <- readr::read_csv(nm_table, col_names = header_names, 
-                                 col_types=paste0(rep("d",length(header_names)),collapse = ""),
-                                 skip = 2) 
+      if(verbose){
+        tab_dat <- readr::read_csv(nm_table, col_names = header_names, 
+                                   col_types=paste0(rep("d",length(header_names)),collapse = ""),
+                                   skip = 2)
+      } else {
+        tab_dat <- suppressWarnings(readr::read_csv(nm_table, col_names = header_names, 
+                                                    col_types=paste0(rep("d",length(header_names)),collapse = ""),
+                                                    skip = 2))
+      }
     }
     
     # Handle multiple simulations

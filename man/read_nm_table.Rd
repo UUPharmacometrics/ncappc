@@ -10,7 +10,8 @@ read_nm_table(
   method = "default",
   quiet = TRUE,
   sim_num = FALSE,
-  sim_name = "NSIM"
+  sim_name = "NSIM",
+  verbose = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ doing?}
 that identifies the simulation number (if present)?}
 
 \item{sim_name}{The name of the resulting column in the returned data frame if \code{sim_num} is true.}
+
+\item{verbose}{Should the output be more verbose for error checking?}
 }
 \value{
 Returns a data frame of the simulated table with an added column for 
