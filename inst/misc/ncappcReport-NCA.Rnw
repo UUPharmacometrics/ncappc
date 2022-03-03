@@ -2,10 +2,10 @@
 <<MAINknitr, message=FALSE, comment=NA, warning=FALSE, echo=FALSE, results='hide', cache=FALSE>>=
 ### Load and set up knitr
 library(knitr)
-library(Cairo)
+#library(Cairo)
 opts_knit$set(self.contained=FALSE)
 opts_chunk$set(message=FALSE,comment=NA,warning=FALSE,echo=FALSE,results='hide', 
-               cache=TRUE,fig.align='center',size='normalsize',dev=c('cairo_pdf','png'),tidy=FALSE,concordance=FALSE)
+               cache=TRUE,fig.align='center',size='normalsize',dev=c('pdf','png'),tidy=FALSE,concordance=FALSE)
 @
 
 
