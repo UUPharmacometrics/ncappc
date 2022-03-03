@@ -2,14 +2,18 @@ context("Check that NCA calculations are working")
 
 test_that("Extravascular single dose data is computed corectly",{
   
-  exvas_sd_dat <- readr::read_table("data_exvas_sd.txt",skip = 1) # Can move this to data
+  exvas_sd_dat <- readr::read_table(
+    "data_exvas_sd.txt",skip = 1,
+    col_types = list(.default = readr::col_double())) # Can move this to data
   
-  exvas_sd_true_result <- readr::read_csv("results_exvas_sd_true.csv")
+  exvas_sd_true_result <- readr::read_csv("results_exvas_sd_true.csv",
+   col_types=list(readr::col_character(),.default = readr::col_double())
+  )
   
   # transpose the true results
   exvas_sd_true_result <- exvas_sd_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=exvas_sd_dat,
@@ -74,7 +78,7 @@ test_that("Extravascular multiple dose data is computed corectly",{
   
   exvas_md_true_result <- exvas_md_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=exvas_md_dat,
@@ -146,7 +150,7 @@ test_that("IV single dose data is computed corectly",{
   
   iv_sd_true_result <- iv_sd_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=iv_sd_dat,
@@ -224,7 +228,7 @@ test_that("IV multiple dose data is computed corectly",{
   
   iv_md_true_result <- iv_md_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=iv_md_dat,
@@ -303,7 +307,7 @@ test_that("IV infusion single dose data is computed corectly",{
   
   iv_inf_sd_true_result <- iv_inf_sd_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=iv_inf_sd_dat,
@@ -382,7 +386,7 @@ test_that("IV infusion multiple dose data is computed corectly",{
   
   iv_inf_md_true_result <- iv_inf_md_true_result %>%
     tidyr::gather(var, val, 2:ncol(.)) %>%
-    tidyr::spread_(names(.)[1], "val")
+    tidyr::spread(names(.)[1], "val")
   
   #### test for linear method 
   out <- ncappc(obsFile=iv_inf_md_dat,
