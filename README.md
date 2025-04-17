@@ -22,6 +22,13 @@ ncappc is a flexible tool that can perform:
     pharmacokinetic (PK) and/or pharmacodynamic (PKPD) models using NCA
     metrics.
 
+You can read more at:
+
+1.  [The website for the stable version of
+    ncappc](https://uupharmacometrics.github.io/ncappc/)
+2.  [The website for the development version of
+    ncappc](https://uupharmacometrics.github.io/ncappc/dev/)
+
 ## Installation
 
 You need to have R installed. Download the latest version of R from

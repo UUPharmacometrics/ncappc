@@ -7,4 +7,15 @@ development:
 authors:
   Andrew C. Hooker:
     href: https://katalog.uu.se/profile/?id=N4-631
+  
 
+# home:
+#   sidebar:
+#     structure: [links, custom, license, community, citation, authors, dev]
+#     components:
+#       custom:
+#         title: Test
+#         - text: Stable release of package
+#           href: https://uupharmacometrics.github.io/ncappc/
+#         - text: Development version of package
+#           href: https://uupharmacometrics.github.io/ncappc/dev/
