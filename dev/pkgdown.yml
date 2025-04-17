@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   ncappc-vignette: ncappc-vignette.html
-last_built: 2025-04-17T14:45Z
+last_built: 2025-04-17T15:35Z
 urls:
   reference: https://uupharmacometrics.github.io/ncappc/reference
   article: https://uupharmacometrics.github.io/ncappc/articles
