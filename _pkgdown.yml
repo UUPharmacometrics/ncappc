@@ -1,0 +1,16 @@
+url: ~
+#url: https://andrewhooker.github.io/PopED/
+
+template:
+  bootstrap: 5
+  bootswatch: litera
+  #litera
+  #spacelab 
+  #flatly
+
+development:
+  mode: auto
+  
+authors:
+  Andrew C. Hooker:
+    href: https://katalog.uu.se/profile/?id=N4-631 

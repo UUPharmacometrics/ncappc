@@ -150,11 +150,11 @@ nca.check.obs <- function(obsData,
   }
   
   # check time range, if any
-  if ((!is.null(AUCTimeRange)) && (length(AUCTimeRange) != 2 | class(AUCTimeRange) != "numeric")){
+  if ((!is.null(AUCTimeRange)) && (length(AUCTimeRange) != 2 | !inherits(AUCTimeRange,"numeric") )){
     print("Note: Incorrect time range for AUC calculation. AUCTimeRange will not be used.")
   }
   
-  if ((!is.null(LambdaTimeRange)) && (length(LambdaTimeRange) != 2 | class(LambdaTimeRange) != "numeric")){
+  if ((!is.null(LambdaTimeRange)) && (length(LambdaTimeRange) != 2 | !inherits(LambdaTimeRange,"numeric") )){
     print("Note: Incorrect time range for Lambda calculation. LambdaTimeRange will not be used.")
     LambdaTimeRange <- NULL
   }

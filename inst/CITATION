@@ -1,16 +1,16 @@
 citHeader("To cite ncappc in publications, use:")
 
-citEntry(
- entry="Article",
- title= "A diagnostic tool for population models using non-compartmental analysis: The ncappc functionality for R",
- journal="Computer Methods and Programs in Biomedicine",
- volume= "127",
- pages="83-93",
- year="2016",
- author = personList(as.person("Chayan Acharya"), 
-                     as.person("Andrew C. Hooker"),
-                     as.person("Gulbeyaz Y. Turkyilmaz"),
-                     as.person("Siv Jonsson"),
-                     as.person("Mats O. Karlsson")),
- textVersion="Chayan Acharya, Andrew C. Hooker, Gulbeyaz Y. Turkyilmaz, Siv Jonsson and Mats O. Karlsson (2016), A diagnostic tool for population models using non-compartmental analysis: The ncappc functionality for R, Computer Methods and Programs in Biomedicine, 127, 83-93."
-)
+bibentry(bibtype="Article",
+         title= "A diagnostic tool for population models using non-compartmental analysis: The ncappc functionality for R",
+         author = c(person("Chayan","Acharya"),
+                    person(c("Andrew","C"),"Hooker"),
+                    person(c("Eric","A"),"Stroemberg"),
+                    person(c("Gulbeyaz","Y"),"Turkyilmaz"),
+                    person("Siv","Jonsson"),
+                    person(c("Mats","O"), "Karlsson")
+                    ),
+         journal = "Computer Methods and Programs in Biomedicine",
+         year   = "2016",
+         volume   = "127",
+         pages = "83-93")
+         
