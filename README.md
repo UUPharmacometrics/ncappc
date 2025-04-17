@@ -22,12 +22,10 @@ ncappc is a flexible tool that can perform:
     pharmacokinetic (PK) and/or pharmacodynamic (PKPD) models using NCA
     metrics.
 
-You can read more at:
-
-1.  [The website for the stable version of
-    ncappc](https://uupharmacometrics.github.io/ncappc/)
-2.  [The website for the development version of
-    ncappc](https://uupharmacometrics.github.io/ncappc/dev/)
+You can read more at the [website for the stable version of
+ncappc](https://uupharmacometrics.github.io/ncappc/) or the [website for
+the development version of
+ncappc](https://uupharmacometrics.github.io/ncappc/dev/)
 
 ## Installation
 
