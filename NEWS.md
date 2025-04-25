@@ -1,4 +1,17 @@
-# ncappc 0.3.0.9000
+# ncappc (development version)
+
+* This is a major release (to version 1.0.0), since the package 
+  is in a stable state and is not considered experimental anymore. 
+  
+* Created a webpage for the package using pkgdown. See
+  https://uupharmacometrics.github.io/ncappc/
+  
+* Updated which time and concentration values are used for 
+  extrapolation for lamda_z when interpolation occurs (#5).
+  
+* Updated tidyverse functions that have been depreciated. 
+
+* Removed the Cairo package from the dependencies of this package.
 
 # ncappc 0.3.0
 
@@ -13,7 +26,7 @@
 * Added parallel computation of NCA metrics for simulated data
 
 * Added a number of automatic tests used for checking the package 
-  includung results from ncappc publication.
+  including results from ncappc publication.
 
 * Added a `NEWS.md` file to track changes to the package.
 
