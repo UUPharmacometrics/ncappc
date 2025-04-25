@@ -1,6 +1,6 @@
 Package: ncappc
 Title: NCA Calculations and Population Model Diagnosis
-Version: 0.3.0.9005
+Version: 1.0.0
 Authors@R: c(
     person("Chayan", "Acharya", role = "aut"),
     person("Gulbeyaz Y.", "Turkyilmaz", role = "aut"),

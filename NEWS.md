@@ -1,4 +1,4 @@
-# ncappc (development version)
+# ncappc 1.0.0
 
 * This is a major release (to version 1.0.0), since the package 
   is in a stable state and is not considered experimental anymore. 
