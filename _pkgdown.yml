@@ -3,8 +3,8 @@ template:
   bootstrap: 5
   bootswatch: litera
 development:
-  #mode: auto
-  mode: release
+  mode: auto
+  #mode: release
 authors:
   Andrew C. Hooker:
     href: https://katalog.uu.se/profile/?id=N4-631
